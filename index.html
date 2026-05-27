@@ -665,28 +665,29 @@ const DEFAULT_DATA = {
         { label: '한도조회→신청 CVR', shortLabel: '한도조회→신청 CVR', goal: 0.35, formula: 'limitToApplyCVR', format: 'pct' }
       ],
       note: '',
-      // dailyLog 필드: introView(프로모션 조회) / approve(가승인) / reject(올거절) / creditLoan(신용대출 신청) / otherLoan(대부 신청) / contract / cost
-      // intro(한도조회) = approve + reject  /  apply(신청) = creditLoan + otherLoan
+      // dailyLog 필드: introView(프로모션 조회) / paymentCount(지급 건수=한도조회) / approve(가승인) / reject(올거절) / creditLoan(신용대출 신청) / otherLoan(대부 신청) / contract / cost
+      // intro(한도조회) = paymentCount (시트 진실 소스) / fallback: approve + reject (Mixpanel)
+      // apply(신청) = creditLoan + otherLoan
       dailyLog: [
-        { date: '2026-05-11', introView: 4936, approve: 1219, reject: 1635, creditLoan: 550, otherLoan: 204, contract: 13, cost: 581458, memo: '' },
-        { date: '2026-05-12', introView: 2674, approve: 834, reject: 951, creditLoan: 456, otherLoan: 155, contract: 32, cost: 334492, memo: '' },
-        { date: '2026-05-13', introView: 2040, approve: 696, reject: 694, creditLoan: 339, otherLoan: 105, contract: 47, cost: 249134, memo: '' },
-        { date: '2026-05-14', introView: 2247, approve: 715, reject: 841, creditLoan: 368, otherLoan: 136, contract: 43, cost: 269932, memo: '' },
-        { date: '2026-05-15', introView: 2042, approve: 599, reject: 756, creditLoan: 308, otherLoan: 110, contract: 61, cost: 239023, memo: '' },
-        { date: '2026-05-16', introView: 902, approve: 263, reject: 295, creditLoan: 126, otherLoan: 36, contract: 5, cost: 100929, memo: '' },
-        { date: '2026-05-17', introView: 862, approve: 246, reject: 295, creditLoan: 123, otherLoan: 42, contract: 5, cost: 94913, memo: '' },
-        { date: '2026-05-18', introView: 2564, approve: 796, reject: 980, creditLoan: 423, otherLoan: 143, contract: 82, cost: 270307, memo: '' },
-        { date: '2026-05-19', introView: 1578, approve: 506, reject: 540, creditLoan: 253, otherLoan: 92, contract: 55, cost: 177566, memo: '' },
-        { date: '2026-05-20', introView: 1926, approve: 644, reject: 639, creditLoan: 354, otherLoan: 83, contract: 48, cost: 220705, memo: '' },
-        { date: '2026-05-21', introView: 1459, approve: 417, reject: 507, creditLoan: 205, otherLoan: 64, contract: 52, cost: 162027, memo: '' },
-        { date: '2026-05-22', introView: 1578, approve: 519, reject: 560, creditLoan: 274, otherLoan: 68, contract: 42, cost: 172121, memo: '' },
-        { date: '2026-05-23', introView: 858, approve: 217, reject: 277, creditLoan: 104, otherLoan: 29, contract: 6, cost: 77569, memo: '' },
-        { date: '2026-05-24', introView: 787, approve: 185, reject: 261, creditLoan: 85, otherLoan: 24, contract: 8, cost: 71986, memo: '' },
-        { date: '2026-05-25', introView: 1570, approve: 423, reject: 574, creditLoan: 195, otherLoan: 63, contract: 12, cost: 71986, memo: '' },
-        { date: '2026-05-26', introView: 1912, approve: 596, reject: 675, creditLoan: 322, otherLoan: 93, contract: 105, cost: 161704, memo: '' },
-        { date: '2026-05-27', introView: null, approve: null, reject: null, creditLoan: null, otherLoan: null, contract: null, cost: null, memo: '' },
-        { date: '2026-05-28', introView: null, approve: null, reject: null, creditLoan: null, otherLoan: null, contract: null, cost: null, memo: '' },
-        { date: '2026-05-29', introView: null, approve: null, reject: null, creditLoan: null, otherLoan: null, contract: null, cost: null, memo: '' }
+        { date: '2026-05-11', introView: 4936, paymentCount: 3439, approve: 1219, reject: 1635, creditLoan: 550, otherLoan: 204, contract: 13, cost: 581458, memo: '' },
+        { date: '2026-05-12', introView: 2674, paymentCount: 1970, approve: 834, reject: 951, creditLoan: 456, otherLoan: 155, contract: 32, cost: 334492, memo: '' },
+        { date: '2026-05-13', introView: 2040, paymentCount: 1466, approve: 696, reject: 694, creditLoan: 339, otherLoan: 105, contract: 47, cost: 249134, memo: '' },
+        { date: '2026-05-14', introView: 2247, paymentCount: 1624, approve: 715, reject: 841, creditLoan: 368, otherLoan: 136, contract: 43, cost: 269932, memo: '' },
+        { date: '2026-05-15', introView: 2042, paymentCount: 1372, approve: 599, reject: 756, creditLoan: 308, otherLoan: 110, contract: 61, cost: 239023, memo: '' },
+        { date: '2026-05-16', introView: 902, paymentCount: 619, approve: 263, reject: 295, creditLoan: 126, otherLoan: 36, contract: 5, cost: 100929, memo: '' },
+        { date: '2026-05-17', introView: 862, paymentCount: 565, approve: 246, reject: 295, creditLoan: 123, otherLoan: 42, contract: 5, cost: 94913, memo: '' },
+        { date: '2026-05-18', introView: 2564, paymentCount: 1607, approve: 796, reject: 980, creditLoan: 423, otherLoan: 143, contract: 82, cost: 270307, memo: '' },
+        { date: '2026-05-19', introView: 1578, paymentCount: 1090, approve: 506, reject: 540, creditLoan: 253, otherLoan: 92, contract: 55, cost: 177566, memo: '' },
+        { date: '2026-05-20', introView: 1926, paymentCount: 1362, approve: 644, reject: 639, creditLoan: 354, otherLoan: 83, contract: 48, cost: 220705, memo: '' },
+        { date: '2026-05-21', introView: 1459, paymentCount: 984, approve: 417, reject: 507, creditLoan: 205, otherLoan: 64, contract: 52, cost: 162027, memo: '' },
+        { date: '2026-05-22', introView: 1578, paymentCount: 1078, approve: 519, reject: 560, creditLoan: 274, otherLoan: 68, contract: 42, cost: 172121, memo: '' },
+        { date: '2026-05-23', introView: 858, paymentCount: 512, approve: 217, reject: 277, creditLoan: 104, otherLoan: 29, contract: 6, cost: 77569, memo: '' },
+        { date: '2026-05-24', introView: 787, paymentCount: 443, approve: 185, reject: 261, creditLoan: 85, otherLoan: 24, contract: 8, cost: 71986, memo: '' },
+        { date: '2026-05-25', introView: 1570, paymentCount: 868, approve: 423, reject: 574, creditLoan: 195, otherLoan: 63, contract: 12, cost: 71986, memo: '' },
+        { date: '2026-05-26', introView: 1912, paymentCount: 981, approve: 596, reject: 675, creditLoan: 322, otherLoan: 93, contract: 105, cost: 161704, memo: '' },
+        { date: '2026-05-27', introView: null, paymentCount: null, approve: null, reject: null, creditLoan: null, otherLoan: null, contract: null, cost: null, memo: '' },
+        { date: '2026-05-28', introView: null, paymentCount: null, approve: null, reject: null, creditLoan: null, otherLoan: null, contract: null, cost: null, memo: '' },
+        { date: '2026-05-29', introView: null, paymentCount: null, approve: null, reject: null, creditLoan: null, otherLoan: null, contract: null, cost: null, memo: '' }
       ]
     }
   ],
@@ -787,22 +788,24 @@ function div(a, b) {
 }
 
 // Get 가정의달(P5)'s effective "current actual" — SUM across daily log
-// 한도조회(intro) = 가승인+올거절 / 신청(apply) = 신용대출+대부
+// 한도조회(intro) = paymentCount (시트의 지급 건수, 진실 소스) / fallback: 가승인+올거절 (Mixpanel)
+// 신청(apply) = 신용대출+대부
 function mayTotal() {
   const may = DATA.promotions.find(p => p.id === 'P5');
-  const empty = { send: null, introView: null, intro: null, apply: null, contract: null, cost: null, approve: null, reject: null, creditLoan: null, otherLoan: null };
+  const empty = { send: null, introView: null, intro: null, apply: null, contract: null, cost: null, approve: null, reject: null, creditLoan: null, otherLoan: null, paymentCount: null };
   if (!may || !may.dailyLog) return empty;
-  const total = { introView: 0, approve: 0, reject: 0, creditLoan: 0, otherLoan: 0, contract: 0, cost: 0 };
+  const total = { introView: 0, approve: 0, reject: 0, creditLoan: 0, otherLoan: 0, contract: 0, cost: 0, paymentCount: 0 };
   const hasAny = {};
   for (const row of may.dailyLog) {
-    for (const k of ['introView','approve','reject','creditLoan','otherLoan','contract','cost']) {
+    for (const k of ['introView','approve','reject','creditLoan','otherLoan','contract','cost','paymentCount']) {
       if (row[k] != null && row[k] !== '' && !isNaN(row[k])) {
         total[k] += Number(row[k]);
         hasAny[k] = true;
       }
     }
   }
-  const intro = (hasAny.approve || hasAny.reject) ? total.approve + total.reject : null;
+  // 한도조회 = paymentCount (시트) 우선, 없으면 approve+reject fallback
+  const intro = hasAny.paymentCount ? total.paymentCount : ((hasAny.approve || hasAny.reject) ? total.approve + total.reject : null);
   const apply = (hasAny.creditLoan || hasAny.otherLoan) ? total.creditLoan + total.otherLoan : null;
   return {
     send: null,
