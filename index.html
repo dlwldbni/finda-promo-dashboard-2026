@@ -753,7 +753,7 @@ const DEFAULT_DATA = {
       goal: { send: null, introView: null, intro: null, apply: null, contract: null, cost: 9250000 },
       actual: { send: null, introView: null, intro: null, apply: null, contract: null, cost: null },
       baseline: { intro: null, contract: null },
-      d0_revenue: null,
+      d0_revenue: 450162,
       loanCVR: null,
       kpis: [
         { label: '한도조회→신청 CVR (신규 타겟)', shortLabel: '신규 한도조회→신청 CVR', goal: 0.4893, format: 'pct' },
@@ -773,8 +773,8 @@ const DEFAULT_DATA = {
       note: '1차 진행중 · 2차/3차 예정 · 핵심 KPI = 한도조회→신청 CVR (신규 +5%p, 타사 +10%p)',
       // dailyLog skeleton — 1차 기간 (5/28 ~ 6/10). 시트에 daily 데이터 들어오면 자동화로 채워짐.
       dailyLog: [
-        { date: '2026-05-28', introView: null, paymentCount: null, approve: null, reject: null, creditLoan: null, otherLoan: null, contract: null, cost: null, memo: '' },
-        { date: '2026-05-29', introView: null, paymentCount: null, approve: null, reject: null, creditLoan: null, otherLoan: null, contract: null, cost: null, memo: '' },
+        { date: '2026-05-28', introView: 32, paymentCount: 23, approve: null, reject: null, creditLoan: 6, otherLoan: null, contract: 0, cost: 49793, memo: '발송 2,213' },
+        { date: '2026-05-29', introView: 267, paymentCount: 161, approve: null, reject: null, creditLoan: 38, otherLoan: null, contract: 5, cost: 462248, memo: '발송 19,091 / 매출 ₩450K' },
         { date: '2026-05-30', introView: null, paymentCount: null, approve: null, reject: null, creditLoan: null, otherLoan: null, contract: null, cost: null, memo: '' },
         { date: '2026-05-31', introView: null, paymentCount: null, approve: null, reject: null, creditLoan: null, otherLoan: null, contract: null, cost: null, memo: '' },
         { date: '2026-06-01', introView: null, paymentCount: null, approve: null, reject: null, creditLoan: null, otherLoan: null, contract: null, cost: null, memo: '' },
