@@ -505,35 +505,45 @@
       <div class="panel-header">
         <div>
           <div class="title">1차: 26.05.28 ~ 26.06.10 (총 14일) · 2차/3차 예정</div>
-          <div class="desc">핵심 KPI = 한도조회→신청 CVR (신규 +5%p · 타사 +10%p) · 일자별 데이터 시트 입력 시 자동 갱신 (셋업 진행 예정)</div>
+          <div class="desc">핵심 KPI: <strong>한도조회→약정 CVR 7%</strong> · 약정자 137명 이상 · ROAS 400%</div>
         </div>
         <div id="p6-dday-pill" style="font-size:12px; padding:4px 10px; border-radius:4px; background:#fef3c7; color:#92400e; font-weight:600;"></div>
       </div>
 
-      <h3 style="font-size:13px; font-weight:600; margin-bottom:10px; color:var(--text-2);">🎯 타겟별 KPI</h3>
+      <h3 style="font-size:13px; font-weight:600; margin-bottom:10px; color:var(--text-2);">🎯 핵심 KPI</h3>
+      <div class="kpi-grid" id="p6-kpis"></div>
+
+      <h3 style="font-size:13px; font-weight:600; margin: 22px 0 10px; color:var(--text-2);">📋 타겟별 베이스라인 (참고)</h3>
       <div class="kpi-grid" id="p6-targets"></div>
 
-      <h3 style="font-size:13px; font-weight:600; margin: 22px 0 10px; color:var(--text-2);">📊 누적 성과 (combined)</h3>
+      <h3 style="font-size:13px; font-weight:600; margin: 22px 0 10px; color:var(--text-2);">📊 누적 성과</h3>
       <div class="kpi-grid" id="p6-progress"></div>
 
-      <h3 style="font-size:13px; font-weight:600; margin: 22px 0 10px; color:var(--text-2);">📅 일자별 누적 로그 (편집 모드 입력 / 시트 자동 갱신 예정)</h3>
+      <h3 style="font-size:13px; font-weight:600; margin: 22px 0 10px; color:var(--text-2);">📅 일자별 누적 로그 (시트 자동 갱신 평일 11:15)</h3>
+      <div style="font-size:11px; color:var(--text-2); margin-bottom:10px; padding:8px 12px; background:#f8fafc; border-left:3px solid #cbd5e1; border-radius:4px; line-height:1.6;">
+        * 발송 / 오픈 / 한도조회 수 / 신청 수는 <strong>태블로 집계 기준</strong><br>
+        * 약정 / 매출 비용 및 ROAS 는 <strong>별도 쿼리</strong>로 추출
+      </div>
       <div class="table-wrap daily-log">
         <table id="p6-daily-table">
           <thead>
             <tr>
               <th>일자</th>
-              <th>경과일</th>
-              <th class="num">프로모션 조회</th>
-              <th class="num">가승인</th>
-              <th class="num">올거절</th>
-              <th class="num" style="background:#e0f2fe;">한도조회<br><span style="font-weight:400;font-size:10px;color:var(--text-2);">(자동)</span></th>
-              <th class="num">신용대출 신청</th>
-              <th class="num">대부 신청</th>
-              <th class="num" style="background:#e0f2fe;">신청 수<br><span style="font-weight:400;font-size:10px;color:var(--text-2);">(자동)</span></th>
-              <th class="num">약정수</th>
-              <th class="num">지급비용</th>
-              <th class="num">인트로→한도조회</th>
-              <th class="num">한도조회→신청</th>
+              <th>그룹</th>
+              <th class="num">발송 수</th>
+              <th class="num">오픈 수</th>
+              <th class="num">발송-오픈 CVR</th>
+              <th class="num">오픈-조회 CVR</th>
+              <th class="num">한도조회 완료</th>
+              <th class="num">대출 신청 수</th>
+              <th class="num">약정 수</th>
+              <th class="num" style="background:#fef3c7;">조회-약정 CVR</th>
+              <th class="num">총 약정 금액</th>
+              <th class="num">포인트 비용</th>
+              <th class="num">발송 비용</th>
+              <th class="num">매출</th>
+              <th class="num">객단가</th>
+              <th class="num" style="background:#fef3c7;">ROAS</th>
               <th>메모</th>
             </tr>
           </thead>
@@ -753,11 +763,12 @@ const DEFAULT_DATA = {
       goal: { send: null, introView: null, intro: null, apply: null, contract: null, cost: 9250000 },
       actual: { send: null, introView: null, intro: null, apply: null, contract: null, cost: null },
       baseline: { intro: null, contract: null },
-      d0_revenue: 450162,
+      d0_revenue: null,  // dailyLog.revenue 합산으로 자동 산출
       loanCVR: null,
       kpis: [
-        { label: '한도조회→신청 CVR (신규 타겟)', shortLabel: '신규 한도조회→신청 CVR', goal: 0.4893, format: 'pct' },
-        { label: '한도조회→신청 CVR (타사 타겟)', shortLabel: '타사 한도조회→신청 CVR', goal: 0.2989, format: 'pct' }
+        { label: '한도조회→약정 CVR', shortLabel: '한도조회→약정 CVR', goal: 0.07, formula: 'limitToContractCVR', format: 'pct' },
+        { label: '약정자 수', shortLabel: '약정자 수', goal: 137, formula: 'contractCount', format: 'int' },
+        { label: 'ROAS', shortLabel: 'ROAS', goal: 4.00, formula: 'roas', format: 'pct' }
       ],
       // 1차 진행중, 2차/3차 예정. 라운드 메타데이터.
       rounds: [
@@ -765,28 +776,31 @@ const DEFAULT_DATA = {
         { round: 2, period: '예정', status: '예정' },
         { round: 3, period: '예정', status: '예정' }
       ],
-      // 두 타겟 — 기획 시트 기준 baseline + goal + 예상 비용
+      // 두 타겟 — 기획 시트 baseline (참고용)
       targets: [
-        { name: '신규가입유저', baselineCVR: 0.3993, goalCVR: 0.4893, expectedParticipants: 9000, expectedCost: 9000000, note: 'baseline +5%p' },
-        { name: '타사한도조회유저', baselineCVR: 0.1989, goalCVR: 0.2989, expectedParticipants: 250, expectedCost: 250000, note: 'baseline +10%p' }
+        { name: '신규가입유저', baselineCVR: 0.3993, expectedParticipants: 9000, expectedCost: 9000000, note: '한도조회-신청 baseline' },
+        { name: '타사한도조회유저', baselineCVR: 0.1989, expectedParticipants: 250, expectedCost: 250000, note: '한도조회-신청 baseline' }
       ],
-      note: '1차 진행중 · 2차/3차 예정 · 핵심 KPI = 한도조회→신청 CVR (신규 +5%p, 타사 +10%p)',
-      // dailyLog skeleton — 1차 기간 (5/28 ~ 6/10). 시트에 daily 데이터 들어오면 자동화로 채워짐.
+      // 데이터 출처 disclaimer
+      dataSourceNote: '* 발송/오픈/한도조회 수/신청 수는 태블로 집계 기준 / * 약정/매출 비용 및 ROAS 는 별도 쿼리로 추출',
+      note: '1차 진행중 · 2차/3차 예정 · KPI: 한도조회→약정 CVR 7%, 약정자 137명+, ROAS 400%',
+      // dailyLog — 시트 컬럼명과 통일된 schema (5/28 ~ 6/10 1차)
+      // schema: { date, group, send, appOpen, limitCheck, applyCount, contract, contractAmount, pointCost, sendCost, revenue, memo }
       dailyLog: [
-        { date: '2026-05-28', introView: 32, paymentCount: 23, approve: null, reject: null, creditLoan: 6, otherLoan: null, contract: 0, cost: 49793, memo: '발송 2,213' },
-        { date: '2026-05-29', introView: 267, paymentCount: 161, approve: null, reject: null, creditLoan: 38, otherLoan: null, contract: 5, cost: 462248, memo: '발송 19,091' },
-        { date: '2026-05-30', introView: null, paymentCount: null, approve: null, reject: null, creditLoan: null, otherLoan: null, contract: null, cost: null, memo: '' },
-        { date: '2026-05-31', introView: null, paymentCount: null, approve: null, reject: null, creditLoan: null, otherLoan: null, contract: null, cost: null, memo: '' },
-        { date: '2026-06-01', introView: null, paymentCount: null, approve: null, reject: null, creditLoan: null, otherLoan: null, contract: null, cost: null, memo: '' },
-        { date: '2026-06-02', introView: null, paymentCount: null, approve: null, reject: null, creditLoan: null, otherLoan: null, contract: null, cost: null, memo: '' },
-        { date: '2026-06-03', introView: null, paymentCount: null, approve: null, reject: null, creditLoan: null, otherLoan: null, contract: null, cost: null, memo: '' },
-        { date: '2026-06-04', introView: null, paymentCount: null, approve: null, reject: null, creditLoan: null, otherLoan: null, contract: null, cost: null, memo: '' },
-        { date: '2026-06-05', introView: null, paymentCount: null, approve: null, reject: null, creditLoan: null, otherLoan: null, contract: null, cost: null, memo: '' },
-        { date: '2026-06-06', introView: null, paymentCount: null, approve: null, reject: null, creditLoan: null, otherLoan: null, contract: null, cost: null, memo: '' },
-        { date: '2026-06-07', introView: null, paymentCount: null, approve: null, reject: null, creditLoan: null, otherLoan: null, contract: null, cost: null, memo: '' },
-        { date: '2026-06-08', introView: null, paymentCount: null, approve: null, reject: null, creditLoan: null, otherLoan: null, contract: null, cost: null, memo: '' },
-        { date: '2026-06-09', introView: null, paymentCount: null, approve: null, reject: null, creditLoan: null, otherLoan: null, contract: null, cost: null, memo: '' },
-        { date: '2026-06-10', introView: null, paymentCount: null, approve: null, reject: null, creditLoan: null, otherLoan: null, contract: null, cost: null, memo: '' }
+        { date: '2026-05-28', group: '1차', send: 2213, appOpen: 32, limitCheck: 23, applyCount: 6, contract: 0, contractAmount: 0, pointCost: 0, sendCost: 49793, revenue: 0, memo: '' },
+        { date: '2026-05-29', group: '1차', send: 19091, appOpen: 267, limitCheck: 161, applyCount: 38, contract: 5, contractAmount: 32700000, pointCost: 32700, sendCost: 429548, revenue: 450162, memo: '' },
+        { date: '2026-05-30', group: '1차', send: null, appOpen: null, limitCheck: null, applyCount: null, contract: null, contractAmount: null, pointCost: null, sendCost: null, revenue: null, memo: '' },
+        { date: '2026-05-31', group: '1차', send: null, appOpen: null, limitCheck: null, applyCount: null, contract: null, contractAmount: null, pointCost: null, sendCost: null, revenue: null, memo: '' },
+        { date: '2026-06-01', group: '1차', send: null, appOpen: null, limitCheck: null, applyCount: null, contract: null, contractAmount: null, pointCost: null, sendCost: null, revenue: null, memo: '' },
+        { date: '2026-06-02', group: '1차', send: null, appOpen: null, limitCheck: null, applyCount: null, contract: null, contractAmount: null, pointCost: null, sendCost: null, revenue: null, memo: '' },
+        { date: '2026-06-03', group: '1차', send: null, appOpen: null, limitCheck: null, applyCount: null, contract: null, contractAmount: null, pointCost: null, sendCost: null, revenue: null, memo: '' },
+        { date: '2026-06-04', group: '1차', send: null, appOpen: null, limitCheck: null, applyCount: null, contract: null, contractAmount: null, pointCost: null, sendCost: null, revenue: null, memo: '' },
+        { date: '2026-06-05', group: '1차', send: null, appOpen: null, limitCheck: null, applyCount: null, contract: null, contractAmount: null, pointCost: null, sendCost: null, revenue: null, memo: '' },
+        { date: '2026-06-06', group: '1차', send: null, appOpen: null, limitCheck: null, applyCount: null, contract: null, contractAmount: null, pointCost: null, sendCost: null, revenue: null, memo: '' },
+        { date: '2026-06-07', group: '1차', send: null, appOpen: null, limitCheck: null, applyCount: null, contract: null, contractAmount: null, pointCost: null, sendCost: null, revenue: null, memo: '' },
+        { date: '2026-06-08', group: '1차', send: null, appOpen: null, limitCheck: null, applyCount: null, contract: null, contractAmount: null, pointCost: null, sendCost: null, revenue: null, memo: '' },
+        { date: '2026-06-09', group: '1차', send: null, appOpen: null, limitCheck: null, applyCount: null, contract: null, contractAmount: null, pointCost: null, sendCost: null, revenue: null, memo: '' },
+        { date: '2026-06-10', group: '1차', send: null, appOpen: null, limitCheck: null, applyCount: null, contract: null, contractAmount: null, pointCost: null, sendCost: null, revenue: null, memo: '' }
       ]
     }
   ],
@@ -807,7 +821,7 @@ const DEFAULT_DATA = {
   }
 };
 
-const STORAGE_KEY = 'promo_dashboard_2026_h1_v11';
+const STORAGE_KEY = 'promo_dashboard_2026_h1_v12';
 
 let dataSource = 'default';  // 'remote' | 'local' | 'default'
 
@@ -934,10 +948,44 @@ function promotionDailyTotal(p) {
 // Backward-compat aliases
 function mayTotal() { return promotionDailyTotal(DATA.promotions.find(p => p.id === 'P5')); }
 const mayLatest = mayTotal;
-function p6Total() { return promotionDailyTotal(DATA.promotions.find(p => p.id === 'P6')); }
 
-// Resolve effective actuals — dailyLog 있는 프로모션은 dailyLog 합산, 아니면 정적 actual
+// P6 — 시트 컬럼명 schema. 새 필드 + 기존 인터페이스 alias 둘 다 반환.
+function p6Total() {
+  const p = DATA.promotions.find(x => x.id === 'P6');
+  const empty = { send: null, introView: null, intro: null, apply: null, contract: null, cost: null, appOpen: null, limitCheck: null, applyCount: null, contractAmount: null, pointCost: null, sendCost: null, revenue: null };
+  if (!p || !p.dailyLog) return empty;
+  const t = { send: 0, appOpen: 0, limitCheck: 0, applyCount: 0, contract: 0, contractAmount: 0, pointCost: 0, sendCost: 0, revenue: 0 };
+  const has = {};
+  for (const row of p.dailyLog) {
+    for (const k of Object.keys(t)) {
+      if (row[k] != null && row[k] !== '' && !isNaN(row[k])) {
+        t[k] += Number(row[k]);
+        has[k] = true;
+      }
+    }
+  }
+  return {
+    // 새 필드 (시트 매칭)
+    send: has.send ? t.send : null,
+    appOpen: has.appOpen ? t.appOpen : null,
+    limitCheck: has.limitCheck ? t.limitCheck : null,
+    applyCount: has.applyCount ? t.applyCount : null,
+    contract: has.contract ? t.contract : null,
+    contractAmount: has.contractAmount ? t.contractAmount : null,
+    pointCost: has.pointCost ? t.pointCost : null,
+    sendCost: has.sendCost ? t.sendCost : null,
+    revenue: has.revenue ? t.revenue : null,
+    // 공통 인터페이스 alias (renderComparison/renderKPICards 호환)
+    introView: has.appOpen ? t.appOpen : null,         // 오픈 수 → introView
+    intro: has.limitCheck ? t.limitCheck : null,        // 한도조회 → intro
+    apply: has.applyCount ? t.applyCount : null,        // 신청 → apply
+    cost: (has.pointCost || has.sendCost) ? t.pointCost + t.sendCost : null  // 총 비용
+  };
+}
+
+// Resolve effective actuals
 function effectiveActual(p) {
+  if (p.id === 'P6') return p6Total();
   if (p.dailyLog && Array.isArray(p.dailyLog) && p.dailyLog.length > 0) {
     return promotionDailyTotal(p);
   }
@@ -1173,31 +1221,46 @@ function toggleEmptyDays() {
 
 // ─────────────────────────────────────────────────────────────
 // P6 (타사한도조회자 약정 프로모션) 진행 추적 — render functions
+// 시트 컬럼 schema: send, appOpen, limitCheck, applyCount, contract, contractAmount, pointCost, sendCost, revenue
 // ─────────────────────────────────────────────────────────────
 let p6DailyExpanded = false;
 
+// 핵심 KPI 카드 (3개: CVR / 약정자 / ROAS)
+function renderP6Kpis() {
+  const p = DATA.promotions.find(x => x.id === 'P6');
+  if (!p || !p.kpis) return;
+  const container = document.getElementById('p6-kpis');
+  if (!container) return;
+  const pIdx = DATA.promotions.findIndex(x => x.id === 'P6');
+  container.innerHTML = p.kpis.map((kpi, kIdx) => {
+    const actual = computeKpiActual(p, kpi);
+    return renderKpiCard(kpi, pIdx, kIdx, actual);
+  }).join('');
+}
+
+// 타겟 baseline 참고 카드 (2개: 신규/타사)
 function renderP6Targets() {
   const p = DATA.promotions.find(x => x.id === 'P6');
   if (!p || !p.targets) return;
   const container = document.getElementById('p6-targets');
   if (!container) return;
   container.innerHTML = p.targets.map(t => `
-    <div class="kpi-card highlight">
+    <div class="kpi-card">
       <div class="label">${t.name}</div>
-      <div class="value" style="font-size:20px;">${pct(t.goalCVR, 1)} <span style="font-size:12px;color:var(--text-2);font-weight:400;">목표</span></div>
+      <div class="value" style="font-size:20px;">${pct(t.baselineCVR, 1)} <span style="font-size:12px;color:var(--text-2);font-weight:400;">${t.note}</span></div>
       <div style="font-size:11px;color:var(--text-2);margin-top:6px;line-height:1.5;">
-        베이스라인 ${pct(t.baselineCVR, 1)} → ${t.note}<br>
         예상 참여 ${fmt(t.expectedParticipants)}명 · 예산 ${krw(t.expectedCost)}
       </div>
     </div>`).join('');
 }
 
+// 누적 성과 카드 (funnel + 비용/매출)
 function renderP6Progress() {
   const p6 = DATA.promotions.find(x => x.id === 'P6');
   if (!p6) return;
-  const actual = p6Total();
+  const a = p6Total();
 
-  // D-day 계산 (1차 기준 6/10 종료)
+  // D-day 계산
   const today = new Date();
   today.setHours(0,0,0,0);
   const start = new Date('2026-05-28');
@@ -1208,59 +1271,48 @@ function renderP6Progress() {
   const ddayEl = document.getElementById('p6-dday-pill');
   if (ddayEl) ddayEl.textContent = today > end ? `종료 (총 ${totalDays}일)` : `D-${remain} (경과 ${elapsed}/${totalDays}일)`;
 
-  // CVR 자동 계산
-  const introToLimitCVR = div(actual.intro, actual.introView);
-  const limitToApplyCVR = div(actual.apply, actual.intro);
+  const avgPrice = div(a.revenue, a.contract);    // 객단가 = 매출 / 약정수
 
   const items = [
-    { type: 'cvr', label: '🎯 인트로→한도조회 CVR', actual: introToLimitCVR, goal: null, highlight: false },
-    { type: 'cvr', label: '🎯 한도조회→신청 CVR (combined)', actual: limitToApplyCVR, goal: null, highlight: true },
-    { type: 'count', label: '프로모션 조회 (누적)', actual: actual.introView, fmt: fmt },
-    { type: 'count', label: '한도조회 (누적)', actual: actual.intro, fmt: fmt },
-    { type: 'count', label: '└ 가승인 / 올거절', actual: null, fmt: () => `${fmt(actual.approve)} / ${fmt(actual.reject)}` },
-    { type: 'count', label: '신청 수 (누적)', actual: actual.apply, fmt: fmt },
-    { type: 'count', label: '└ 신용대출 / 대부', actual: null, fmt: () => `${fmt(actual.creditLoan)} / ${fmt(actual.otherLoan)}` },
-    { type: 'count', label: '약정 수 (누적)', actual: actual.contract, fmt: fmt },
-    { type: 'count', label: '지급비용 (누적)', actual: actual.cost, fmt: krw }
+    { label: '발송 수', value: fmt(a.send) },
+    { label: '오픈 수', value: fmt(a.appOpen) },
+    { label: '한도조회', value: fmt(a.limitCheck) },
+    { label: '대출 신청', value: fmt(a.applyCount) },
+    { label: '약정 수', value: fmt(a.contract) },
+    { label: '총 약정 금액', value: krw(a.contractAmount) },
+    { label: '포인트 비용', value: krw(a.pointCost) },
+    { label: '발송 비용', value: krw(a.sendCost) },
+    { label: '매출 (D0)', value: krw(a.revenue) },
+    { label: '객단가', value: krw(avgPrice) }
   ];
   const container = document.getElementById('p6-progress');
   if (!container) return;
-  container.innerHTML = items.map(it => {
-    if (it.type === 'cvr') {
-      return `
-        <div class="kpi-card ${it.highlight?'highlight':''}">
-          <div class="label">${it.label}</div>
-          <div class="value">${pct(it.actual, 1)}</div>
-          <div style="font-size:11px;color:var(--text-2);margin-top:4px;">데이터 입력 대기</div>
-        </div>`;
-    } else {
-      return `
-        <div class="kpi-card">
-          <div class="label">${it.label}</div>
-          <div class="value">${it.fmt(it.actual)}</div>
-          <div style="font-size:11px;color:var(--text-2);margin-top:4px;">현재 누적</div>
-        </div>`;
-    }
-  }).join('');
+  container.innerHTML = items.map(it => `
+    <div class="kpi-card">
+      <div class="label">${it.label}</div>
+      <div class="value">${it.value}</div>
+      <div style="font-size:11px;color:var(--text-2);margin-top:4px;">현재 누적</div>
+    </div>`).join('');
 }
 
+// 일자별 누적 로그 (17 columns matching sheet)
 function renderP6Daily() {
   const p6 = DATA.promotions.find(x => x.id === 'P6');
   const p6Idx = DATA.promotions.findIndex(x => x.id === 'P6');
   if (!p6 || !p6.dailyLog) return;
   const tbody = document.getElementById('p6-daily-body');
   if (!tbody) return;
-  const isFilled = (r) => r.introView != null || r.approve != null || r.reject != null || r.creditLoan != null || r.otherLoan != null || r.contract != null || r.cost != null;
+  const isFilled = (r) => r.send != null || r.appOpen != null || r.limitCheck != null || r.applyCount != null || r.contract != null;
   const todayStr = new Date().toISOString().slice(0,10);
 
   const rendered = p6.dailyLog.map((row, idx) => {
-    const intro = (row.paymentCount != null)
-      ? Number(row.paymentCount)
-      : ((row.approve != null || row.reject != null) ? Number(row.approve || 0) + Number(row.reject || 0) : null);
-    const apply = (row.creditLoan != null || row.otherLoan != null)
-      ? Number(row.creditLoan || 0) + Number(row.otherLoan || 0) : null;
-    const cvr1 = div(intro, row.introView);
-    const cvr2 = div(apply, intro);
+    const totalCost = (row.pointCost != null || row.sendCost != null)
+      ? Number(row.pointCost || 0) + Number(row.sendCost || 0) : null;
+    const cvrSendOpen = div(row.appOpen, row.send);          // 발송→오픈
+    const cvrOpenCheck = div(row.limitCheck, row.appOpen);   // 오픈→조회
+    const cvrCheckContract = div(row.contract, row.limitCheck);  // 조회→약정
+    const avgPrice = div(row.revenue, row.contract);         // 객단가
+    const roas = div(row.revenue, totalCost);                // ROAS
     const path = `promotions.${p6Idx}.dailyLog.${idx}`;
     const filled = isFilled(row);
     const isToday = row.date === todayStr;
@@ -1272,18 +1324,21 @@ function renderP6Daily() {
       filled, isToday, hidden: !filled && !isToday,
       html: `<tr class="${cls}">
         <td class="date">${row.date}</td>
-        <td class="center">${idx+1}일</td>
-        ${inputCell(row.introView, path+'.introView')}
-        ${inputCell(row.approve, path+'.approve')}
-        ${inputCell(row.reject, path+'.reject')}
-        <td class="num" style="background:#f0f9ff;font-weight:600;">${fmt(intro)}</td>
-        ${inputCell(row.creditLoan, path+'.creditLoan')}
-        ${inputCell(row.otherLoan, path+'.otherLoan')}
-        <td class="num" style="background:#f0f9ff;font-weight:600;">${fmt(apply)}</td>
+        <td class="center">${row.group || '1차'}</td>
+        ${inputCell(row.send, path+'.send')}
+        ${inputCell(row.appOpen, path+'.appOpen')}
+        <td class="num">${pct(cvrSendOpen, 2)}</td>
+        <td class="num">${pct(cvrOpenCheck, 2)}</td>
+        ${inputCell(row.limitCheck, path+'.limitCheck')}
+        ${inputCell(row.applyCount, path+'.applyCount')}
         ${inputCell(row.contract, path+'.contract')}
-        ${inputCell(row.cost, path+'.cost', 'krw')}
-        <td class="num">${pct(cvr1)}</td>
-        <td class="num">${pct(cvr2)}</td>
+        <td class="num" style="background:#fef3c7;font-weight:600;">${pct(cvrCheckContract, 2)}</td>
+        ${inputCell(row.contractAmount, path+'.contractAmount', 'krw')}
+        ${inputCell(row.pointCost, path+'.pointCost', 'krw')}
+        ${inputCell(row.sendCost, path+'.sendCost', 'krw')}
+        ${inputCell(row.revenue, path+'.revenue', 'krw')}
+        <td class="num">${krw(avgPrice)}</td>
+        <td class="num" style="background:#fef3c7;font-weight:600;">${pct(roas, 1)}</td>
         <td><textarea class="note" data-path="${path}.memo" ${document.body.classList.contains('edit-mode')?'':'disabled'}>${row.memo || ''}</textarea></td>
       </tr>`
     };
@@ -1296,7 +1351,7 @@ function renderP6Daily() {
     const toggleLabel = p6DailyExpanded
       ? `▼ 미입력 ${hiddenCount}일 접기`
       : `▶ 미입력 ${hiddenCount}일 펼쳐보기  (입력 완료 ${filledCount}일)`;
-    html += `<tr class="empty-toggle-row" onclick="toggleP6EmptyDays()"><td colspan="14">${toggleLabel}</td></tr>`;
+    html += `<tr class="empty-toggle-row" onclick="toggleP6EmptyDays()"><td colspan="17">${toggleLabel}</td></tr>`;
   }
   tbody.innerHTML = html;
 }
@@ -1314,11 +1369,13 @@ function computeKpiActual(p, kpi) {
   if (kpi.actualOverride != null) return kpi.actualOverride;
   const a = effectiveActual(p);
   switch (kpi.formula) {
-    case 'introToLimitCVR': return div(a.intro, a.introView);
-    case 'limitToApplyCVR': return div(a.apply, a.intro);
-    case 'introCount':      return a.intro;
-    case 'applyCount':      return a.apply;
-    case 'contractCount':   return a.contract;
+    case 'introToLimitCVR':    return div(a.intro, a.introView);
+    case 'limitToApplyCVR':    return div(a.apply, a.intro);
+    case 'limitToContractCVR': return div(a.contract, a.intro);  // 한도조회 → 약정 CVR
+    case 'introCount':         return a.intro;
+    case 'applyCount':         return a.apply;
+    case 'contractCount':      return a.contract;
+    case 'roas':               return div(a.revenue, a.cost);    // 매출 / 총 비용
     default: return null;
   }
 }
@@ -1385,19 +1442,29 @@ function renderPromoTab(id) {
     return renderKpiCard(kpi, pIdx, kIdx, actual);
   }).join('');
 
-  // dailyLog 가 있는 프로모션 (P5, P6) 은 가승인/올거절·신용대출/대부 sub-breakdown 표시
-  const hasDaily = Array.isArray(p.dailyLog) && p.dailyLog.length > 0;
-  const introSub = hasDaily ? `가승인 ${fmt(a.approve)} · 올거절 ${fmt(a.reject)}` : null;
-  const applySub = hasDaily ? `신용대출 ${fmt(a.creditLoan)} · 대부 ${fmt(a.otherLoan)}` : null;
+  // dailyLog 있는 프로모션의 sub-breakdown
+  // - P5: 가승인/올거절 (approve/reject), 신용대출/대부 (creditLoan/otherLoan)
+  // - P6: 발송수, 매출 (시트 schema)
+  const isP5 = p.id === 'P5';
+  const isP6 = p.id === 'P6';
+  const introSub = isP5 ? `가승인 ${fmt(a.approve)} · 올거절 ${fmt(a.reject)}`
+                 : isP6 ? `발송 ${fmt(a.send)} · 오픈 ${fmt(a.appOpen)}` : null;
+  const applySub = isP5 ? `신용대출 ${fmt(a.creditLoan)} · 대부 ${fmt(a.otherLoan)}`
+                 : isP6 ? `대출 신청 (no breakdown)` : null;
 
+  // D0 매출: P6 는 dailyLog revenue 합 우선, 그 외 p.d0_revenue 정적값
+  const d0Revenue = (a.revenue != null) ? a.revenue : p.d0_revenue;
+  const costLabel = isP6 ? '총 비용 (포인트+발송)' : '지급비용';
+  const introLabel = isP6 ? '오픈 수' : '프로모션 조회';
   const context = `
     <div class="context-grid">
-      ${renderContextItem('프로모션 조회', fmt(a.introView))}
+      ${renderContextItem(introLabel, fmt(a.introView))}
       ${renderContextItem('한도조회', fmt(a.intro), introSub)}
       ${renderContextItem('신청 수', fmt(a.apply), applySub)}
       ${renderContextItem('약정 수', fmt(a.contract))}
-      ${renderContextItem('지급비용', krw(a.cost))}
-      ${p.d0_revenue != null ? renderContextItem('D0 매출', krw(p.d0_revenue)) : ''}
+      ${renderContextItem(costLabel, krw(a.cost))}
+      ${d0Revenue != null ? renderContextItem('D0 매출', krw(d0Revenue)) : ''}
+      ${isP6 && a.contractAmount != null ? renderContextItem('총 약정 금액', krw(a.contractAmount)) : ''}
     </div>`;
 
   return `
@@ -1751,6 +1818,7 @@ function renderAll() {
   renderKPICards();
   renderComparison();
   // P6 (현재 진행중)
+  renderP6Kpis();
   renderP6Targets();
   renderP6Progress();
   renderP6Daily();
