@@ -513,9 +513,6 @@
       <h3 style="font-size:13px; font-weight:600; margin-bottom:10px; color:var(--text-2);">🎯 핵심 KPI</h3>
       <div class="kpi-grid" id="p6-kpis"></div>
 
-      <h3 style="font-size:13px; font-weight:600; margin: 22px 0 10px; color:var(--text-2);">📋 타겟별 베이스라인 (참고)</h3>
-      <div class="kpi-grid" id="p6-targets"></div>
-
       <h3 style="font-size:13px; font-weight:600; margin: 22px 0 10px; color:var(--text-2);">📊 누적 성과</h3>
       <div class="kpi-grid" id="p6-progress"></div>
 
@@ -775,11 +772,6 @@ const DEFAULT_DATA = {
         { round: 1, period: '26.05.28 ~ 26.06.10', status: '진행중' },
         { round: 2, period: '예정', status: '예정' },
         { round: 3, period: '예정', status: '예정' }
-      ],
-      // 두 타겟 — 기획 시트 baseline (참고용)
-      targets: [
-        { name: '신규가입유저', baselineCVR: 0.3993, expectedParticipants: 9000, expectedCost: 9000000, note: '한도조회-신청 baseline' },
-        { name: '타사한도조회유저', baselineCVR: 0.1989, expectedParticipants: 250, expectedCost: 250000, note: '한도조회-신청 baseline' }
       ],
       // 데이터 출처 disclaimer
       dataSourceNote: '* 발송/오픈/한도조회 수/신청 수는 태블로 집계 기준 / * 약정/매출 비용 및 ROAS 는 별도 쿼리로 추출',
@@ -1232,22 +1224,6 @@ function renderP6Kpis() {
     const actual = computeKpiActual(p, kpi);
     return renderKpiCard(kpi, pIdx, kIdx, actual);
   }).join('');
-}
-
-// 타겟 baseline 참고 카드 (2개: 신규/타사)
-function renderP6Targets() {
-  const p = DATA.promotions.find(x => x.id === 'P6');
-  if (!p || !p.targets) return;
-  const container = document.getElementById('p6-targets');
-  if (!container) return;
-  container.innerHTML = p.targets.map(t => `
-    <div class="kpi-card">
-      <div class="label">${t.name}</div>
-      <div class="value" style="font-size:20px;">${pct(t.baselineCVR, 1)} <span style="font-size:12px;color:var(--text-2);font-weight:400;">${t.note}</span></div>
-      <div style="font-size:11px;color:var(--text-2);margin-top:6px;line-height:1.5;">
-        예상 참여 ${fmt(t.expectedParticipants)}명 · 예산 ${krw(t.expectedCost)}
-      </div>
-    </div>`).join('');
 }
 
 // 누적 성과 카드 (funnel + 비용/매출)
@@ -1815,7 +1791,6 @@ function renderAll() {
   renderComparison();
   // P6 (현재 진행중)
   renderP6Kpis();
-  renderP6Targets();
   renderP6Progress();
   renderP6Daily();
   // P5 (완료)
