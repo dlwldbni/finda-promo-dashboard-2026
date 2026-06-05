@@ -1370,12 +1370,46 @@ function rateInfo(rate) {
 }
 
 function renderKpiCard(kpi, pIdx, kIdx, actual) {
-  const rate = div(actual, kpi.goal);
-  const info = rateInfo(rate);
+  const p = DATA.promotions[pIdx];
   const fmtFn = kpi.format === 'pct' ? (v) => pct(v, 1) : fmt;
-  const barW = rate == null ? 0 : Math.min(150, rate * 100);
-  const barColor = rate == null ? '#cbd5e1' : rate >= 1 ? '#10B981' : rate >= 0.7 ? '#F59E0B' : '#EF4444';
   const metric = kpi.shortLabel || kpi.label;
+
+  // 절대 누적 KPI (약정자/신청자/한도조회자 등) + 진행 중 캠페인 → 페이스 기반 평가
+  // (기간 안 찬 상태에서 절대값을 "미달" 로 표현하지 않기 위함)
+  const isCumulativeCount = ['contractCount', 'applyCount', 'introCount'].includes(kpi.formula);
+  const isActive = p && p.status === '진행중';
+
+  let rate, info, achievementLabel, barW, barColor;
+
+  if (isCumulativeCount && isActive && Array.isArray(p.dailyLog) && p.dailyLog.length > 0) {
+    const todayStr = new Date().toISOString().slice(0,10);
+    const totalDays = p.dailyLog.length;
+    const elapsedDays = p.dailyLog.filter(r => r.date <= todayStr).length;
+    const progressRatio = elapsedDays / totalDays;
+    const expected = kpi.goal * progressRatio;
+    const paceRate = (actual != null && expected > 0) ? actual / expected : null;
+
+    rate = paceRate;
+    achievementLabel = '페이스';
+    barW = paceRate == null ? 0 : Math.min(150, paceRate * 100);
+    barColor = paceRate == null ? '#cbd5e1'
+              : paceRate >= 1   ? '#10B981'
+              : paceRate >= 0.8 ? '#F59E0B' : '#94a3b8';
+    const dayLabel = `${elapsedDays}/${totalDays}일차`;
+    if (paceRate == null)         info = { cls: '',     status: `📊 데이터 수집 중 (${dayLabel})` };
+    else if (paceRate >= 1.2)     info = { cls: 'high', status: `🟢 매우 양호 (${dayLabel})` };
+    else if (paceRate >= 1)       info = { cls: 'high', status: `🟢 페이스 양호 (${dayLabel})` };
+    else if (paceRate >= 0.8)     info = { cls: 'mid',  status: `🟠 페이스 근접 (${dayLabel})` };
+    else                          info = { cls: '',     status: `📈 누적 진행 중 (${dayLabel})` };
+  } else {
+    // 일반 KPI (CVR / ROAS 등 비율 기반, 또는 완료된 캠페인의 절대 KPI)
+    rate = div(actual, kpi.goal);
+    achievementLabel = '달성률';
+    info = rateInfo(rate);
+    barW = rate == null ? 0 : Math.min(150, rate * 100);
+    barColor = rate == null ? '#cbd5e1' : rate >= 1 ? '#10B981' : rate >= 0.7 ? '#F59E0B' : '#EF4444';
+  }
+
   return `
     <div class="kpi-large">
       <div class="kpi-name">📌 KPI · ${kpi.label}</div>
@@ -1389,7 +1423,7 @@ function renderKpiCard(kpi, pIdx, kIdx, actual) {
           <div class="kpi-stat-value" style="font-size:24px;">${editableValue(kpi.goal, `promotions.${pIdx}.kpis.${kIdx}.goal`, kpi.format)}</div>
         </div>
         <div class="kpi-stat">
-          <div class="kpi-stat-label">달성률</div>
+          <div class="kpi-stat-label">${achievementLabel}</div>
           <div class="kpi-stat-value ${info.cls}">${rate == null ? '—' : pct(rate, 1)}</div>
           <div class="kpi-stat-status ${info.cls}">${info.status}</div>
         </div>
