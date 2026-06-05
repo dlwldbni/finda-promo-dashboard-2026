@@ -1395,12 +1395,7 @@ function renderKpiCard(kpi, pIdx, kIdx, actual) {
     barColor = paceRate == null ? '#cbd5e1'
               : paceRate >= 1   ? '#10B981'
               : paceRate >= 0.8 ? '#F59E0B' : '#94a3b8';
-    const dayLabel = `${elapsedDays}/${totalDays}일차`;
-    if (paceRate == null)         info = { cls: '',     status: `📊 데이터 수집 중 (${dayLabel})` };
-    else if (paceRate >= 1.2)     info = { cls: 'high', status: `🟢 매우 양호 (${dayLabel})` };
-    else if (paceRate >= 1)       info = { cls: 'high', status: `🟢 페이스 양호 (${dayLabel})` };
-    else if (paceRate >= 0.8)     info = { cls: 'mid',  status: `🟠 페이스 근접 (${dayLabel})` };
-    else                          info = { cls: '',     status: `📈 누적 진행 중 (${dayLabel})` };
+    info = { cls: '', status: '📈 누적 진행중' };
   } else {
     // 일반 KPI (CVR / ROAS 등 비율 기반, 또는 완료된 캠페인의 절대 KPI)
     rate = div(actual, kpi.goal);
