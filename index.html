@@ -505,7 +505,7 @@
       <div class="panel-header">
         <div>
           <div class="title">1차: 26.05.28 ~ 26.06.10 (총 14일) · 2차/3차 예정</div>
-          <div class="desc">핵심 KPI: <strong>한도조회→약정 CVR 7%</strong> · 약정자 137명 이상 · ROAS 400%</div>
+          <div class="desc">핵심 KPI: <strong>한도조회→약정 CVR 7%</strong> · 약정자 196명 이상 · ROAS 400% <span style="color:var(--text-2); font-weight:400;">(약정자 목표 = 원안 137명 × 라이브 10일/7일)</span></div>
         </div>
         <div id="p6-dday-pill" style="font-size:12px; padding:4px 10px; border-radius:4px; background:#fef3c7; color:#92400e; font-weight:600;"></div>
       </div>
@@ -764,7 +764,7 @@ const DEFAULT_DATA = {
       loanCVR: null,
       kpis: [
         { label: '한도조회→약정 CVR', shortLabel: '한도조회→약정 CVR', goal: 0.07, formula: 'limitToContractCVR', format: 'pct' },
-        { label: '약정자 수', shortLabel: '약정자 수', goal: 137, formula: 'contractCount', format: 'int' },
+        { label: '약정자 수', shortLabel: '약정자 수', goal: 196, formula: 'contractCount', format: 'int' },
         { label: 'ROAS', shortLabel: 'ROAS', goal: 4.00, formula: 'roas', format: 'pct' }
       ],
       // 1차 진행중, 2차/3차 예정. 라운드 메타데이터.
@@ -775,7 +775,7 @@ const DEFAULT_DATA = {
       ],
       // 데이터 출처 disclaimer
       dataSourceNote: '* 발송/오픈/한도조회 수/신청 수는 태블로 집계 기준 / * 약정/매출 비용 및 ROAS 는 별도 쿼리로 추출',
-      note: '1차 진행중 · 2차/3차 예정 · KPI: 한도조회→약정 CVR 7%, 약정자 137명+, ROAS 400%',
+      note: '1차 진행중 · 2차/3차 예정 · KPI: 한도조회→약정 CVR 7%, 약정자 196명+ (라이브 10일 환산), ROAS 400%',
       // dailyLog — 시트 컬럼명과 통일된 schema (5/28 ~ 6/10 1차)
       // schema: { date, group, send, appOpen, limitCheck, applyCount, contract, contractAmount, pointCost, sendCost, revenue, memo }
       dailyLog: [
@@ -808,7 +808,7 @@ const DEFAULT_DATA = {
   }
 };
 
-const STORAGE_KEY = 'promo_dashboard_2026_h1_v12';
+const STORAGE_KEY = 'promo_dashboard_2026_h1_v13';
 
 let dataSource = 'default';  // 'remote' | 'local' | 'default'
 
