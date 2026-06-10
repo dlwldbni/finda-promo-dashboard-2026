@@ -539,7 +539,7 @@
               <th class="num">포인트 비용</th>
               <th class="num">발송 비용</th>
               <th class="num">매출</th>
-              <th class="num">객단가</th>
+              <th class="num">평균 수수료</th>
               <th class="num" style="background:#fef3c7;">ROAS</th>
               <th>메모</th>
             </tr>
@@ -1242,7 +1242,7 @@ function renderP6Progress() {
   const ddayEl = document.getElementById('p6-dday-pill');
   if (ddayEl) ddayEl.textContent = today > end ? `종료 (총 ${totalDays}일)` : `D-${remain} (경과 ${elapsed}/${totalDays}일)`;
 
-  const avgPrice = div(a.revenue, a.contract);    // 객단가 = 매출 / 약정수
+  const avgPrice = div(a.revenue, a.contract);    // 평균 수수료 = 매출 / 약정수
 
   const items = [
     { label: '발송 수', value: fmt(a.send) },
@@ -1254,7 +1254,7 @@ function renderP6Progress() {
     { label: '포인트 비용', value: krw(a.pointCost) },
     { label: '발송 비용', value: krw(a.sendCost) },
     { label: '매출 (D0)', value: krw(a.revenue) },
-    { label: '객단가', value: krw(avgPrice) }
+    { label: '평균 수수료', value: krw(avgPrice) }
   ];
   const container = document.getElementById('p6-progress');
   if (!container) return;
@@ -1282,7 +1282,7 @@ function renderP6Daily() {
     const cvrSendOpen = div(row.appOpen, row.send);          // 발송→오픈
     const cvrOpenCheck = div(row.limitCheck, row.appOpen);   // 오픈→조회
     const cvrCheckContract = div(row.contract, row.limitCheck);  // 조회→약정
-    const avgPrice = div(row.revenue, row.contract);         // 객단가
+    const avgPrice = div(row.revenue, row.contract);         // 평균 수수료
     const roas = div(row.revenue, totalCost);                // ROAS
     const path = `promotions.${p6Idx}.dailyLog.${idx}`;
     const filled = isFilled(row);
