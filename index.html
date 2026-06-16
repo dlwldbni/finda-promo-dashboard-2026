@@ -781,7 +781,7 @@ const DEFAULT_DATA = {
           kpis: [
             { label: '한도조회→약정 CVR', shortLabel: '한도조회→약정 CVR', goal: 0.04, formula: 'limitToContractCVR', format: 'pct' },
             { label: '누적 약정 수', shortLabel: '누적 약정 수', goal: 27, formula: 'contractCount', format: 'int' },
-            { label: 'ROAS', shortLabel: 'ROAS', goal: 2.50, formula: 'roas', format: 'pct', reference: true, note: '브랜드메시지 발송비가 별도 집계되는 채널이라 ROAS 분모(총비용)에 발송비가 빠져 과대계상됩니다. 250% 목표 대비 달성 여부는 발송비 별도 정산 후 판단하세요.' }
+            { label: 'ROAS', shortLabel: 'ROAS', goal: 2.50, formula: 'roas', format: 'pct', reference: true }
           ]
         }
       ],
@@ -1307,8 +1307,7 @@ function renderP6Header() {
     const cvr = k[0] ? pct(k[0].goal, 0) : '—';
     const cnt = k[1] ? k[1].goal : '—';
     const roas = k[2] ? pct(k[2].goal, 0) : '—';
-    const roasRef = k[2] && k[2].reference ? '(참고)' : '';
-    desc.innerHTML = `핵심 KPI: <strong>한도조회→약정 CVR ${cvr}</strong> · 누적 약정 ${cnt}건 이상 · ROAS ${roas}${roasRef}`;
+    desc.innerHTML = `핵심 KPI: <strong>한도조회→약정 CVR ${cvr}</strong> · 누적 약정 ${cnt}건 이상 · ROAS ${roas}`;
   }
 }
 
@@ -1497,18 +1496,14 @@ function renderKpiCard(kpi, pIdx, kIdx, actual, opts = {}) {
   if (kpi.reference) {
     return `
     <div class="kpi-large">
-      <div class="kpi-name">📌 KPI · ${kpi.label} <span class="kpi-tag" style="background:#e2e8f0;color:#475569;">참고 · 달성률 미산정</span></div>
+      <div class="kpi-name">📌 KPI · ${kpi.label}</div>
       <div class="kpi-row">
         <div class="kpi-stat">
-          <div class="kpi-stat-label">${metric} (실적)</div>
+          <div class="kpi-stat-label">${metric} (현재)</div>
           <div class="kpi-stat-value primary">${fmtFn(actual)}</div>
-        </div>
-        <div class="kpi-stat">
-          <div class="kpi-stat-label">목표 ${metric}</div>
-          <div class="kpi-stat-value" style="font-size:24px;">${editableValue(kpi.goal, goalPath, kpi.format)}</div>
+          <div style="font-size:12px;color:var(--text-2);margin-top:6px;">목표 ${editableValue(kpi.goal, goalPath, kpi.format)}</div>
         </div>
       </div>
-      ${kpi.note ? `<div style="font-size:11px;color:#9a3412;margin-top:10px;line-height:1.5;background:#fff7ed;border-left:3px solid #fb923c;padding:7px 10px;border-radius:4px;">⚠ ${kpi.note}</div>` : ''}
     </div>`;
   }
 
