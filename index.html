@@ -500,12 +500,14 @@
 
   <!-- 🔥 P6 타사한도조회자 약정 프로모션 진행 추적 (현재 진행중) -->
   <section class="block">
-    <h2 class="section-title">🔥 타사한도조회자 대상 약정 프로모션 진행 추적 <span class="badge" style="background:#fcd34d;color:#92400e;">진행중 · 1차</span></h2>
+    <h2 class="section-title">🔥 타사한도조회자 대상 약정 프로모션 진행 추적 <span id="p6-status-badge" class="badge" style="background:#fcd34d;color:#92400e;">진행중 · 2차</span></h2>
     <div class="panel">
+      <!-- 라운드 탭 (1차 / 2차) — JS 렌더 -->
+      <div class="tab-bar" id="p6-round-tabs" style="margin-bottom:16px;"></div>
       <div class="panel-header">
         <div>
-          <div class="title">1차: 26.05.28 ~ 26.06.10 (총 14일) · 2차/3차 예정</div>
-          <div class="desc">핵심 KPI: <strong>한도조회→약정 CVR 7%</strong> · 약정자 137명 이상 · ROAS 400%</div>
+          <div class="title" id="p6-round-title">—</div>
+          <div class="desc" id="p6-round-desc">—</div>
         </div>
         <div id="p6-dday-pill" style="font-size:12px; padding:4px 10px; border-radius:4px; background:#fef3c7; color:#92400e; font-weight:600;"></div>
       </div>
@@ -516,7 +518,7 @@
       <h3 style="font-size:13px; font-weight:600; margin: 22px 0 10px; color:var(--text-2);">📊 누적 성과</h3>
       <div class="kpi-grid" id="p6-progress"></div>
 
-      <h3 style="font-size:13px; font-weight:600; margin: 22px 0 10px; color:var(--text-2);">📅 일자별 누적 로그 (시트 자동 갱신 평일 11:15)</h3>
+      <h3 style="font-size:13px; font-weight:600; margin: 22px 0 10px; color:var(--text-2);">📅 일자별 누적 로그 (시트 자동 갱신 매일 11:15)</h3>
       <div style="font-size:11px; color:var(--text-2); margin-bottom:10px; padding:8px 12px; background:#f8fafc; border-left:3px solid #cbd5e1; border-radius:4px; line-height:1.6;">
         * 발송 / 오픈 / 한도조회 수 / 신청 수는 <strong>태블로 집계 기준</strong><br>
         * 약정 / 매출 비용 및 ROAS 는 <strong>별도 쿼리</strong>로 추출
@@ -618,7 +620,7 @@
   <section class="block">
     <h2 class="section-title">2. KPI 달성률 <span class="badge">프로모션별</span></h2>
     <div class="panel">
-      <div class="tab-bar">
+      <div class="tab-bar" id="kpi-tab-bar">
         <button class="tab active" onclick="switchKpiTab('p6', event)">🔥 타사한도조회자 약정 <span class="kpi-tag" style="background:#fcd34d;color:#92400e;">진행중</span></button>
         <button class="tab" onclick="switchKpiTab('p1', event)">🎴 신년 행운카드</button>
         <button class="tab" onclick="switchKpiTab('p2', event)">🧧 세뱃돈</button>
@@ -755,28 +757,38 @@ const DEFAULT_DATA = {
       id: 'P6', month: '5-6월',
       name: '타사한도조회자 대상 약정 프로모션',
       channel: '브랜드메시지 + Push',
-      period: '26.05.28 ~ 26.06.10 (1차)',
+      period: '26.05.28 ~ 26.06.21 (1차·2차)',
       status: '진행중',
       goal: { send: null, introView: null, intro: null, apply: null, contract: null, cost: 9250000 },
       actual: { send: null, introView: null, intro: null, apply: null, contract: null, cost: null },
       baseline: { intro: null, contract: null },
       d0_revenue: null,  // dailyLog.revenue 합산으로 자동 산출
       loanCVR: null,
-      kpis: [
-        { label: '한도조회→약정 CVR', shortLabel: '한도조회→약정 CVR', goal: 0.07, formula: 'limitToContractCVR', format: 'pct' },
-        { label: '약정자 수', shortLabel: '약정자 수', goal: 137, formula: 'contractCount', format: 'int' },
-        { label: 'ROAS', shortLabel: 'ROAS', goal: 4.00, formula: 'roas', format: 'pct' }
-      ],
-      // 1차 진행중, 2차/3차 예정. 라운드 메타데이터.
+      // 라운드별 메타데이터 — 진행 추적 섹션의 1차/2차 탭이 이 설정을 사용 (기간·KPI 라운드별 상이)
       rounds: [
-        { round: 1, period: '26.05.28 ~ 26.06.10', status: '진행중' },
-        { round: 2, period: '예정', status: '예정' },
-        { round: 3, period: '예정', status: '예정' }
+        {
+          round: 1, group: '1차', period: '26.05.28 ~ 26.06.10',
+          start: '2026-05-28', end: '2026-06-10', days: 14, status: '완료',
+          kpis: [
+            { label: '한도조회→약정 CVR', shortLabel: '한도조회→약정 CVR', goal: 0.07, formula: 'limitToContractCVR', format: 'pct' },
+            { label: '약정자 수', shortLabel: '약정자 수', goal: 137, formula: 'contractCount', format: 'int' },
+            { label: 'ROAS', shortLabel: 'ROAS', goal: 4.00, formula: 'roas', format: 'pct' }
+          ]
+        },
+        {
+          round: 2, group: '2차', period: '26.06.15 ~ 26.06.21',
+          start: '2026-06-15', end: '2026-06-21', days: 7, status: '진행중',
+          kpis: [
+            { label: '한도조회→약정 CVR', shortLabel: '한도조회→약정 CVR', goal: 0.04, formula: 'limitToContractCVR', format: 'pct' },
+            { label: '누적 약정 수', shortLabel: '누적 약정 수', goal: 27, formula: 'contractCount', format: 'int' },
+            { label: 'ROAS', shortLabel: 'ROAS', goal: 2.50, formula: 'roas', format: 'pct' }
+          ]
+        }
       ],
       // 데이터 출처 disclaimer
       dataSourceNote: '* 발송/오픈/한도조회 수/신청 수는 태블로 집계 기준 / * 약정/매출 비용 및 ROAS 는 별도 쿼리로 추출',
-      note: '1차 진행중 · 2차/3차 예정 · KPI: 한도조회→약정 CVR 7%, 약정자 137명+, ROAS 400%',
-      // dailyLog — 시트 컬럼명과 통일된 schema (5/28 ~ 6/10 1차)
+      note: '1차 완료 · 2차 진행중(6/15~6/21) · 2차 KPI: 한도조회→약정 CVR 4%, 누적 약정 27건, ROAS 250%',
+      // dailyLog — 시트 컬럼명과 통일된 schema. group('1차'/'2차') 로 라운드 구분.
       // schema: { date, group, send, appOpen, limitCheck, applyCount, contract, contractAmount, pointCost, sendCost, revenue, memo }
       dailyLog: [
         { date: '2026-05-28', group: '1차', send: 2213, appOpen: 32, limitCheck: 23, applyCount: 6, contract: 0, contractAmount: 0, pointCost: 0, sendCost: 49793, revenue: 0, memo: '' },
@@ -787,7 +799,14 @@ const DEFAULT_DATA = {
         { date: '2026-06-05', group: '1차', send: 21220, appOpen: 300, limitCheck: 181, applyCount: 37, contract: 18, contractAmount: 255300000, pointCost: 200300, sendCost: 477450, revenue: 3399345, memo: '' },
         { date: '2026-06-08', group: '1차', send: 35030, appOpen: 330, limitCheck: 171, applyCount: 46, contract: 21, contractAmount: 259100000, pointCost: 217700, sendCost: 788175, revenue: 2689424, memo: '' },
         { date: '2026-06-09', group: '1차', send: 22022, appOpen: 289, limitCheck: 151, applyCount: 37, contract: 10, contractAmount: 68500000, pointCost: 68500, sendCost: 495495, revenue: 830189, memo: '' },
-        { date: '2026-06-10', group: '1차', send: 21684, appOpen: 377, limitCheck: 222, applyCount: 51, contract: 16, contractAmount: 151300000, pointCost: 147800, sendCost: 487890, revenue: 1749527, memo: '' }
+        { date: '2026-06-10', group: '1차', send: 21684, appOpen: 377, limitCheck: 222, applyCount: 51, contract: 16, contractAmount: 151300000, pointCost: 147800, sendCost: 487890, revenue: 1749527, memo: '' },
+        { date: '2026-06-15', group: '2차', send: null, appOpen: null, limitCheck: null, applyCount: null, contract: null, contractAmount: null, pointCost: null, sendCost: null, revenue: null, memo: '' },
+        { date: '2026-06-16', group: '2차', send: null, appOpen: null, limitCheck: null, applyCount: null, contract: null, contractAmount: null, pointCost: null, sendCost: null, revenue: null, memo: '' },
+        { date: '2026-06-17', group: '2차', send: null, appOpen: null, limitCheck: null, applyCount: null, contract: null, contractAmount: null, pointCost: null, sendCost: null, revenue: null, memo: '' },
+        { date: '2026-06-18', group: '2차', send: null, appOpen: null, limitCheck: null, applyCount: null, contract: null, contractAmount: null, pointCost: null, sendCost: null, revenue: null, memo: '' },
+        { date: '2026-06-19', group: '2차', send: null, appOpen: null, limitCheck: null, applyCount: null, contract: null, contractAmount: null, pointCost: null, sendCost: null, revenue: null, memo: '' },
+        { date: '2026-06-20', group: '2차', send: null, appOpen: null, limitCheck: null, applyCount: null, contract: null, contractAmount: null, pointCost: null, sendCost: null, revenue: null, memo: '' },
+        { date: '2026-06-21', group: '2차', send: null, appOpen: null, limitCheck: null, applyCount: null, contract: null, contractAmount: null, pointCost: null, sendCost: null, revenue: null, memo: '' }
       ]
     }
   ],
@@ -808,7 +827,7 @@ const DEFAULT_DATA = {
   }
 };
 
-const STORAGE_KEY = 'promo_dashboard_2026_h1_v12';
+const STORAGE_KEY = 'promo_dashboard_2026_h1_v13';
 
 let dataSource = 'default';  // 'remote' | 'local' | 'default'
 
@@ -937,13 +956,15 @@ function mayTotal() { return promotionDailyTotal(DATA.promotions.find(p => p.id 
 const mayLatest = mayTotal;
 
 // P6 — 시트 컬럼명 schema. 새 필드 + 기존 인터페이스 alias 둘 다 반환.
-function p6Total() {
+function p6Total(group) {
   const p = DATA.promotions.find(x => x.id === 'P6');
   const empty = { send: null, introView: null, intro: null, apply: null, contract: null, cost: null, appOpen: null, limitCheck: null, applyCount: null, contractAmount: null, pointCost: null, sendCost: null, revenue: null };
   if (!p || !p.dailyLog) return empty;
+  // group 인자가 있으면 해당 라운드(1차/2차)만 합산, 없으면 전체(프로그램 누적)
+  const rows = group ? p.dailyLog.filter(r => (r.group || '1차') === group) : p.dailyLog;
   const t = { send: 0, appOpen: 0, limitCheck: 0, applyCount: 0, contract: 0, contractAmount: 0, pointCost: 0, sendCost: 0, revenue: 0 };
   const has = {};
-  for (const row of p.dailyLog) {
+  for (const row of rows) {
     for (const k of Object.keys(t)) {
       if (row[k] != null && row[k] !== '' && !isNaN(row[k])) {
         t[k] += Number(row[k]);
@@ -1211,32 +1232,119 @@ function toggleEmptyDays() {
 // 시트 컬럼 schema: send, appOpen, limitCheck, applyCount, contract, contractAmount, pointCost, sendCost, revenue
 // ─────────────────────────────────────────────────────────────
 let p6DailyExpanded = false;
+let p6Round = '2차';  // 진행 추적 섹션에서 현재 선택된 라운드. init()에서 defaultP6Round()로 설정.
 
-// 핵심 KPI 카드 (3개: CVR / 약정자 / ROAS)
+// 라운드 메타 헬퍼 ─────────────────────────────────────────
+function p6Rounds() {
+  const p = DATA.promotions.find(x => x.id === 'P6');
+  return (p && Array.isArray(p.rounds)) ? p.rounds : [];
+}
+function p6VisibleRounds() {
+  // '예정' 상태(아직 시작 안 한) 라운드는 탭에서 숨김
+  return p6Rounds().filter(r => r.status !== '예정');
+}
+function p6RoundConfig() {
+  return p6Rounds().find(r => r.group === p6Round) || p6VisibleRounds()[0] || p6Rounds()[0];
+}
+// 기본 라운드 = 오늘 기준 이미 시작한 라운드 중 가장 최근 것 (해당 기간엔 2차가 디폴트)
+function defaultP6Round() {
+  const rounds = p6VisibleRounds();
+  if (!rounds.length) return '1차';
+  const today = new Date().toISOString().slice(0,10);
+  let pick = rounds[0];
+  for (const r of rounds) { if (r.start <= today) pick = r; }
+  return pick.group;
+}
+
+// 라운드 탭 (1차 / 2차) — KPI 탭바와 동일 룩, '#p6-round-tabs' 스코프
+function renderP6RoundTabs() {
+  const bar = document.getElementById('p6-round-tabs');
+  if (!bar) return;
+  bar.innerHTML = p6VisibleRounds().map(r => {
+    const active = r.group === p6Round ? ' active' : '';
+    const tag = r.status === '진행중'
+      ? '<span class="kpi-tag" style="background:#fcd34d;color:#92400e;">진행중</span>'
+      : '<span class="kpi-tag" style="background:#e2e8f0;color:#475569;">완료</span>';
+    return `<button class="tab${active}" onclick="switchP6Round('${r.group}', event)">${r.group} ${tag}</button>`;
+  }).join('');
+}
+
+function switchP6Round(group, ev) {
+  p6Round = group;
+  if (ev && ev.currentTarget) {
+    document.querySelectorAll('#p6-round-tabs .tab').forEach(t => t.classList.remove('active'));
+    ev.currentTarget.classList.add('active');
+  }
+  renderP6Header();
+  renderP6Kpis();
+  renderP6Progress();
+  renderP6Daily();
+  // 하단 'KPI 달성률' P6 탭도 동일 라운드로 동기화
+  const tabP6 = document.getElementById('tab-p6');
+  if (tabP6) tabP6.innerHTML = renderPromoTab('P6');
+  // 편집 모드 재적용
+  const isEdit = document.body.classList.contains('edit-mode');
+  document.querySelectorAll('.editable').forEach(c => c.contentEditable = isEdit);
+  document.querySelectorAll('textarea.note').forEach(t => t.disabled = !isEdit);
+}
+
+// 선택 라운드에 맞춰 헤더(뱃지/제목/KPI 요약) 갱신
+function renderP6Header() {
+  const r = p6RoundConfig();
+  if (!r) return;
+  const badge = document.getElementById('p6-status-badge');
+  const title = document.getElementById('p6-round-title');
+  const desc  = document.getElementById('p6-round-desc');
+  if (badge) {
+    const active = r.status === '진행중';
+    badge.textContent = `${r.status} · ${r.group}`;
+    badge.style.background = active ? '#fcd34d' : '#e2e8f0';
+    badge.style.color = active ? '#92400e' : '#475569';
+  }
+  if (title) title.textContent = `${r.group}: ${r.period} (총 ${r.days}일)`;
+  if (desc) {
+    const k = r.kpis || [];
+    const cvr = k[0] ? pct(k[0].goal, 0) : '—';
+    const cnt = k[1] ? k[1].goal : '—';
+    const roas = k[2] ? pct(k[2].goal, 0) : '—';
+    desc.innerHTML = `핵심 KPI: <strong>한도조회→약정 CVR ${cvr}</strong> · 누적 약정 ${cnt}건 이상 · ROAS ${roas}`;
+  }
+}
+
+// 핵심 KPI 카드 (3개: CVR / 약정 / ROAS) — 선택 라운드 기준
 function renderP6Kpis() {
   const p = DATA.promotions.find(x => x.id === 'P6');
-  if (!p || !p.kpis) return;
+  const r = p6RoundConfig();
+  if (!p || !r || !r.kpis) return;
   const container = document.getElementById('p6-kpis');
   if (!container) return;
   const pIdx = DATA.promotions.findIndex(x => x.id === 'P6');
-  container.innerHTML = p.kpis.map((kpi, kIdx) => {
-    const actual = computeKpiActual(p, kpi);
-    return renderKpiCard(kpi, pIdx, kIdx, actual);
+  const rIdx = p.rounds.findIndex(x => x.group === r.group);
+  const a = p6Total(r.group);
+  const roundLog = p.dailyLog.filter(x => (x.group || '1차') === r.group);
+  container.innerHTML = r.kpis.map((kpi, kIdx) => {
+    const actual = computeKpiActual(p, kpi, a);
+    return renderKpiCard(kpi, pIdx, kIdx, actual, {
+      dailyLog: roundLog,
+      isActive: r.status === '진행중',
+      goalPath: `promotions.${pIdx}.rounds.${rIdx}.kpis.${kIdx}.goal`
+    });
   }).join('');
 }
 
 // 누적 성과 카드 (funnel + 비용/매출)
 function renderP6Progress() {
   const p6 = DATA.promotions.find(x => x.id === 'P6');
-  if (!p6) return;
-  const a = p6Total();
+  const r = p6RoundConfig();
+  if (!p6 || !r) return;
+  const a = p6Total(r.group);
 
-  // D-day 계산
+  // D-day 계산 (선택 라운드 기준)
   const today = new Date();
   today.setHours(0,0,0,0);
-  const start = new Date('2026-05-28');
-  const end = new Date('2026-06-10');
-  const totalDays = 14;
+  const start = new Date(r.start);
+  const end = new Date(r.end);
+  const totalDays = r.days;
   const elapsed = Math.min(totalDays, Math.max(0, Math.floor((today - start) / 86400000) + 1));
   const remain = Math.max(0, Math.floor((end - today) / 86400000));
   const ddayEl = document.getElementById('p6-dday-pill');
@@ -1276,7 +1384,12 @@ function renderP6Daily() {
   const isFilled = (r) => r.send != null || r.appOpen != null || r.limitCheck != null || r.applyCount != null || r.contract != null;
   const todayStr = new Date().toISOString().slice(0,10);
 
-  const rendered = p6.dailyLog.map((row, idx) => {
+  // 선택 라운드(p6Round)의 행만 — 단, path 는 전체 dailyLog 의 원본 idx 유지
+  const roundRows = p6.dailyLog
+    .map((row, idx) => ({ row, idx }))
+    .filter(o => (o.row.group || '1차') === p6Round);
+
+  const rendered = roundRows.map(({ row, idx }) => {
     const totalCost = (row.pointCost != null || row.sendCost != null)
       ? Number(row.pointCost || 0) + Number(row.sendCost || 0) : null;
     const cvrSendOpen = div(row.appOpen, row.send);          // 발송→오픈
@@ -1336,9 +1449,9 @@ function toggleP6EmptyDays() {
 }
 
 // 각 KPI의 실적값 계산 — actualOverride 우선, 없으면 formula로 계산
-function computeKpiActual(p, kpi) {
+function computeKpiActual(p, kpi, aOverride) {
   if (kpi.actualOverride != null) return kpi.actualOverride;
-  const a = effectiveActual(p);
+  const a = aOverride || effectiveActual(p);
   switch (kpi.formula) {
     case 'introToLimitCVR':    return div(a.intro, a.introView);
     case 'limitToApplyCVR':    return div(a.apply, a.intro);
@@ -1369,22 +1482,26 @@ function rateInfo(rate) {
   return { cls: 'low', status: '🔴 미달' };
 }
 
-function renderKpiCard(kpi, pIdx, kIdx, actual) {
+function renderKpiCard(kpi, pIdx, kIdx, actual, opts = {}) {
   const p = DATA.promotions[pIdx];
   const fmtFn = kpi.format === 'pct' ? (v) => pct(v, 1) : fmt;
   const metric = kpi.shortLabel || kpi.label;
 
+  // 라운드별 오버라이드 (P6 1차/2차) — 없으면 프로모션 기본값
+  const paceLog = opts.dailyLog || p.dailyLog;
+  const goalPath = opts.goalPath || `promotions.${pIdx}.kpis.${kIdx}.goal`;
+
   // 절대 누적 KPI (약정자/신청자/한도조회자 등) + 진행 중 캠페인 → 페이스 기반 평가
   // (기간 안 찬 상태에서 절대값을 "미달" 로 표현하지 않기 위함)
   const isCumulativeCount = ['contractCount', 'applyCount', 'introCount'].includes(kpi.formula);
-  const isActive = p && p.status === '진행중';
+  const isActive = opts.isActive != null ? opts.isActive : (p && p.status === '진행중');
 
   let rate, info, achievementLabel, barW, barColor;
 
-  if (isCumulativeCount && isActive && Array.isArray(p.dailyLog) && p.dailyLog.length > 0) {
+  if (isCumulativeCount && isActive && Array.isArray(paceLog) && paceLog.length > 0) {
     const todayStr = new Date().toISOString().slice(0,10);
-    const totalDays = p.dailyLog.length;
-    const elapsedDays = p.dailyLog.filter(r => r.date <= todayStr).length;
+    const totalDays = paceLog.length;
+    const elapsedDays = paceLog.filter(r => r.date <= todayStr).length;
     const progressRatio = elapsedDays / totalDays;
     const expected = kpi.goal * progressRatio;
     const paceRate = (actual != null && expected > 0) ? actual / expected : null;
@@ -1415,7 +1532,7 @@ function renderKpiCard(kpi, pIdx, kIdx, actual) {
         </div>
         <div class="kpi-stat">
           <div class="kpi-stat-label">목표 ${metric}</div>
-          <div class="kpi-stat-value" style="font-size:24px;">${editableValue(kpi.goal, `promotions.${pIdx}.kpis.${kIdx}.goal`, kpi.format)}</div>
+          <div class="kpi-stat-value" style="font-size:24px;">${editableValue(kpi.goal, goalPath, kpi.format)}</div>
         </div>
         <div class="kpi-stat">
           <div class="kpi-stat-label">${achievementLabel}</div>
@@ -1435,18 +1552,26 @@ function renderPromoTab(id) {
   const pIdx = DATA.promotions.findIndex(x => x.id === id);
   if (pIdx === -1) return '';
   const p = DATA.promotions[pIdx];
-  const a = effectiveActual(p);
-
-  const kpiHtml = (p.kpis || []).map((kpi, kIdx) => {
-    const actual = computeKpiActual(p, kpi);
-    return renderKpiCard(kpi, pIdx, kIdx, actual);
-  }).join('');
-
-  // dailyLog 있는 프로모션의 sub-breakdown
-  // - P5: 가승인/올거절 (approve/reject), 신용대출/대부 (creditLoan/otherLoan)
-  // - P6: 발송수, 매출 (시트 schema)
   const isP5 = p.id === 'P5';
   const isP6 = p.id === 'P6';
+
+  // P6 는 선택 라운드(1차/2차) 기준으로 KPI·참고수치 계산
+  const round = isP6 ? p6RoundConfig() : null;
+  const a = isP6 ? p6Total(round.group) : effectiveActual(p);
+  const metaPeriod = isP6 && round ? `${round.group} ${round.period}` : p.period;
+
+  const kpiList = isP6 ? (round.kpis || []) : (p.kpis || []);
+  const rIdx = isP6 ? p.rounds.findIndex(x => x.group === round.group) : -1;
+  const roundLog = isP6 ? p.dailyLog.filter(x => (x.group || '1차') === round.group) : null;
+  const kpiHtml = kpiList.map((kpi, kIdx) => {
+    const actual = computeKpiActual(p, kpi, isP6 ? a : undefined);
+    const cardOpts = isP6 ? {
+      dailyLog: roundLog,
+      isActive: round.status === '진행중',
+      goalPath: `promotions.${pIdx}.rounds.${rIdx}.kpis.${kIdx}.goal`
+    } : {};
+    return renderKpiCard(kpi, pIdx, kIdx, actual, cardOpts);
+  }).join('');
   const introSub = isP5 ? `가승인 ${fmt(a.approve)} · 올거절 ${fmt(a.reject)}`
                  : isP6 ? `발송 ${fmt(a.send)} · 오픈 ${fmt(a.appOpen)}` : null;
   const applySub = isP5 ? `신용대출 ${fmt(a.creditLoan)} · 대부 ${fmt(a.otherLoan)}`
@@ -1471,7 +1596,7 @@ function renderPromoTab(id) {
     <div class="promo-tab-header">
       <h3>${p.name}</h3>
       <div class="meta">
-        <span>${p.period}</span><span class="dot"></span>
+        <span>${metaPeriod}</span><span class="dot"></span>
         <span>${p.channel}</span><span class="dot"></span>
         ${statusBadge(p.status)}
       </div>
@@ -1633,7 +1758,7 @@ function renderKpiTabs() {
 }
 
 function switchKpiTab(which, ev) {
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('#kpi-tab-bar .tab').forEach(t => t.classList.remove('active'));
   document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
   if (ev && ev.currentTarget) ev.currentTarget.classList.add('active');
   document.getElementById('tab-' + which).classList.add('active');
@@ -1817,7 +1942,9 @@ function handleNoteEdit(e) {
 function renderAll() {
   renderKPICards();
   renderComparison();
-  // P6 (현재 진행중)
+  // P6 (현재 진행중) — 1차/2차 라운드 탭
+  renderP6RoundTabs();
+  renderP6Header();
   renderP6Kpis();
   renderP6Progress();
   renderP6Daily();
@@ -1888,6 +2015,7 @@ document.addEventListener('input', handleNoteEdit, true);
 // Async 초기화 — data.json 우선 fetch 후 렌더
 (async function init() {
   DATA = await loadData();
+  p6Round = defaultP6Round();  // 기간 중에는 2차가 기본 노출
   renderAll();
   showDataSourceBanner();
 })();
