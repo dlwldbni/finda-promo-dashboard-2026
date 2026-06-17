@@ -781,7 +781,9 @@ const DEFAULT_DATA = {
           kpis: [
             { label: '한도조회→약정 CVR', shortLabel: '한도조회→약정 CVR', goal: 0.04, formula: 'limitToContractCVR', format: 'pct' },
             { label: '누적 약정 수', shortLabel: '누적 약정 수', goal: 27, formula: 'contractCount', format: 'int' },
-            { label: 'ROAS', shortLabel: 'ROAS', goal: 2.50, formula: 'roas', format: 'pct', reference: true }
+            { label: 'CPA (건당 포인트)', shortLabel: 'CPA', formula: 'cpaPoint', format: 'krw', reference: true, hint: '포인트비용 ÷ 약정 · 낮을수록 좋음' },
+            { label: '순이익 (수수료−포인트)', shortLabel: '순이익', formula: 'netProfit', format: 'krw', reference: true, hint: '수수료 매출 − 포인트비용' }
+            // ※ 푸시 채널이라 발송비 0 → ROAS는 구조적으로 과대(1000%+)라 KPI에서 제외. 효율은 CPA·순이익으로 측정.
           ]
         }
       ],
@@ -1303,11 +1305,12 @@ function renderP6Header() {
   }
   if (title) title.textContent = `${r.group}: ${r.period} (총 ${r.days}일)`;
   if (desc) {
-    const k = r.kpis || [];
-    const cvr = k[0] ? pct(k[0].goal, 0) : '—';
-    const cnt = k[1] ? k[1].goal : '—';
-    const roas = k[2] ? pct(k[2].goal, 0) : '—';
-    desc.innerHTML = `핵심 KPI: <strong>한도조회→약정 CVR ${cvr}</strong> · 누적 약정 ${cnt}건 이상 · ROAS ${roas}`;
+    // 목표가 설정된 KPI만 요약에 표기 (CPA·순이익 등 목표 없는 참고지표는 생략)
+    const parts = (r.kpis || []).filter(k => k.goal != null).map(k => {
+      const g = k.format === 'pct' ? pct(k.goal, 0) : k.format === 'krw' ? krw(k.goal) : `${k.goal}`;
+      return `${k.shortLabel || k.label} ${g}`;
+    });
+    desc.innerHTML = '핵심 KPI: ' + parts.map((p, i) => i === 0 ? `<strong>${p}</strong>` : p).join(' · ');
   }
 }
 
@@ -1460,6 +1463,10 @@ function computeKpiActual(p, kpi, aOverride) {
     case 'applyCount':         return a.apply;
     case 'contractCount':      return a.contract;
     case 'roas':               return div(a.revenue, a.cost);    // 매출 / 총 비용
+    case 'cpaPoint':           return div(a.pointCost, a.contract);  // 약정 1건당 포인트 비용 (낮을수록 좋음)
+    case 'netProfit':          // 순이익 = 수수료 매출 − 포인트 비용
+      if (a.revenue == null && a.pointCost == null) return null;
+      return (Number(a.revenue) || 0) - (Number(a.pointCost) || 0);
     default: return null;
   }
 }
@@ -1484,24 +1491,31 @@ function rateInfo(rate) {
 
 function renderKpiCard(kpi, pIdx, kIdx, actual, opts = {}) {
   const p = DATA.promotions[pIdx];
-  const fmtFn = kpi.format === 'pct' ? (v) => pct(v, 1) : fmt;
+  const fmtFn = kpi.format === 'pct' ? (v) => pct(v, 1) : kpi.format === 'krw' ? krw : fmt;
   const metric = kpi.shortLabel || kpi.label;
 
   // 라운드별 오버라이드 (P6 1차/2차) — 없으면 프로모션 기본값
   const paceLog = opts.dailyLog || p.dailyLog;
   const goalPath = opts.goalPath || `promotions.${pIdx}.kpis.${kIdx}.goal`;
 
-  // 참고 지표 (reference) — 달성률/진척바 없이 실적값만 + 주의 문구.
-  // (예: 2차 ROAS — 발송비가 별도 집계라 총비용 분모가 불완전 → 달성률 산정 부적절)
+  // 참고 지표 (reference) — 달성률/진척바 없이 실적값만.
+  // (예: CPA·순이익 — 목표 미설정, 효율 절대값 자체를 봄)
   if (kpi.reference) {
+    // 목표가 있으면 '목표 X', 없으면 hint(계산식) 캡션 표시
+    const caption = kpi.goal != null
+      ? `목표 ${editableValue(kpi.goal, goalPath, kpi.format)}`
+      : (kpi.hint || '');
+    // 순이익은 양수 초록 / 음수 빨강
+    const valColor = kpi.formula === 'netProfit' && actual != null
+      ? (actual >= 0 ? 'color:#047857;' : 'color:#b91c1c;') : '';
     return `
     <div class="kpi-large">
       <div class="kpi-name">📌 KPI · ${kpi.label}</div>
       <div class="kpi-row">
         <div class="kpi-stat">
           <div class="kpi-stat-label">${metric} (현재)</div>
-          <div class="kpi-stat-value primary">${fmtFn(actual)}</div>
-          <div style="font-size:12px;color:var(--text-2);margin-top:6px;">목표 ${editableValue(kpi.goal, goalPath, kpi.format)}</div>
+          <div class="kpi-stat-value primary" style="${valColor}">${fmtFn(actual)}</div>
+          ${caption ? `<div style="font-size:12px;color:var(--text-2);margin-top:6px;">${caption}</div>` : ''}
         </div>
       </div>
     </div>`;
