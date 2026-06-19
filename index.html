@@ -781,7 +781,7 @@ const DEFAULT_DATA = {
           kpis: [
             { label: '한도조회→약정 CVR', shortLabel: '한도조회→약정 CVR', goal: 0.04, formula: 'limitToContractCVR', format: 'pct' },
             { label: '누적 약정 수', shortLabel: '누적 약정 수', goal: 27, formula: 'contractCount', format: 'int' },
-            { label: 'CPA (건당 포인트)', shortLabel: 'CPA', formula: 'cpaPoint', format: 'krw', reference: true, hint: '포인트비용 ÷ 약정 · 낮을수록 좋음' },
+            { label: '약정 1건당 포인트 비용', shortLabel: '약정당 포인트', formula: 'cpaPoint', format: 'krw', reference: true, hint: '총 포인트비용 ÷ 약정 수 · 낮을수록 좋음' },
             { label: '순이익 (수수료−포인트)', shortLabel: '순이익', formula: 'netProfit', format: 'krw', reference: true, hint: '수수료 매출 − 포인트비용' }
             // ※ 푸시 채널이라 발송비 0 → ROAS는 구조적으로 과대(1000%+)라 KPI에서 제외. 효율은 CPA·순이익으로 측정.
           ]
