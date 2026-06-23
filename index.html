@@ -776,8 +776,8 @@ const DEFAULT_DATA = {
           ]
         },
         {
-          round: 2, group: '2차', period: '26.06.15 ~ 26.06.21',
-          start: '2026-06-15', end: '2026-06-21', days: 7, status: '진행중',
+          round: 2, group: '2차', period: '26.06.15 ~ 26.06.22', // 주말 6/20~21 미운영, 6/22 운영
+          start: '2026-06-15', end: '2026-06-22', days: 8, status: '완료',
           kpis: [
             { label: '한도조회→약정 CVR', shortLabel: '한도조회→약정 CVR', goal: 0.04, formula: 'limitToContractCVR', format: 'pct' },
             { label: '누적 약정 수', shortLabel: '누적 약정 수', goal: 27, formula: 'contractCount', format: 'int' },
@@ -806,9 +806,8 @@ const DEFAULT_DATA = {
         { date: '2026-06-16', group: '2차', send: 13353, appOpen: 87, limitCheck: 25, applyCount: 8, contract: 2, contractAmount: 20000000, pointCost: 20000, sendCost: 0, revenue: 239800, memo: '' },
         { date: '2026-06-17', group: '2차', send: 11021, appOpen: 72, limitCheck: null, applyCount: null, contract: 1, contractAmount: 3000000, pointCost: 3000, sendCost: 0, revenue: 37500, memo: '' },
         { date: '2026-06-18', group: '2차', send: 10886, appOpen: 61, limitCheck: null, applyCount: null, contract: 2, contractAmount: 7300000, pointCost: 7300, sendCost: 0, revenue: 59150, memo: '' },
-        { date: '2026-06-19', group: '2차', send: null, appOpen: null, limitCheck: null, applyCount: null, contract: null, contractAmount: null, pointCost: null, sendCost: 0, revenue: null, memo: '' },
-        { date: '2026-06-20', group: '2차', send: null, appOpen: null, limitCheck: null, applyCount: null, contract: null, contractAmount: null, pointCost: null, sendCost: 0, revenue: null, memo: '' },
-        { date: '2026-06-21', group: '2차', send: null, appOpen: null, limitCheck: null, applyCount: null, contract: null, contractAmount: null, pointCost: null, sendCost: 0, revenue: null, memo: '' }
+        { date: '2026-06-19', group: '2차', send: 10152, appOpen: 35, limitCheck: 10, applyCount: 1, contract: 2, contractAmount: 37000000, pointCost: 37000, sendCost: 0, revenue: 606300, memo: '' },
+        { date: '2026-06-22', group: '2차', send: 21415, appOpen: 121, limitCheck: 33, applyCount: 6, contract: 1, contractAmount: 3000000, pointCost: 3000, sendCost: 0, revenue: 37500, memo: '주말(6/20~21) 미운영' }
       ]
     }
   ],
