@@ -542,7 +542,6 @@
               <th class="num">발송 비용</th>
               <th class="num">매출</th>
               <th class="num">평균 수수료</th>
-              <th class="num" style="background:#fef3c7;">ROAS</th>
               <th>메모</th>
             </tr>
           </thead>
@@ -804,9 +803,9 @@ const DEFAULT_DATA = {
         { date: '2026-06-10', group: '1차', send: 21684, appOpen: 377, limitCheck: 222, applyCount: 51, contract: 16, contractAmount: 151300000, pointCost: 147800, sendCost: 487890, revenue: 1749527, memo: '' },
         { date: '2026-06-15', group: '2차', send: 7542, appOpen: 59, limitCheck: 25, applyCount: 5, contract: 1, contractAmount: 2000000, pointCost: 2000, sendCost: 0, revenue: 34400, memo: '' },
         { date: '2026-06-16', group: '2차', send: 13353, appOpen: 87, limitCheck: 25, applyCount: 8, contract: 2, contractAmount: 20000000, pointCost: 20000, sendCost: 0, revenue: 239800, memo: '' },
-        { date: '2026-06-17', group: '2차', send: 11021, appOpen: 72, limitCheck: null, applyCount: null, contract: 1, contractAmount: 3000000, pointCost: 3000, sendCost: 0, revenue: 37500, memo: '' },
-        { date: '2026-06-18', group: '2차', send: 10886, appOpen: 61, limitCheck: null, applyCount: null, contract: 2, contractAmount: 7300000, pointCost: 7300, sendCost: 0, revenue: 59150, memo: '' },
-        { date: '2026-06-19', group: '2차', send: 10152, appOpen: 35, limitCheck: 10, applyCount: 1, contract: 2, contractAmount: 37000000, pointCost: 37000, sendCost: 0, revenue: 606300, memo: '' },
+        { date: '2026-06-17', group: '2차', send: 11021, appOpen: 72, limitCheck: 22, applyCount: 3, contract: 1, contractAmount: 3000000, pointCost: 3000, sendCost: 0, revenue: 37500, memo: '' },
+        { date: '2026-06-18', group: '2차', send: 10886, appOpen: 61, limitCheck: 22, applyCount: 6, contract: 2, contractAmount: 7300000, pointCost: 7300, sendCost: 0, revenue: 59150, memo: '' },
+        { date: '2026-06-19', group: '2차', send: 10152, appOpen: 60, limitCheck: 19, applyCount: 3, contract: 2, contractAmount: 37000000, pointCost: 37000, sendCost: 0, revenue: 606300, memo: '' },
         { date: '2026-06-22', group: '2차', send: 21415, appOpen: 121, limitCheck: 33, applyCount: 6, contract: 1, contractAmount: 3000000, pointCost: 3000, sendCost: 0, revenue: 37500, memo: '주말(6/20~21) 미운영' }
       ]
     }
@@ -1392,13 +1391,10 @@ function renderP6Daily() {
     .filter(o => (o.row.group || '1차') === p6Round);
 
   const rendered = roundRows.map(({ row, idx }) => {
-    const totalCost = (row.pointCost != null || row.sendCost != null)
-      ? Number(row.pointCost || 0) + Number(row.sendCost || 0) : null;
     const cvrSendOpen = div(row.appOpen, row.send);          // 발송→오픈
     const cvrOpenCheck = div(row.limitCheck, row.appOpen);   // 오픈→조회
     const cvrCheckContract = div(row.contract, row.limitCheck);  // 조회→약정
     const avgPrice = div(row.revenue, row.contract);         // 평균 수수료
-    const roas = div(row.revenue, totalCost);                // ROAS
     const path = `promotions.${p6Idx}.dailyLog.${idx}`;
     const filled = isFilled(row);
     const isToday = row.date === todayStr;
@@ -1424,7 +1420,6 @@ function renderP6Daily() {
         ${inputCell(row.sendCost, path+'.sendCost', 'krw')}
         ${inputCell(row.revenue, path+'.revenue', 'krw')}
         <td class="num">${krw(avgPrice)}</td>
-        <td class="num" style="background:#fef3c7;font-weight:600;">${pct(roas, 1)}</td>
         <td><textarea class="note" data-path="${path}.memo" ${document.body.classList.contains('edit-mode')?'':'disabled'}>${row.memo || ''}</textarea></td>
       </tr>`
     };
@@ -1437,7 +1432,7 @@ function renderP6Daily() {
     const toggleLabel = p6DailyExpanded
       ? `▼ 미입력 ${hiddenCount}일 접기`
       : `▶ 미입력 ${hiddenCount}일 펼쳐보기  (입력 완료 ${filledCount}일)`;
-    html += `<tr class="empty-toggle-row" onclick="toggleP6EmptyDays()"><td colspan="17">${toggleLabel}</td></tr>`;
+    html += `<tr class="empty-toggle-row" onclick="toggleP6EmptyDays()"><td colspan="16">${toggleLabel}</td></tr>`;
   }
   tbody.innerHTML = html;
 }
