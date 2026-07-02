@@ -438,7 +438,7 @@
     <div class="meta">
       <span>분석 기간: 2026.01.01 ~ 진행중</span>
       <span class="dot"></span>
-      <span>대상 프로모션 4건 (마수동 유도 · 차번호 입력 제외)</span>
+      <span>대상 프로모션 6건 (마수동 유도 · 차번호 입력 제외)</span>
       <span class="dot"></span>
       <span>마지막 업데이트: <span id="last-update">—</span></span>
     </div>
@@ -470,7 +470,7 @@
     <div class="panel">
       <div class="panel-header">
         <div>
-          <div class="title">전체 성과 기반 5개 프로모션 비교 (인트로 조회 → 한도조회 → 신청 → 약정 → 매출)</div>
+          <div class="title">전체 성과 기반 7개 프로모션 비교 (인트로 조회 → 한도조회 → 신청 → 약정 → 매출)</div>
           <div class="desc">메인 KPI: <span class="kpi-tag" style="background:#fde68a">인트로→한도조회 CVR</span> &nbsp;·&nbsp; 대출신청 상시 이벤트(P3·P4)만: <span class="kpi-tag">한도조회→신청 CVR</span></div>
         </div>
       </div>
@@ -493,6 +493,52 @@
             </tr>
           </thead>
           <tbody id="comparison-body"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- 🚀 P7 7월 대고객 한도조회유도 상시화 1차 진행 추적 (현재 진행중 · 최상단 노출) -->
+  <section class="block">
+    <h2 class="section-title">🚀 7월 대고객 한도조회유도 상시화 1차 진행 추적 <span class="badge" style="background:#c7d2fe;color:#3730a3;">진행중 · 1차</span></h2>
+    <div class="panel">
+      <div class="panel-header">
+        <div>
+          <div class="title">26.07.01 ~ 26.07.15 (총 15일)</div>
+          <div class="desc">핵심 KPI = <strong>한도조회 수 2주 누적 15,000건 이상</strong> · 예상비용 350만원 · 인트로→한도조회 / 한도조회→신청 CVR 추적</div>
+        </div>
+        <div id="july-dday-pill" style="font-size:12px; padding:4px 10px; border-radius:4px; background:#e0e7ff; color:#3730a3; font-weight:600;"></div>
+      </div>
+
+      <h3 style="font-size:13px; font-weight:600; margin-bottom:10px; color:var(--text-2);">🎯 목표 vs 누적</h3>
+      <div class="kpi-grid" id="july-progress"></div>
+
+      <h3 style="font-size:13px; font-weight:600; margin: 22px 0 10px; color:var(--text-2);">📅 일자별 누적 로그 <span style="font-weight:400;font-size:11px;color:var(--text-2);">(매일 오전 11시 자동 갱신 · 주말은 월요일 일괄)</span></h3>
+      <div style="font-size:11px; color:var(--text-2); margin-bottom:10px; padding:8px 12px; background:#f8fafc; border-left:3px solid #a5b4fc; border-radius:4px; line-height:1.6;">
+        * 프로모션 조회 / 가승인 / 올거절 / 신청 = <strong>Mixpanel (promo_name=julyevt, D0·24h 퍼널)</strong><br>
+        * 한도조회 수(지급 건수) / 약정 수 / 포인트 비용 = <strong>Google Sheet</strong>
+      </div>
+      <div class="table-wrap daily-log">
+        <table id="july-daily-table">
+          <thead>
+            <tr>
+              <th>일자</th>
+              <th>경과일</th>
+              <th class="num">프로모션 조회</th>
+              <th class="num">가승인</th>
+              <th class="num">올거절</th>
+              <th class="num" style="background:#e0e7ff;">한도조회<br><span style="font-weight:400;font-size:10px;color:var(--text-2);">(자동)</span></th>
+              <th class="num">신용대출 신청</th>
+              <th class="num">대부 신청</th>
+              <th class="num" style="background:#e0e7ff;">신청 수<br><span style="font-weight:400;font-size:10px;color:var(--text-2);">(자동)</span></th>
+              <th class="num">약정수</th>
+              <th class="num">지급비용</th>
+              <th class="num">인트로→한도조회</th>
+              <th class="num">한도조회→신청</th>
+              <th>메모</th>
+            </tr>
+          </thead>
+          <tbody id="july-body"></tbody>
         </table>
       </div>
     </div>
@@ -620,13 +666,15 @@
     <h2 class="section-title">2. KPI 달성률 <span class="badge">프로모션별</span></h2>
     <div class="panel">
       <div class="tab-bar" id="kpi-tab-bar">
-        <button class="tab active" onclick="switchKpiTab('p6', event)">🔥 타사한도조회자 약정 <span class="kpi-tag" style="background:#fcd34d;color:#92400e;">진행중</span></button>
+        <button class="tab active" onclick="switchKpiTab('p7', event)">🚀 7월 한도조회유도 <span class="kpi-tag" style="background:#c7d2fe;color:#3730a3;">진행중</span></button>
+        <button class="tab" onclick="switchKpiTab('p6', event)">🔥 타사한도조회자 약정 <span class="kpi-tag" style="background:#fcd34d;color:#92400e;">진행중</span></button>
         <button class="tab" onclick="switchKpiTab('p1', event)">🎴 신년 행운카드</button>
         <button class="tab" onclick="switchKpiTab('p2', event)">🧧 세뱃돈</button>
         <button class="tab" onclick="switchKpiTab('loan', event)">💳 대출신청 상시</button>
         <button class="tab" onclick="switchKpiTab('p5', event)">🌷 가정의달 <span class="kpi-tag" style="background:#e2e8f0;color:#475569;">완료</span></button>
       </div>
-      <div id="tab-p6" class="tab-content active"></div>
+      <div id="tab-p7" class="tab-content active"></div>
+      <div id="tab-p6" class="tab-content"></div>
       <div id="tab-p1" class="tab-content"></div>
       <div id="tab-p2" class="tab-content"></div>
       <div id="tab-loan" class="tab-content"></div>
@@ -750,6 +798,47 @@ const DEFAULT_DATA = {
         { date: '2026-05-27', introView: 2357, paymentCount: 1656, approve: 734, reject: 774, creditLoan: 369, otherLoan: 106, contract: 72, cost: 267656, memo: '' },
         { date: '2026-05-28', introView: 2291, paymentCount: 987, approve: 491, reject: 570, creditLoan: 217, otherLoan: 84, contract: 63, cost: 163428, memo: '' },
         { date: '2026-05-29', introView: 1401, paymentCount: 949, approve: 453, reject: 469, creditLoan: 239, otherLoan: 66, contract: 76, cost: 154837, memo: '' }
+      ]
+    },
+    {
+      id: 'P7', month: '7월',
+      name: '대고객 한도조회유도 상시화 1차',
+      channel: 'CRM Push + 스마트배너 + 핀다소식',
+      period: '26.07.01 ~ 26.07.15',
+      status: '진행중',
+      goal: { send: null, introView: null, intro: 15000, apply: null, contract: null, cost: 3500000 },
+      actual: { send: null, introView: null, intro: null, apply: null, contract: null, cost: null },
+      baseline: { intro: null, contract: null },
+      d0_revenue: null,
+      loanCVR: null,
+      // 핵심 KPI (Confluence ['26.06] 대고객 한도조회유도 상시화 1차):
+      //   운영 2주간 한도조회 수 1.5만 건 이상 / 예상비용 총 350만원
+      //   혜택: 한도조회 완료 시 100~1,000P 랜덤 + 10명(0.07%) 10만P 추첨
+      kpis: [
+        { label: '한도조회 수 (2주 누적)', shortLabel: '한도조회 수', goal: 15000, formula: 'introCount', format: 'int' },
+        { label: '인트로→한도조회 CVR', shortLabel: '인트로→한도조회 CVR', formula: 'introToLimitCVR', format: 'pct', reference: true, hint: '프로모션 조회 → 한도조회 완료' },
+        { label: '한도조회→신청 CVR', shortLabel: '한도조회→신청 CVR', formula: 'limitToApplyCVR', format: 'pct', reference: true, hint: '한도조회 완료 → 대출 신청' }
+      ],
+      note: '한도조회 유도 상시화 1차. 한도조회 완료 시 포인트 추첨 지급.',
+      // dailyLog 필드 (5월 P5 와 동일 schema): introView(프로모션 조회) / paymentCount(지급 건수=한도조회, 시트 진실 소스) /
+      //   approve(가승인) / reject(올거절) / creditLoan(신용대출 신청) / otherLoan(대부 신청) / contract(약정) / cost(포인트 비용)
+      // intro(한도조회) = paymentCount 우선, fallback approve+reject / apply(신청) = creditLoan + otherLoan
+      dailyLog: [
+        { date: '2026-07-01', introView: 1866, paymentCount: 1443, approve: 379, reject: 419, creditLoan: 124, otherLoan: 32, contract: 5, cost: 244719, memo: '' },
+        { date: '2026-07-02', introView: null, paymentCount: null, approve: null, reject: null, creditLoan: null, otherLoan: null, contract: null, cost: null, memo: '' },
+        { date: '2026-07-03', introView: null, paymentCount: null, approve: null, reject: null, creditLoan: null, otherLoan: null, contract: null, cost: null, memo: '' },
+        { date: '2026-07-04', introView: null, paymentCount: null, approve: null, reject: null, creditLoan: null, otherLoan: null, contract: null, cost: null, memo: '주말' },
+        { date: '2026-07-05', introView: null, paymentCount: null, approve: null, reject: null, creditLoan: null, otherLoan: null, contract: null, cost: null, memo: '주말' },
+        { date: '2026-07-06', introView: null, paymentCount: null, approve: null, reject: null, creditLoan: null, otherLoan: null, contract: null, cost: null, memo: '' },
+        { date: '2026-07-07', introView: null, paymentCount: null, approve: null, reject: null, creditLoan: null, otherLoan: null, contract: null, cost: null, memo: '' },
+        { date: '2026-07-08', introView: null, paymentCount: null, approve: null, reject: null, creditLoan: null, otherLoan: null, contract: null, cost: null, memo: '' },
+        { date: '2026-07-09', introView: null, paymentCount: null, approve: null, reject: null, creditLoan: null, otherLoan: null, contract: null, cost: null, memo: '' },
+        { date: '2026-07-10', introView: null, paymentCount: null, approve: null, reject: null, creditLoan: null, otherLoan: null, contract: null, cost: null, memo: '' },
+        { date: '2026-07-11', introView: null, paymentCount: null, approve: null, reject: null, creditLoan: null, otherLoan: null, contract: null, cost: null, memo: '주말' },
+        { date: '2026-07-12', introView: null, paymentCount: null, approve: null, reject: null, creditLoan: null, otherLoan: null, contract: null, cost: null, memo: '주말' },
+        { date: '2026-07-13', introView: null, paymentCount: null, approve: null, reject: null, creditLoan: null, otherLoan: null, contract: null, cost: null, memo: '' },
+        { date: '2026-07-14', introView: null, paymentCount: null, approve: null, reject: null, creditLoan: null, otherLoan: null, contract: null, cost: null, memo: '' },
+        { date: '2026-07-15', introView: null, paymentCount: null, approve: null, reject: null, creditLoan: null, otherLoan: null, contract: null, cost: null, memo: '' }
       ]
     },
     {
@@ -1062,7 +1151,7 @@ function renderComparison() {
 
     const cvrIntroToLimit = div(a.intro, a.introView);   // 인트로→한도조회 (Main KPI for non-loan)
     const cvrLimitToApply = div(a.apply, a.intro);        // 한도조회→신청 (Main KPI for loan)
-    const isMay = p.id === 'P5';   // 가정의달 진행중
+    const isMay = p.id === 'P5' || p.id === 'P7';   // dailyLog 자동 집계 (가정의달·7월) → 읽기전용 셀
     const isLoan = !!p.loanCVR;     // 대출신청 상시 이벤트 (P3, P4)
 
     const path = `promotions.${idx}.actual`;
@@ -1222,6 +1311,147 @@ function toggleEmptyDays() {
   dailyExpanded = !dailyExpanded;
   renderDaily();
   // Re-apply edit mode contenteditable state
+  const isEdit = document.body.classList.contains('edit-mode');
+  document.querySelectorAll('.editable').forEach(c => c.contentEditable = isEdit);
+  document.querySelectorAll('textarea.note').forEach(t => t.disabled = !isEdit);
+}
+
+// ─────────────────────────────────────────────────────────────
+// P7 (7월 대고객 한도조회유도 상시화 1차) 진행 추적 — render functions
+// P5 와 동일 schema. 핵심 KPI = 한도조회 수 (2주 누적 15,000건, 페이스 기반 평가)
+// ─────────────────────────────────────────────────────────────
+function julyTotal() { return promotionDailyTotal(DATA.promotions.find(p => p.id === 'P7')); }
+let julyExpanded = false;
+
+function renderJulyProgress() {
+  const jul = DATA.promotions.find(p => p.id === 'P7');
+  if (!jul) return;
+  const actual = julyTotal();
+  const today = new Date();
+  today.setHours(0,0,0,0);
+  const start = new Date('2026-07-01');
+  const end = new Date('2026-07-15');
+  const totalDays = 15;
+  const elapsed = Math.min(totalDays, Math.max(0, Math.floor((today - start) / 86400000) + 1));
+  const remain = Math.max(0, Math.floor((end - today) / 86400000));
+  const ddayEl = document.getElementById('july-dday-pill');
+  if (ddayEl) ddayEl.textContent = today > end ? `종료 (총 ${totalDays}일)` : `D-${remain} (경과 ${elapsed}/${totalDays}일)`;
+
+  const limitKpi = jul.kpis.find(k => k.formula === 'introCount');
+  const goal = limitKpi ? limitKpi.goal : 15000;
+  const introToLimitCVR = div(actual.intro, actual.introView);
+  const limitToApplyCVR = div(actual.apply, actual.intro);
+
+  // 한도조회 수 목표 카드 — 페이스 기반 (기간 안 찬 상태에서 절대값을 '미달'로 표시하지 않기 위함)
+  const progressRatio = totalDays > 0 ? Math.min(1, elapsed / totalDays) : 0;
+  const expected = goal * progressRatio;
+  const paceRate = (actual.intro != null && expected > 0) ? actual.intro / expected : null;
+  const rawRate = div(actual.intro, goal);
+  let paceCls = 'mid', paceLabel = '진행중';
+  if (paceRate != null && paceRate >= 1) { paceCls = 'high'; paceLabel = '페이스 초과'; }
+  else if (paceRate != null && paceRate < 0.8) { paceCls = 'low'; paceLabel = '페이스 미달'; }
+  const goalBarW = rawRate == null ? 0 : Math.min(110, rawRate * 100);
+  const goalBarCls = rawRate != null && rawRate >= 1 ? 'over' : '';
+
+  let html = `
+    <div class="kpi-card highlight">
+      <div class="label">🎯 한도조회 수 (누적)</div>
+      <div class="value">${fmt(actual.intro)}</div>
+      <div style="font-size:11px;color:var(--text-2);margin-top:4px;">목표 ${fmt(goal)}건 (2주)</div>
+      <div class="progress-bar"><div class="${goalBarCls}" style="width:${goalBarW}%"></div></div>
+      <div class="achievement ${paceCls}" style="margin-top:4px;">${rawRate==null?'—':pct(rawRate,1)} <span style="color:var(--text-2);font-weight:400;">(${paceRate==null?'데이터 부족':paceLabel})</span></div>
+    </div>`;
+
+  const cvrItems = [
+    { label: '인트로→한도조회 CVR', val: introToLimitCVR },
+    { label: '한도조회→신청 CVR', val: limitToApplyCVR }
+  ];
+  html += cvrItems.map(it => `
+    <div class="kpi-card">
+      <div class="label">${it.label}</div>
+      <div class="value">${pct(it.val, 1)}</div>
+      <div style="font-size:11px;color:var(--text-2);margin-top:4px;">현재 누적</div>
+    </div>`).join('');
+
+  const countItems = [
+    { label: '프로모션 조회 (누적)', val: fmt(actual.introView) },
+    { label: '└ 가승인 / 올거절', val: `${fmt(actual.approve)} / ${fmt(actual.reject)}` },
+    { label: '신청 수 (누적)', val: fmt(actual.apply) },
+    { label: '└ 신용대출 / 대부', val: `${fmt(actual.creditLoan)} / ${fmt(actual.otherLoan)}` },
+    { label: '약정 수 (누적)', val: fmt(actual.contract) },
+    { label: '지급비용 (누적)', val: krw(actual.cost) }
+  ];
+  html += countItems.map(it => `
+    <div class="kpi-card">
+      <div class="label">${it.label}</div>
+      <div class="value">${it.val}</div>
+      <div style="font-size:11px;color:var(--text-2);margin-top:4px;">현재 누적</div>
+    </div>`).join('');
+
+  const container = document.getElementById('july-progress');
+  if (container) container.innerHTML = html;
+}
+
+function renderJulyDaily() {
+  const jul = DATA.promotions.find(p => p.id === 'P7');
+  const julIdx = DATA.promotions.findIndex(p => p.id === 'P7');
+  if (!jul) return;
+  const tbody = document.getElementById('july-body');
+  if (!tbody) return;
+  const todayStr = new Date().toISOString().slice(0,10);
+  const isFilled = (r) => r.introView != null || r.approve != null || r.reject != null || r.creditLoan != null || r.otherLoan != null || r.contract != null || r.cost != null;
+
+  const rendered = jul.dailyLog.map((row, idx) => {
+    // 한도조회 = 가승인 + 올거절, 신청 = 신용대출 + 대부 (자동 계산)
+    const intro = (row.approve != null || row.reject != null)
+      ? Number(row.approve || 0) + Number(row.reject || 0) : null;
+    const apply = (row.creditLoan != null || row.otherLoan != null)
+      ? Number(row.creditLoan || 0) + Number(row.otherLoan || 0) : null;
+    const cvr1 = div(intro, row.introView);
+    const cvr2 = div(apply, intro);
+    const path = `promotions.${julIdx}.dailyLog.${idx}`;
+    const filled = isFilled(row);
+    const isToday = row.date === todayStr;
+    let cls = '';
+    if (filled) cls = 'filled-day';
+    else if (isToday) cls = 'today-empty';
+    else cls = 'empty-hidden' + (julyExpanded ? ' expanded' : '');
+    return {
+      filled, isToday, hidden: !filled && !isToday,
+      html: `<tr class="${cls}">
+        <td class="date">${row.date}</td>
+        <td class="center">${idx+1}일</td>
+        ${inputCell(row.introView, path+'.introView')}
+        ${inputCell(row.approve, path+'.approve')}
+        ${inputCell(row.reject, path+'.reject')}
+        <td class="num" style="background:#eef2ff;font-weight:600;">${fmt(intro)}</td>
+        ${inputCell(row.creditLoan, path+'.creditLoan')}
+        ${inputCell(row.otherLoan, path+'.otherLoan')}
+        <td class="num" style="background:#eef2ff;font-weight:600;">${fmt(apply)}</td>
+        ${inputCell(row.contract, path+'.contract')}
+        ${inputCell(row.cost, path+'.cost', 'krw')}
+        <td class="num">${pct(cvr1)}</td>
+        <td class="num">${pct(cvr2)}</td>
+        <td><textarea class="note" data-path="${path}.memo" ${document.body.classList.contains('edit-mode')?'':'disabled'}>${row.memo || ''}</textarea></td>
+      </tr>`
+    };
+  });
+
+  const hiddenCount = rendered.filter(r => r.hidden).length;
+  const filledCount = rendered.filter(r => r.filled).length;
+  let html = rendered.map(r => r.html).join('');
+  if (hiddenCount > 0) {
+    const toggleLabel = julyExpanded
+      ? `▼ 미입력 ${hiddenCount}일 접기`
+      : `▶ 미입력 ${hiddenCount}일 펼쳐보기  (입력 완료 ${filledCount}일)`;
+    html += `<tr class="empty-toggle-row" onclick="toggleJulyEmptyDays()"><td colspan="14">${toggleLabel}</td></tr>`;
+  }
+  tbody.innerHTML = html;
+}
+
+function toggleJulyEmptyDays() {
+  julyExpanded = !julyExpanded;
+  renderJulyDaily();
   const isEdit = document.body.classList.contains('edit-mode');
   document.querySelectorAll('.editable').forEach(c => c.contentEditable = isEdit);
   document.querySelectorAll('textarea.note').forEach(t => t.disabled = !isEdit);
@@ -1577,6 +1807,7 @@ function renderPromoTab(id) {
   if (pIdx === -1) return '';
   const p = DATA.promotions[pIdx];
   const isP5 = p.id === 'P5';
+  const isP7 = p.id === 'P7';
   const isP6 = p.id === 'P6';
 
   // P6 는 선택 라운드(1차/2차) 기준으로 KPI·참고수치 계산
@@ -1596,9 +1827,9 @@ function renderPromoTab(id) {
     } : {};
     return renderKpiCard(kpi, pIdx, kIdx, actual, cardOpts);
   }).join('');
-  const introSub = isP5 ? `가승인 ${fmt(a.approve)} · 올거절 ${fmt(a.reject)}`
+  const introSub = (isP5 || isP7) ? `가승인 ${fmt(a.approve)} · 올거절 ${fmt(a.reject)}`
                  : isP6 ? `발송 ${fmt(a.send)} · 오픈 ${fmt(a.appOpen)}` : null;
-  const applySub = isP5 ? `신용대출 ${fmt(a.creditLoan)} · 대부 ${fmt(a.otherLoan)}`
+  const applySub = (isP5 || isP7) ? `신용대출 ${fmt(a.creditLoan)} · 대부 ${fmt(a.otherLoan)}`
                  : isP6 ? `대출 신청 (no breakdown)` : null;
 
   // D0 매출: P6 는 dailyLog revenue 합 우선, 그 외 p.d0_revenue 정적값
@@ -1773,6 +2004,8 @@ function renderLoanIntegrated() {
 }
 
 function renderKpiTabs() {
+  const p7El = document.getElementById('tab-p7');
+  if (p7El) p7El.innerHTML = renderPromoTab('P7');
   const p6El = document.getElementById('tab-p6');
   if (p6El) p6El.innerHTML = renderPromoTab('P6');
   document.getElementById('tab-p1').innerHTML = renderPromoTab('P1');
@@ -1855,7 +2088,7 @@ function renderInc() {
 let charts = {};
 function renderCharts() {
   // Monthly trend
-  const monthData = { '1월': 0, '2월': 0, '상시': 0, '5월': 0 };
+  const monthData = { '1월': 0, '2월': 0, '상시': 0, '5월': 0, '7월': 0 };
   for (const p of DATA.promotions) {
     const a = effectiveActual(p);
     const m = p.month;
@@ -1966,7 +2199,10 @@ function handleNoteEdit(e) {
 function renderAll() {
   renderKPICards();
   renderComparison();
-  // P6 (현재 진행중) — 1차/2차 라운드 탭
+  // P7 (7월 한도조회유도 상시화 · 최상단 진행중)
+  renderJulyProgress();
+  renderJulyDaily();
+  // P6 (타사한도조회자 약정) — 1차/2차 라운드 탭
   renderP6RoundTabs();
   renderP6Header();
   renderP6Kpis();
