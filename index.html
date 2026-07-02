@@ -515,8 +515,9 @@
 
       <h3 style="font-size:13px; font-weight:600; margin: 22px 0 10px; color:var(--text-2);">📅 일자별 누적 로그 <span style="font-weight:400;font-size:11px;color:var(--text-2);">(매일 오전 11시 자동 갱신 · 주말은 월요일 일괄)</span></h3>
       <div style="font-size:11px; color:var(--text-2); margin-bottom:10px; padding:8px 12px; background:#f8fafc; border-left:3px solid #a5b4fc; border-radius:4px; line-height:1.6;">
-        * 프로모션 조회 / 가승인 / 올거절 / 신청 = <strong>Mixpanel (promo_name=julyevt, 이벤트 total)</strong><br>
-        * 한도조회 수(지급 건수) / 약정 수 / 포인트 비용 = <strong>Google Sheet</strong>
+        * 프로모션 조회 / 가승인 / 올거절 / 신청 = <strong>Mixpanel (promo_name=julyevt, unique · 프로모션 인트로 경유분)</strong><br>
+        * 한도조회 수(지급 건수) / 약정 수 / 포인트 비용 = <strong>Google Sheet(DB)</strong> — 지급건수가 진실 소스<br>
+        <span style="color:#b45309;">⚠ Mixpanel 프로모션 이벤트는 오가닉 auto-join·서버지급 미태깅으로 DB 지급건수보다 과소집계됨. 한도조회 수는 DB 기준.</span>
       </div>
       <div class="table-wrap daily-log">
         <table id="july-daily-table">
@@ -824,7 +825,7 @@ const DEFAULT_DATA = {
       //   approve(가승인) / reject(올거절) / creditLoan(신용대출 신청) / otherLoan(대부 신청) / contract(약정) / cost(포인트 비용)
       // intro(한도조회) = paymentCount 우선, fallback approve+reject / apply(신청) = creditLoan + otherLoan
       dailyLog: [
-        { date: '2026-07-01', introView: 2015, paymentCount: 1443, approve: 759, reject: 666, creditLoan: 197, otherLoan: 46, contract: 5, cost: 244719, memo: '' },
+        { date: '2026-07-01', introView: 1866, paymentCount: 1443, approve: 430, reject: 450, creditLoan: 134, otherLoan: 36, contract: 5, cost: 244719, memo: '' },
         { date: '2026-07-02', introView: null, paymentCount: null, approve: null, reject: null, creditLoan: null, otherLoan: null, contract: null, cost: null, memo: '' },
         { date: '2026-07-03', introView: null, paymentCount: null, approve: null, reject: null, creditLoan: null, otherLoan: null, contract: null, cost: null, memo: '' },
         { date: '2026-07-04', introView: null, paymentCount: null, approve: null, reject: null, creditLoan: null, otherLoan: null, contract: null, cost: null, memo: '주말' },
