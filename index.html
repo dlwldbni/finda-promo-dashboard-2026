@@ -1368,15 +1368,18 @@ function renderJulyProgress() {
       <div class="achievement ${paceCls}" style="margin-top:4px;">${rawRate==null?'—':pct(rawRate,1)} <span style="color:var(--text-2);font-weight:400;">(${paceRate==null?'데이터 부족':paceLabel})</span></div>
     </div>`;
 
+  // 5월(P5) 인트로→한도조회 CVR 벤치마크 (동적 계산)
+  const mayTot = mayTotal();
+  const mayIntroCVR = div(mayTot.intro, mayTot.introView);
   const cvrItems = [
-    { label: '인트로→한도조회 CVR', val: introToLimitCVR },
+    { label: '인트로→한도조회 CVR', val: introToLimitCVR, bench: mayIntroCVR, benchLabel: '5월' },
     { label: '한도조회→신청 CVR', val: limitToApplyCVR }
   ];
   html += cvrItems.map(it => `
     <div class="kpi-card">
       <div class="label">${it.label}</div>
       <div class="value">${pct(it.val, 1)}</div>
-      <div style="font-size:11px;color:var(--text-2);margin-top:4px;">현재 누적</div>
+      <div style="font-size:11px;color:var(--text-2);margin-top:4px;">현재 누적${it.bench != null ? ` · <span style="color:#94a3b8;">${it.benchLabel} ${pct(it.bench, 1)}</span>` : ''}</div>
     </div>`).join('');
 
   const countItems = [
