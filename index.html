@@ -515,9 +515,8 @@
 
       <h3 style="font-size:13px; font-weight:600; margin: 22px 0 10px; color:var(--text-2);">📅 일자별 누적 로그 <span style="font-weight:400;font-size:11px;color:var(--text-2);">(매일 오전 11시 자동 갱신 · 주말은 월요일 일괄)</span></h3>
       <div style="font-size:11px; color:var(--text-2); margin-bottom:10px; padding:8px 12px; background:#f8fafc; border-left:3px solid #a5b4fc; border-radius:4px; line-height:1.6;">
-        * 프로모션 조회 / 가승인 / 올거절 / 신청 = <strong>Mixpanel (promo_name=julyevt, unique · 프로모션 인트로 경유분)</strong><br>
-        * 한도조회 수(지급 건수) / 약정 수 / 포인트 비용 = <strong>Google Sheet(DB)</strong> — 지급건수가 진실 소스<br>
-        <span style="color:#b45309;">⚠ Mixpanel 프로모션 이벤트는 오가닉 auto-join·서버지급 미태깅으로 DB 지급건수보다 과소집계됨. 한도조회 수는 DB 기준.</span>
+        * 프로모션 조회 / 가승인 / 올거절 / 한도조회 / 신청 = <strong>Mixpanel (promo_name=julyevt, 일별 unique)</strong> · 한도조회 = 가승인+올거절<br>
+        * 약정 수 / 포인트 비용 = <strong>Google Sheet</strong>
       </div>
       <div class="table-wrap daily-log">
         <table id="july-daily-table">
@@ -528,7 +527,7 @@
               <th class="num">프로모션 조회</th>
               <th class="num">가승인</th>
               <th class="num">올거절</th>
-              <th class="num" style="background:#e0e7ff;">한도조회<br><span style="font-weight:400;font-size:10px;color:var(--text-2);">(지급수)</span></th>
+              <th class="num" style="background:#e0e7ff;">한도조회<br><span style="font-weight:400;font-size:10px;color:var(--text-2);">(가승인+올거절)</span></th>
               <th class="num">신용대출 신청</th>
               <th class="num">대부 신청</th>
               <th class="num" style="background:#e0e7ff;">신청 수<br><span style="font-weight:400;font-size:10px;color:var(--text-2);">(자동)</span></th>
@@ -825,11 +824,11 @@ const DEFAULT_DATA = {
       //   approve(가승인) / reject(올거절) / creditLoan(신용대출 신청) / otherLoan(대부 신청) / contract(약정) / cost(포인트 비용)
       // intro(한도조회) = paymentCount 우선, fallback approve+reject / apply(신청) = creditLoan + otherLoan
       dailyLog: [
-        { date: '2026-07-01', introView: 1867, paymentCount: 1443, approve: 430, reject: 450, creditLoan: 134, otherLoan: 36, contract: 5, cost: 244719, memo: '' },
-        { date: '2026-07-02', introView: 1633, paymentCount: 846, approve: 490, reject: 496, creditLoan: 184, otherLoan: 66, contract: 16, cost: 237522, memo: '' },
-        { date: '2026-07-03', introView: null, paymentCount: null, approve: null, reject: null, creditLoan: null, otherLoan: null, contract: null, cost: null, memo: '' },
-        { date: '2026-07-04', introView: null, paymentCount: null, approve: null, reject: null, creditLoan: null, otherLoan: null, contract: null, cost: null, memo: '주말' },
-        { date: '2026-07-05', introView: null, paymentCount: null, approve: null, reject: null, creditLoan: null, otherLoan: null, contract: null, cost: null, memo: '주말' },
+        { date: '2026-07-01', introView: 1936, paymentCount: null, approve: 443, reject: 467, creditLoan: 136, otherLoan: 37, contract: 5, cost: 139628, memo: '' },
+        { date: '2026-07-02', introView: 1664, paymentCount: null, approve: 506, reject: 524, creditLoan: 189, otherLoan: 67, contract: 16, cost: 237522, memo: '' },
+        { date: '2026-07-03', introView: 1293, paymentCount: null, approve: 407, reject: 473, creditLoan: 165, otherLoan: 70, contract: 19, cost: 220098, memo: '' },
+        { date: '2026-07-04', introView: 683, paymentCount: null, approve: 192, reject: 226, creditLoan: 76, otherLoan: 20, contract: 6, cost: 172477, memo: '주말' },
+        { date: '2026-07-05', introView: 672, paymentCount: null, approve: 199, reject: 241, creditLoan: 64, otherLoan: 31, contract: 4, cost: 120139, memo: '주말' },
         { date: '2026-07-06', introView: null, paymentCount: null, approve: null, reject: null, creditLoan: null, otherLoan: null, contract: null, cost: null, memo: '' },
         { date: '2026-07-07', introView: null, paymentCount: null, approve: null, reject: null, creditLoan: null, otherLoan: null, contract: null, cost: null, memo: '' },
         { date: '2026-07-08', introView: null, paymentCount: null, approve: null, reject: null, creditLoan: null, otherLoan: null, contract: null, cost: null, memo: '' },
@@ -1403,11 +1402,9 @@ function renderJulyDaily() {
   const isFilled = (r) => r.introView != null || r.approve != null || r.reject != null || r.creditLoan != null || r.otherLoan != null || r.contract != null || r.cost != null;
 
   const rendered = jul.dailyLog.map((row, idx) => {
-    // 한도조회 = 포인트 지급 수(paymentCount, DB 진실소스)에 맞춤. 없으면 가승인+올거절(Mixpanel) fallback.
-    const intro = row.paymentCount != null
-      ? Number(row.paymentCount)
-      : ((row.approve != null || row.reject != null) ? Number(row.approve || 0) + Number(row.reject || 0) : null);
-    // 신청 = 신용대출 + 대부 (자동 계산)
+    // 한도조회 = 가승인 + 올거절 (Mixpanel 기준). 신청 = 신용대출 + 대부 (자동 계산)
+    const intro = (row.approve != null || row.reject != null)
+      ? Number(row.approve || 0) + Number(row.reject || 0) : null;
     const apply = (row.creditLoan != null || row.otherLoan != null)
       ? Number(row.creditLoan || 0) + Number(row.otherLoan || 0) : null;
     const cvr1 = div(intro, row.introView);
