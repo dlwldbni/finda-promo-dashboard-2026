@@ -540,6 +540,7 @@
               <th class="num">지급비용</th>
               <th class="num">인트로→한도조회</th>
               <th class="num">한도조회→신청</th>
+              <th class="num" style="background:#fef3c7;">한도조회→약정</th>
               <th>메모</th>
             </tr>
           </thead>
@@ -1414,6 +1415,7 @@ function renderJulyDaily() {
       ? Number(row.creditLoan || 0) + Number(row.otherLoan || 0) : null;
     const cvr1 = div(intro, row.introView);
     const cvr2 = div(apply, intro);
+    const cvr3 = div(row.contract, intro);   // 한도조회 → 약정
     const path = `promotions.${julIdx}.dailyLog.${idx}`;
     const filled = isFilled(row);
     const isToday = row.date === todayStr;
@@ -1437,6 +1439,7 @@ function renderJulyDaily() {
         ${inputCell(row.cost, path+'.cost', 'krw')}
         <td class="num">${pct(cvr1)}</td>
         <td class="num">${pct(cvr2)}</td>
+        <td class="num" style="background:#fef3c7;font-weight:600;">${pct(cvr3)}</td>
         <td><textarea class="note" data-path="${path}.memo" ${document.body.classList.contains('edit-mode')?'':'disabled'}>${row.memo || ''}</textarea></td>
       </tr>`
     };
@@ -1449,7 +1452,7 @@ function renderJulyDaily() {
     const toggleLabel = julyExpanded
       ? `▼ 미입력 ${hiddenCount}일 접기`
       : `▶ 미입력 ${hiddenCount}일 펼쳐보기  (입력 완료 ${filledCount}일)`;
-    html += `<tr class="empty-toggle-row" onclick="toggleJulyEmptyDays()"><td colspan="14">${toggleLabel}</td></tr>`;
+    html += `<tr class="empty-toggle-row" onclick="toggleJulyEmptyDays()"><td colspan="15">${toggleLabel}</td></tr>`;
   }
   tbody.innerHTML = html;
 }
