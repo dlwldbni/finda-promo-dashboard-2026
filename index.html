@@ -540,7 +540,7 @@
               <th class="num">지급비용</th>
               <th class="num">인트로→한도조회</th>
               <th class="num">한도조회→신청</th>
-              <th class="num" style="background:#fef3c7;">한도조회→약정</th>
+              <th class="num" style="background:#fef3c7;">신청→약정</th>
               <th>메모</th>
             </tr>
           </thead>
@@ -1418,7 +1418,7 @@ function renderJulyDaily() {
       ? Number(row.creditLoan || 0) + Number(row.otherLoan || 0) : null;
     const cvr1 = div(intro, row.introView);
     const cvr2 = div(apply, intro);
-    const cvr3 = div(row.contract, intro);   // 한도조회 → 약정
+    const cvr3 = div(row.contract, apply);   // 신청 → 약정
     const path = `promotions.${julIdx}.dailyLog.${idx}`;
     const filled = isFilled(row);
     const isToday = row.date === todayStr;
