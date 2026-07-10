@@ -520,9 +520,9 @@
 
       <h3 style="font-size:13px; font-weight:600; margin: 22px 0 10px; color:var(--text-2);">📅 일자별 누적 로그 <span style="font-weight:400;font-size:11px;color:var(--text-2);">(매일 오전 11시 자동 갱신 · 주말은 월요일 일괄)</span></h3>
       <div style="font-size:11px; color:var(--text-2); margin-bottom:10px; padding:8px 12px; background:#f8fafc; border-left:3px solid #a5b4fc; border-radius:4px; line-height:1.6;">
-        * 프로모션 조회 / 가승인 / 올거절 / 신청 = <strong>Mixpanel (promo_name=julyevt, 일별 unique)</strong><br>
-        * <strong>한도조회 = 지급건수</strong> / 약정 수 / 포인트 비용 = <strong>Google Sheet(DB)</strong> — 지급은 1인 1회라 중복 없음<br>
-        <span style="color:#64748b;">※ 가승인·올거절(Mixpanel)은 결과화면 조회 기준이라 실제 지급(한도조회)보다 큽니다 — 참고용 세부.</span>
+        * 프로모션 조회 / 가승인 / 올거절 / 신청 = <strong>Mixpanel (promo_name=julyevt, 일별 unique)</strong> · 약정 수 / 포인트 비용 = <strong>Google Sheet</strong><br>
+        * <strong>누적 한도조회 = 가승인+올거절 기간 순 unique</strong> (중복 제거)<br>
+        <span style="color:#64748b;">※ 누적 한도조회는 기간 전체 중복제거값이라, 일별 표의 한도조회를 단순 합산한 값보다 작습니다 (같은 사람 여러 날 방문 = 1명).</span>
       </div>
       <div class="table-wrap daily-log">
         <table id="july-daily-table">
@@ -533,7 +533,7 @@
               <th class="num">프로모션 조회</th>
               <th class="num">가승인</th>
               <th class="num">올거절</th>
-              <th class="num" style="background:#e0e7ff;">한도조회<br><span style="font-weight:400;font-size:10px;color:var(--text-2);">(지급수)</span></th>
+              <th class="num" style="background:#e0e7ff;">한도조회<br><span style="font-weight:400;font-size:10px;color:var(--text-2);">(가승인+올거절)</span></th>
               <th class="num">신용대출 신청</th>
               <th class="num">대부 신청</th>
               <th class="num" style="background:#e0e7ff;">신청 수<br><span style="font-weight:400;font-size:10px;color:var(--text-2);">(자동)</span></th>
@@ -818,6 +818,9 @@ const DEFAULT_DATA = {
       baseline: { intro: null, contract: null },
       d0_revenue: null,
       loanCVR: null,
+      // 누적 한도조회 = Mixpanel 기간 순 unique(가승인 LA_loanlist_view + 올거절 LD_intro_view, promo_name=julyevt).
+      // ⚠ 일별 합산 아님(같은 사람 여러 날 와도 1회). 자동화가 7/1~오늘 기간으로 매일 재계산. (7/1~7/10 기준 ≈ 6,148)
+      limitUniqueTotal: 6148,
       // 핵심 KPI (Confluence ['26.06] 대고객 한도조회유도 상시화 1차):
       //   운영 2주간 한도조회 수 1.5만 건 이상 / 예상비용 총 350만원
       //   혜택: 한도조회 완료 시 100~1,000P 랜덤 + 10명(0.07%) 10만P 추첨
@@ -1031,7 +1034,8 @@ function promotionDailyTotal(p) {
     }
   }
   // 한도조회 = paymentCount (시트) 우선, 없으면 approve+reject fallback
-  const intro = hasAny.paymentCount ? total.paymentCount : ((hasAny.approve || hasAny.reject) ? total.approve + total.reject : null);
+  const intro = (p.limitUniqueTotal != null) ? p.limitUniqueTotal
+              : (hasAny.paymentCount ? total.paymentCount : ((hasAny.approve || hasAny.reject) ? total.approve + total.reject : null));
   const apply = (hasAny.creditLoan || hasAny.otherLoan) ? total.creditLoan + total.otherLoan : null;
   return {
     send: null,
@@ -1362,9 +1366,9 @@ function renderJulyProgress() {
 
   let html = `
     <div class="kpi-card highlight">
-      <div class="label">🎯 한도조회 수 (누적)</div>
+      <div class="label">🎯 한도조회 수 (누적·순unique)</div>
       <div class="value">${fmt(actual.intro)}</div>
-      <div style="font-size:11px;color:var(--text-2);margin-top:4px;">목표 ${fmt(goal)}건 (2주)</div>
+      <div style="font-size:11px;color:var(--text-2);margin-top:4px;">목표 ${fmt(goal)}건 (2주) · 기간 중복제거</div>
       <div class="progress-bar"><div class="${goalBarCls}" style="width:${goalBarW}%"></div></div>
       <div class="achievement ${paceCls}" style="margin-top:4px;">${rawRate==null?'—':pct(rawRate,1)} <span style="color:var(--text-2);font-weight:400;">(${paceRate==null?'데이터 부족':paceLabel})</span></div>
     </div>`;
@@ -1412,10 +1416,9 @@ function renderJulyDaily() {
   const isFilled = (r) => r.introView != null || r.approve != null || r.reject != null || r.creditLoan != null || r.otherLoan != null || r.contract != null || r.cost != null;
 
   const rendered = jul.dailyLog.map((row, idx) => {
-    // 한도조회 = 지급건수(paymentCount · 시트 DB · 1인 1회, 중복 없음). 없으면 가승인+올거절 fallback.
-    const intro = row.paymentCount != null
-      ? Number(row.paymentCount)
-      : ((row.approve != null || row.reject != null) ? Number(row.approve || 0) + Number(row.reject || 0) : null);
+    // 한도조회(일별) = 가승인 + 올거절 (Mixpanel 일별 unique). ※ 누적은 기간 순unique(중복제거)라 일별 합과 다름.
+    const intro = (row.approve != null || row.reject != null)
+      ? Number(row.approve || 0) + Number(row.reject || 0) : null;
     const apply = (row.creditLoan != null || row.otherLoan != null)
       ? Number(row.creditLoan || 0) + Number(row.otherLoan || 0) : null;
     const cvr1 = div(intro, row.introView);
