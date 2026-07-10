@@ -520,9 +520,8 @@
 
       <h3 style="font-size:13px; font-weight:600; margin: 22px 0 10px; color:var(--text-2);">📅 일자별 누적 로그 <span style="font-weight:400;font-size:11px;color:var(--text-2);">(매일 오전 11시 자동 갱신 · 주말은 월요일 일괄)</span></h3>
       <div style="font-size:11px; color:var(--text-2); margin-bottom:10px; padding:8px 12px; background:#f8fafc; border-left:3px solid #a5b4fc; border-radius:4px; line-height:1.6;">
-        * 프로모션 조회 / 가승인 / 올거절 / 신청 = <strong>Mixpanel (promo_name=julyevt, 일별 unique)</strong> · 약정 수 / 포인트 비용 = <strong>Google Sheet</strong><br>
-        * <strong>누적 한도조회 = 가승인+올거절 기간 순 unique</strong> (중복 제거)<br>
-        <span style="color:#64748b;">※ 누적 한도조회는 기간 전체 중복제거값이라, 일별 표의 한도조회를 단순 합산한 값보다 작습니다 (같은 사람 여러 날 방문 = 1명).</span>
+        * 프로모션 조회 / 가승인 / 올거절 / 신청 = <strong>Mixpanel (promo_name=julyevt, 날짜별 unique)</strong> · 약정 수 / 포인트 비용 = <strong>Google Sheet</strong><br>
+        * 한도조회 = 가승인+올거절 · <strong>재방문자는 방문한 날마다 카운트</strong> (누적 = 일별 합)
       </div>
       <div class="table-wrap daily-log">
         <table id="july-daily-table">
@@ -818,9 +817,7 @@ const DEFAULT_DATA = {
       baseline: { intro: null, contract: null },
       d0_revenue: null,
       loanCVR: null,
-      // 누적 한도조회 = Mixpanel 기간 순 unique(가승인 LA_loanlist_view + 올거절 LD_intro_view, promo_name=julyevt).
-      // ⚠ 일별 합산 아님(같은 사람 여러 날 와도 1회). 자동화가 7/1~오늘 기간으로 매일 재계산. (7/1~7/10 기준 ≈ 6,148)
-      limitUniqueTotal: 6148,
+      // 모든 지표 = 날짜별 unique(재방문자 매일 카운트). 누적 = 일별 합. (한도조회 = 가승인+올거절)
       // 핵심 KPI (Confluence ['26.06] 대고객 한도조회유도 상시화 1차):
       //   운영 2주간 한도조회 수 1.5만 건 이상 / 예상비용 총 350만원
       //   혜택: 한도조회 완료 시 100~1,000P 랜덤 + 10명(0.07%) 10만P 추첨
@@ -834,15 +831,15 @@ const DEFAULT_DATA = {
       //   approve(가승인) / reject(올거절) / creditLoan(신용대출 신청) / otherLoan(대부 신청) / contract(약정) / cost(포인트 비용)
       // intro(한도조회) = paymentCount 우선, fallback approve+reject / apply(신청) = creditLoan + otherLoan
       dailyLog: [
-        { date: '2026-07-01', introView: 1936, paymentCount: 836, approve: 443, reject: 467, creditLoan: 136, otherLoan: 37, contract: 5, cost: 139628, memo: '' },
-        { date: '2026-07-02', introView: 1664, paymentCount: 846, approve: 506, reject: 524, creditLoan: 189, otherLoan: 67, contract: 16, cost: 237522, memo: '' },
-        { date: '2026-07-03', introView: 1293, paymentCount: 642, approve: 407, reject: 473, creditLoan: 165, otherLoan: 70, contract: 19, cost: 108137, memo: '' },
-        { date: '2026-07-04', introView: 683, paymentCount: 290, approve: 192, reject: 226, creditLoan: 76, otherLoan: 20, contract: 6, cost: 51146, memo: '주말' },
-        { date: '2026-07-05', introView: 672, paymentCount: 284, approve: 199, reject: 241, creditLoan: 64, otherLoan: 31, contract: 4, cost: 146782, memo: '주말' },
-        { date: '2026-07-06', introView: 1664, paymentCount: 740, approve: 564, reject: 713, creditLoan: 215, otherLoan: 105, contract: 12, cost: 123198, memo: '' },
-        { date: '2026-07-07', introView: 1262, paymentCount: 628, approve: 475, reject: 652, creditLoan: 172, otherLoan: 104, contract: 14, cost: 109542, memo: '' },
-        { date: '2026-07-08', introView: 1066, paymentCount: 529, approve: 436, reject: 610, creditLoan: 173, otherLoan: 99, contract: 19, cost: 188855, memo: '' },
-        { date: '2026-07-09', introView: 2428, paymentCount: 663, approve: 577, reject: 616, creditLoan: 168, otherLoan: 81, contract: 20, cost: 212809, memo: '' },
+        { date: '2026-07-01', introView: 1949, paymentCount: null, approve: 446, reject: 468, creditLoan: 136, otherLoan: 37, contract: 5, cost: 139628, memo: '' },
+        { date: '2026-07-02', introView: 1672, paymentCount: null, approve: 510, reject: 531, creditLoan: 189, otherLoan: 67, contract: 16, cost: 237522, memo: '' },
+        { date: '2026-07-03', introView: 1311, paymentCount: null, approve: 413, reject: 490, creditLoan: 165, otherLoan: 70, contract: 19, cost: 108137, memo: '' },
+        { date: '2026-07-04', introView: 696, paymentCount: null, approve: 197, reject: 239, creditLoan: 76, otherLoan: 20, contract: 6, cost: 51146, memo: '주말' },
+        { date: '2026-07-05', introView: 694, paymentCount: null, approve: 206, reject: 254, creditLoan: 64, otherLoan: 31, contract: 4, cost: 146782, memo: '주말' },
+        { date: '2026-07-06', introView: 1704, paymentCount: null, approve: 582, reject: 752, creditLoan: 215, otherLoan: 105, contract: 12, cost: 123198, memo: '' },
+        { date: '2026-07-07', introView: 1285, paymentCount: null, approve: 484, reject: 674, creditLoan: 172, otherLoan: 104, contract: 14, cost: 109542, memo: '' },
+        { date: '2026-07-08', introView: 1076, paymentCount: null, approve: 437, reject: 616, creditLoan: 173, otherLoan: 99, contract: 19, cost: 188855, memo: '' },
+        { date: '2026-07-09', introView: 2428, paymentCount: null, approve: 577, reject: 616, creditLoan: 168, otherLoan: 81, contract: 20, cost: 212809, memo: '' },
         { date: '2026-07-10', introView: null, paymentCount: null, approve: null, reject: null, creditLoan: null, otherLoan: null, contract: null, cost: null, memo: '' },
         { date: '2026-07-11', introView: null, paymentCount: null, approve: null, reject: null, creditLoan: null, otherLoan: null, contract: null, cost: null, memo: '주말' },
         { date: '2026-07-12', introView: null, paymentCount: null, approve: null, reject: null, creditLoan: null, otherLoan: null, contract: null, cost: null, memo: '주말' },
@@ -1366,9 +1363,9 @@ function renderJulyProgress() {
 
   let html = `
     <div class="kpi-card highlight">
-      <div class="label">🎯 한도조회 수 (누적·순unique)</div>
+      <div class="label">🎯 한도조회 수 (누적)</div>
       <div class="value">${fmt(actual.intro)}</div>
-      <div style="font-size:11px;color:var(--text-2);margin-top:4px;">목표 ${fmt(goal)}건 (2주) · 기간 중복제거</div>
+      <div style="font-size:11px;color:var(--text-2);margin-top:4px;">목표 ${fmt(goal)}건 (2주)</div>
       <div class="progress-bar"><div class="${goalBarCls}" style="width:${goalBarW}%"></div></div>
       <div class="achievement ${paceCls}" style="margin-top:4px;">${rawRate==null?'—':pct(rawRate,1)} <span style="color:var(--text-2);font-weight:400;">(${paceRate==null?'데이터 부족':paceLabel})</span></div>
     </div>`;
