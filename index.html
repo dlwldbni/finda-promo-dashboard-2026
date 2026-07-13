@@ -852,7 +852,7 @@ const DEFAULT_DATA = {
       id: 'P6', month: '5-6월',
       name: '타사한도조회자 대상 약정 프로모션',
       channel: '브랜드메시지 + Push',
-      period: '26.05.28 ~ 26.06.21 (1차·2차)',
+      period: '26.05.28 ~ (1차·2차 완료 · 3차 진행중)',
       status: '진행중',
       goal: { send: null, introView: null, intro: null, apply: null, contract: null, cost: 9250000 },
       actual: { send: null, introView: null, intro: null, apply: null, contract: null, cost: null },
@@ -880,11 +880,23 @@ const DEFAULT_DATA = {
             { label: '순이익 (수수료−포인트)', shortLabel: '순이익', formula: 'netProfit', format: 'krw', reference: true, hint: '수수료 매출 − 포인트비용' }
             // ※ 푸시 채널이라 발송비 0 → ROAS는 구조적으로 과대(1000%+)라 KPI에서 제외. 효율은 CPA·순이익으로 측정.
           ]
+        },
+        {
+          // 3차: 1차와 동일한 구조(대시 브랜드메시지 채널·ROAS 측정)로 운영. 마감기한 없는 상시 라운드.
+          // 이번 라운드부터 포인트 자동 지급 (약정 시 즉시).
+          round: 3, group: '3차', period: '26.07.13 ~ (상시)',
+          start: '2026-07-13', end: null, days: null, status: '진행중',
+          pointNote: '💡 이번 라운드부터 약정 시 포인트 자동 즉시 지급',
+          kpis: [
+            { label: '한도조회→약정 CVR', shortLabel: '한도조회→약정 CVR', goal: 0.07, formula: 'limitToContractCVR', format: 'pct' },
+            { label: '약정자 수', shortLabel: '약정자 수', goal: 137, formula: 'contractCount', format: 'int' },
+            { label: 'ROAS', shortLabel: 'ROAS', goal: 4.00, formula: 'roas', format: 'pct' }
+          ]
         }
       ],
       // 데이터 출처 disclaimer
       dataSourceNote: '* 발송/오픈/한도조회 수/신청 수는 태블로 집계 기준 / * 약정/매출 비용 및 ROAS 는 별도 쿼리로 추출',
-      note: '1차 완료 · 2차 진행중(6/15~6/21) · 2차 KPI: 한도조회→약정 CVR 4%, 누적 약정 27건, ROAS 250%',
+      note: '1차·2차 완료 · 3차 진행중(7/13~, 상시) · 3차는 1차와 동일 구조(브랜드메시지·ROAS) + 약정 시 포인트 자동 즉시 지급 · 3차 KPI: 한도조회→약정 CVR 7%, 약정자 137명, ROAS 400%',
       // dailyLog — 시트 컬럼명과 통일된 schema. group('1차'/'2차') 로 라운드 구분.
       // schema: { date, group, send, appOpen, limitCheck, applyCount, contract, contractAmount, pointCost, sendCost, revenue, memo }
       dailyLog: [
@@ -902,7 +914,22 @@ const DEFAULT_DATA = {
         { date: '2026-06-17', group: '2차', send: 11021, appOpen: 72, limitCheck: 22, applyCount: 3, contract: 1, contractAmount: 3000000, pointCost: 3000, sendCost: 0, revenue: 37500, memo: '' },
         { date: '2026-06-18', group: '2차', send: 10886, appOpen: 61, limitCheck: 22, applyCount: 6, contract: 2, contractAmount: 7300000, pointCost: 7300, sendCost: 0, revenue: 59150, memo: '' },
         { date: '2026-06-19', group: '2차', send: 10152, appOpen: 60, limitCheck: 19, applyCount: 3, contract: 2, contractAmount: 37000000, pointCost: 37000, sendCost: 0, revenue: 606300, memo: '' },
-        { date: '2026-06-22', group: '2차', send: 21415, appOpen: 121, limitCheck: 33, applyCount: 6, contract: 1, contractAmount: 3000000, pointCost: 3000, sendCost: 0, revenue: 37500, memo: '주말(6/20~21) 미운영' }
+        { date: '2026-06-22', group: '2차', send: 21415, appOpen: 121, limitCheck: 33, applyCount: 6, contract: 1, contractAmount: 3000000, pointCost: 3000, sendCost: 0, revenue: 37500, memo: '주말(6/20~21) 미운영' },
+        { date: '2026-07-13', group: '3차', send: null, appOpen: null, limitCheck: null, applyCount: null, contract: null, contractAmount: null, pointCost: null, sendCost: null, revenue: null, memo: '' },
+        { date: '2026-07-14', group: '3차', send: null, appOpen: null, limitCheck: null, applyCount: null, contract: null, contractAmount: null, pointCost: null, sendCost: null, revenue: null, memo: '' },
+        { date: '2026-07-15', group: '3차', send: null, appOpen: null, limitCheck: null, applyCount: null, contract: null, contractAmount: null, pointCost: null, sendCost: null, revenue: null, memo: '' },
+        { date: '2026-07-16', group: '3차', send: null, appOpen: null, limitCheck: null, applyCount: null, contract: null, contractAmount: null, pointCost: null, sendCost: null, revenue: null, memo: '' },
+        { date: '2026-07-17', group: '3차', send: null, appOpen: null, limitCheck: null, applyCount: null, contract: null, contractAmount: null, pointCost: null, sendCost: null, revenue: null, memo: '' },
+        { date: '2026-07-20', group: '3차', send: null, appOpen: null, limitCheck: null, applyCount: null, contract: null, contractAmount: null, pointCost: null, sendCost: null, revenue: null, memo: '' },
+        { date: '2026-07-21', group: '3차', send: null, appOpen: null, limitCheck: null, applyCount: null, contract: null, contractAmount: null, pointCost: null, sendCost: null, revenue: null, memo: '' },
+        { date: '2026-07-22', group: '3차', send: null, appOpen: null, limitCheck: null, applyCount: null, contract: null, contractAmount: null, pointCost: null, sendCost: null, revenue: null, memo: '' },
+        { date: '2026-07-23', group: '3차', send: null, appOpen: null, limitCheck: null, applyCount: null, contract: null, contractAmount: null, pointCost: null, sendCost: null, revenue: null, memo: '' },
+        { date: '2026-07-24', group: '3차', send: null, appOpen: null, limitCheck: null, applyCount: null, contract: null, contractAmount: null, pointCost: null, sendCost: null, revenue: null, memo: '' },
+        { date: '2026-07-27', group: '3차', send: null, appOpen: null, limitCheck: null, applyCount: null, contract: null, contractAmount: null, pointCost: null, sendCost: null, revenue: null, memo: '' },
+        { date: '2026-07-28', group: '3차', send: null, appOpen: null, limitCheck: null, applyCount: null, contract: null, contractAmount: null, pointCost: null, sendCost: null, revenue: null, memo: '' },
+        { date: '2026-07-29', group: '3차', send: null, appOpen: null, limitCheck: null, applyCount: null, contract: null, contractAmount: null, pointCost: null, sendCost: null, revenue: null, memo: '' },
+        { date: '2026-07-30', group: '3차', send: null, appOpen: null, limitCheck: null, applyCount: null, contract: null, contractAmount: null, pointCost: null, sendCost: null, revenue: null, memo: '' },
+        { date: '2026-07-31', group: '3차', send: null, appOpen: null, limitCheck: null, applyCount: null, contract: null, contractAmount: null, pointCost: null, sendCost: null, revenue: null, memo: '' }
       ]
     }
   ],
@@ -1544,14 +1571,16 @@ function renderP6Header() {
     badge.style.background = active ? '#fcd34d' : '#e2e8f0';
     badge.style.color = active ? '#92400e' : '#475569';
   }
-  if (title) title.textContent = `${r.group}: ${r.period} (총 ${r.days}일)`;
+  if (title) title.textContent = r.days != null ? `${r.group}: ${r.period} (총 ${r.days}일)` : `${r.group}: ${r.period}`;
   if (desc) {
     // 목표가 설정된 KPI만 요약에 표기 (CPA·순이익 등 목표 없는 참고지표는 생략)
     const parts = (r.kpis || []).filter(k => k.goal != null).map(k => {
       const g = k.format === 'pct' ? pct(k.goal, 0) : k.format === 'krw' ? krw(k.goal) : `${k.goal}`;
       return `${k.shortLabel || k.label} ${g}`;
     });
-    desc.innerHTML = '핵심 KPI: ' + parts.map((p, i) => i === 0 ? `<strong>${p}</strong>` : p).join(' · ');
+    let html = '핵심 KPI: ' + parts.map((p, i) => i === 0 ? `<strong>${p}</strong>` : p).join(' · ');
+    if (r.pointNote) html += `<div style="margin-top:6px;font-size:12px;color:var(--text-2);">${r.pointNote}</div>`;
+    desc.innerHTML = html;
   }
 }
 
@@ -1587,12 +1616,18 @@ function renderP6Progress() {
   const today = new Date();
   today.setHours(0,0,0,0);
   const start = new Date(r.start);
-  const end = new Date(r.end);
-  const totalDays = r.days;
-  const elapsed = Math.min(totalDays, Math.max(0, Math.floor((today - start) / 86400000) + 1));
-  const remain = Math.max(0, Math.floor((end - today) / 86400000));
   const ddayEl = document.getElementById('p6-dday-pill');
-  if (ddayEl) ddayEl.textContent = today > end ? `종료 (총 ${totalDays}일)` : `D-${remain} (경과 ${elapsed}/${totalDays}일)`;
+  if (r.end == null || r.days == null) {
+    // 마감기한 없는 상시 라운드 — 경과일만 표기
+    const elapsed = Math.max(1, Math.floor((today - start) / 86400000) + 1);
+    if (ddayEl) ddayEl.textContent = `상시 운영 (경과 ${elapsed}일)`;
+  } else {
+    const end = new Date(r.end);
+    const totalDays = r.days;
+    const elapsed = Math.min(totalDays, Math.max(0, Math.floor((today - start) / 86400000) + 1));
+    const remain = Math.max(0, Math.floor((end - today) / 86400000));
+    if (ddayEl) ddayEl.textContent = today > end ? `종료 (총 ${totalDays}일)` : `D-${remain} (경과 ${elapsed}/${totalDays}일)`;
+  }
 
   const avgPrice = div(a.revenue, a.contract);    // 평균 수수료 = 매출 / 약정수
 
