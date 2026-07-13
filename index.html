@@ -564,7 +564,7 @@
         <div id="p6-dday-pill" style="font-size:12px; padding:4px 10px; border-radius:4px; background:#fef3c7; color:#92400e; font-weight:600;"></div>
       </div>
 
-      <h3 style="font-size:13px; font-weight:600; margin-bottom:10px; color:var(--text-2);">🎯 주요 성과 지표</h3>
+      <h3 id="p6-kpi-heading" style="font-size:13px; font-weight:600; margin-bottom:10px; color:var(--text-2);">🎯 핵심 KPI</h3>
       <div class="kpi-grid" id="p6-kpis"></div>
 
       <h3 style="font-size:13px; font-weight:600; margin: 22px 0 10px; color:var(--text-2);">📊 누적 성과</h3>
@@ -1573,9 +1573,12 @@ function renderP6Header() {
     badge.style.color = active ? '#92400e' : '#475569';
   }
   if (title) title.textContent = r.days != null ? `${r.group}: ${r.period} (총 ${r.days}일)` : `${r.group}: ${r.period}`;
+  // 목표가 설정된 KPI만 요약에 표기 (CPA·순이익 등 목표 없는 참고지표는 생략)
+  const goaled = (r.kpis || []).filter(k => k.goal != null);
+  // 카드 섹션 제목: 목표 있는 라운드(1차/2차)는 '핵심 KPI', 목표 없는 상시 라운드(3차)는 '주요 성과 지표'
+  const heading = document.getElementById('p6-kpi-heading');
+  if (heading) heading.textContent = goaled.length ? '🎯 핵심 KPI' : '🎯 주요 성과 지표';
   if (desc) {
-    // 목표가 설정된 KPI만 요약에 표기 (CPA·순이익 등 목표 없는 참고지표는 생략)
-    const goaled = (r.kpis || []).filter(k => k.goal != null);
     let html;
     if (goaled.length) {
       const parts = goaled.map(k => {
