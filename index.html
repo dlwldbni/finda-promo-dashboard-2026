@@ -887,10 +887,11 @@ const DEFAULT_DATA = {
           round: 3, group: '3차', period: '26.07.13 ~ (상시)',
           start: '2026-07-13', end: null, days: null, status: '진행중',
           pointNote: '💡 이번 라운드부터 약정 시 포인트 자동 즉시 지급',
+          // 상시화 라운드 — 목표 수치 없이 주요 지표만 실적 표기 (reference)
           kpis: [
-            { label: '한도조회→약정 CVR', shortLabel: '한도조회→약정 CVR', goal: 0.07, formula: 'limitToContractCVR', format: 'pct' },
-            { label: '약정자 수', shortLabel: '약정자 수', goal: 137, formula: 'contractCount', format: 'int' },
-            { label: 'ROAS', shortLabel: 'ROAS', goal: 4.00, formula: 'roas', format: 'pct' }
+            { label: '한도조회→약정 CVR', shortLabel: '한도조회→약정 CVR', formula: 'limitToContractCVR', format: 'pct', reference: true, hint: '약정 수 ÷ 한도조회 수' },
+            { label: '약정자 수', shortLabel: '약정자 수', formula: 'contractCount', format: 'int', reference: true, hint: '누적 약정 건수' },
+            { label: 'ROAS', shortLabel: 'ROAS', formula: 'roas', format: 'pct', reference: true, hint: '매출 ÷ 총 비용' }
           ]
         }
       ],
@@ -1574,11 +1575,19 @@ function renderP6Header() {
   if (title) title.textContent = r.days != null ? `${r.group}: ${r.period} (총 ${r.days}일)` : `${r.group}: ${r.period}`;
   if (desc) {
     // 목표가 설정된 KPI만 요약에 표기 (CPA·순이익 등 목표 없는 참고지표는 생략)
-    const parts = (r.kpis || []).filter(k => k.goal != null).map(k => {
-      const g = k.format === 'pct' ? pct(k.goal, 0) : k.format === 'krw' ? krw(k.goal) : `${k.goal}`;
-      return `${k.shortLabel || k.label} ${g}`;
-    });
-    let html = '핵심 KPI: ' + parts.map((p, i) => i === 0 ? `<strong>${p}</strong>` : p).join(' · ');
+    const goaled = (r.kpis || []).filter(k => k.goal != null);
+    let html;
+    if (goaled.length) {
+      const parts = goaled.map(k => {
+        const g = k.format === 'pct' ? pct(k.goal, 0) : k.format === 'krw' ? krw(k.goal) : `${k.goal}`;
+        return `${k.shortLabel || k.label} ${g}`;
+      });
+      html = '핵심 KPI: ' + parts.map((p, i) => i === 0 ? `<strong>${p}</strong>` : p).join(' · ');
+    } else {
+      // 목표 없는 상시 라운드 — 주요 지표 라벨만 표기
+      const labels = (r.kpis || []).map(k => k.shortLabel || k.label);
+      html = '주요 지표: ' + labels.map((l, i) => i === 0 ? `<strong>${l}</strong>` : l).join(' · ');
+    }
     if (r.pointNote) html += `<div style="margin-top:6px;font-size:12px;color:var(--text-2);">${r.pointNote}</div>`;
     desc.innerHTML = html;
   }
