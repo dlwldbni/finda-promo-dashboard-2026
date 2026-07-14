@@ -589,6 +589,7 @@
               <th class="num">대출 신청 수</th>
               <th class="num">약정 수</th>
               <th class="num" style="background:#fef3c7;">조회-약정 CVR</th>
+              <th class="num">포인트 지급</th>
               <th class="num">총 약정 금액</th>
               <th class="num">포인트 비용</th>
               <th class="num">발송 비용</th>
@@ -899,7 +900,8 @@ const DEFAULT_DATA = {
       dataSourceNote: '* 발송/오픈/한도조회 수/신청 수는 태블로 집계 기준 / * 약정/매출 비용 및 ROAS 는 별도 쿼리로 추출',
       note: '1차·2차 완료 · 3차 진행중(7/13~, 상시) · 3차는 1차와 동일 구조(브랜드메시지·ROAS) + 약정 시 포인트 자동 즉시 지급 · 3차 KPI: 한도조회→약정 CVR 7%, 약정자 137명, ROAS 400%',
       // dailyLog — 시트 컬럼명과 통일된 schema. group('1차'/'2차') 로 라운드 구분.
-      // schema: { date, group, send, appOpen, limitCheck, applyCount, contract, contractAmount, pointCost, sendCost, revenue, memo }
+      // schema: { date, group, send, appOpen, limitCheck, applyCount, contract, contractAmount, pointCost, sendCost, revenue, pointPaid, memo }
+      // ※ pointPaid(포인트 지급 명) = 3차부터 추가된 컬럼. 1차/2차 행엔 없음(—).
       dailyLog: [
         { date: '2026-05-28', group: '1차', send: 2213, appOpen: 32, limitCheck: 23, applyCount: 6, contract: 0, contractAmount: 0, pointCost: 0, sendCost: 49793, revenue: 0, memo: '' },
         { date: '2026-05-29', group: '1차', send: 19091, appOpen: 267, limitCheck: 161, applyCount: 38, contract: 5, contractAmount: 32700000, pointCost: 32700, sendCost: 429548, revenue: 450162, memo: '' },
@@ -916,7 +918,7 @@ const DEFAULT_DATA = {
         { date: '2026-06-18', group: '2차', send: 10886, appOpen: 61, limitCheck: 22, applyCount: 6, contract: 2, contractAmount: 7300000, pointCost: 7300, sendCost: 0, revenue: 59150, memo: '' },
         { date: '2026-06-19', group: '2차', send: 10152, appOpen: 60, limitCheck: 19, applyCount: 3, contract: 2, contractAmount: 37000000, pointCost: 37000, sendCost: 0, revenue: 606300, memo: '' },
         { date: '2026-06-22', group: '2차', send: 21415, appOpen: 121, limitCheck: 33, applyCount: 6, contract: 1, contractAmount: 3000000, pointCost: 3000, sendCost: 0, revenue: 37500, memo: '주말(6/20~21) 미운영' },
-        { date: '2026-07-13', group: '3차', send: null, appOpen: null, limitCheck: null, applyCount: null, contract: null, contractAmount: null, pointCost: null, sendCost: null, revenue: null, memo: '' },
+        { date: '2026-07-13', group: '3차', send: 39390, appOpen: 436, limitCheck: 251, applyCount: 56, contract: 12, contractAmount: 126080000, pointCost: 97980, sendCost: 886275, revenue: 980775, pointPaid: 8, memo: '' },
         { date: '2026-07-14', group: '3차', send: null, appOpen: null, limitCheck: null, applyCount: null, contract: null, contractAmount: null, pointCost: null, sendCost: null, revenue: null, memo: '' },
         { date: '2026-07-15', group: '3차', send: null, appOpen: null, limitCheck: null, applyCount: null, contract: null, contractAmount: null, pointCost: null, sendCost: null, revenue: null, memo: '' },
         { date: '2026-07-16', group: '3차', send: null, appOpen: null, limitCheck: null, applyCount: null, contract: null, contractAmount: null, pointCost: null, sendCost: null, revenue: null, memo: '' },
@@ -1083,11 +1085,11 @@ const mayLatest = mayTotal;
 // P6 — 시트 컬럼명 schema. 새 필드 + 기존 인터페이스 alias 둘 다 반환.
 function p6Total(group) {
   const p = DATA.promotions.find(x => x.id === 'P6');
-  const empty = { send: null, introView: null, intro: null, apply: null, contract: null, cost: null, appOpen: null, limitCheck: null, applyCount: null, contractAmount: null, pointCost: null, sendCost: null, revenue: null };
+  const empty = { send: null, introView: null, intro: null, apply: null, contract: null, cost: null, appOpen: null, limitCheck: null, applyCount: null, contractAmount: null, pointCost: null, sendCost: null, revenue: null, pointPaid: null };
   if (!p || !p.dailyLog) return empty;
   // group 인자가 있으면 해당 라운드(1차/2차)만 합산, 없으면 전체(프로그램 누적)
   const rows = group ? p.dailyLog.filter(r => (r.group || '1차') === group) : p.dailyLog;
-  const t = { send: 0, appOpen: 0, limitCheck: 0, applyCount: 0, contract: 0, contractAmount: 0, pointCost: 0, sendCost: 0, revenue: 0 };
+  const t = { send: 0, appOpen: 0, limitCheck: 0, applyCount: 0, contract: 0, contractAmount: 0, pointCost: 0, sendCost: 0, revenue: 0, pointPaid: 0 };
   const has = {};
   for (const row of rows) {
     for (const k of Object.keys(t)) {
@@ -1108,6 +1110,7 @@ function p6Total(group) {
     pointCost: has.pointCost ? t.pointCost : null,
     sendCost: has.sendCost ? t.sendCost : null,
     revenue: has.revenue ? t.revenue : null,
+    pointPaid: has.pointPaid ? t.pointPaid : null,   // 포인트 지급 건수(명) — 3차 추가 컬럼
     // 공통 인터페이스 alias (renderComparison/renderKPICards 호환)
     introView: has.appOpen ? t.appOpen : null,         // 오픈 수 → introView
     intro: has.limitCheck ? t.limitCheck : null,        // 한도조회 → intro
@@ -1649,6 +1652,7 @@ function renderP6Progress() {
     { label: '한도조회', value: fmt(a.limitCheck) },
     { label: '대출 신청', value: fmt(a.applyCount) },
     { label: '약정 수', value: fmt(a.contract) },
+    { label: '포인트 지급 (명)', value: fmt(a.pointPaid) },
     { label: '총 약정 금액', value: krw(a.contractAmount) },
     { label: '포인트 비용', value: krw(a.pointCost) },
     { label: '발송 비용', value: krw(a.sendCost) },
@@ -1705,6 +1709,7 @@ function renderP6Daily() {
         ${inputCell(row.applyCount, path+'.applyCount')}
         ${inputCell(row.contract, path+'.contract')}
         <td class="num" style="background:#fef3c7;font-weight:600;">${pct(cvrCheckContract, 2)}</td>
+        ${inputCell(row.pointPaid, path+'.pointPaid')}
         ${inputCell(row.contractAmount, path+'.contractAmount', 'krw')}
         ${inputCell(row.pointCost, path+'.pointCost', 'krw')}
         ${inputCell(row.sendCost, path+'.sendCost', 'krw')}
@@ -1722,7 +1727,7 @@ function renderP6Daily() {
     const toggleLabel = p6DailyExpanded
       ? `▼ 미입력 ${hiddenCount}일 접기`
       : `▶ 미입력 ${hiddenCount}일 펼쳐보기  (입력 완료 ${filledCount}일)`;
-    html += `<tr class="empty-toggle-row" onclick="toggleP6EmptyDays()"><td colspan="16">${toggleLabel}</td></tr>`;
+    html += `<tr class="empty-toggle-row" onclick="toggleP6EmptyDays()"><td colspan="17">${toggleLabel}</td></tr>`;
   }
   tbody.innerHTML = html;
 }
