@@ -498,58 +498,6 @@
     </div>
   </section>
 
-  <!-- 🚀 P7 7월 대고객 한도조회유도 상시화 1차 진행 추적 (현재 진행중 · 최상단 노출) -->
-  <section class="block">
-    <h2 class="section-title">🚀 7월 대고객 한도조회유도 상시화 1차 진행 추적 <span class="badge" style="background:#e2e8f0;color:#475569;">완료 · 1차</span></h2>
-    <div class="panel">
-      <div class="panel-header">
-        <div>
-          <div class="title">26.07.01 ~ 26.07.15 (총 15일)</div>
-          <div class="desc">핵심 KPI = <strong>한도조회 수 2주 누적 15,000건 이상</strong> · 예상비용 350만원 · 인트로→한도조회 / 한도조회→신청 CVR 추적</div>
-        </div>
-        <div id="july-dday-pill" style="font-size:12px; padding:4px 10px; border-radius:4px; background:#e0e7ff; color:#3730a3; font-weight:600;"></div>
-      </div>
-
-      <h3 style="font-size:13px; font-weight:600; margin-bottom:6px; color:var(--text-2);">🎯 목표 vs 누적</h3>
-      <div style="font-size:11px; color:var(--text-2); margin-bottom:10px; padding:7px 11px; background:#eef2ff; border-left:3px solid #a5b4fc; border-radius:4px; line-height:1.6;">
-        💡 <strong>페이스</strong> = 실제 누적 ÷ 기대치 (기대치 = 목표 15,000 × 경과일÷15, 즉 하루 균등 1,000건 기준).
-        <strong style="color:#047857;">100%↑ 초과</strong> · <strong style="color:#b45309;">80~100% 진행중</strong> · <strong style="color:#b91c1c;">80%↓ 미달</strong>.
-        기간 중 진척 속도 지표이며 최종 달성 여부가 아님.
-      </div>
-      <div class="kpi-grid" id="july-progress"></div>
-
-      <h3 style="font-size:13px; font-weight:600; margin: 22px 0 10px; color:var(--text-2);">📅 일자별 누적 로그 <span style="font-weight:400;font-size:11px;color:var(--text-2);">(매일 오전 11시 자동 갱신 · 주말은 월요일 일괄)</span></h3>
-      <div style="font-size:11px; color:var(--text-2); margin-bottom:10px; padding:8px 12px; background:#f8fafc; border-left:3px solid #a5b4fc; border-radius:4px; line-height:1.6;">
-        * 프로모션 조회 / 가승인 / 올거절 / 신청 = <strong>Mixpanel (promo_name=julyevt, 날짜별 unique)</strong> · 약정 수 / 포인트 비용 = <strong>Google Sheet</strong><br>
-        * 한도조회 = 가승인+올거절 · <strong>재방문자는 방문한 날마다 카운트</strong> (누적 = 일별 합)
-      </div>
-      <div class="table-wrap daily-log">
-        <table id="july-daily-table">
-          <thead>
-            <tr>
-              <th>일자</th>
-              <th>경과일</th>
-              <th class="num">프로모션 조회</th>
-              <th class="num">가승인</th>
-              <th class="num">올거절</th>
-              <th class="num" style="background:#e0e7ff;">한도조회<br><span style="font-weight:400;font-size:10px;color:var(--text-2);">(가승인+올거절)</span></th>
-              <th class="num">신용대출 신청</th>
-              <th class="num">대부 신청</th>
-              <th class="num" style="background:#e0e7ff;">신청 수<br><span style="font-weight:400;font-size:10px;color:var(--text-2);">(자동)</span></th>
-              <th class="num">약정수</th>
-              <th class="num">지급비용</th>
-              <th class="num">인트로→한도조회</th>
-              <th class="num">한도조회→신청</th>
-              <th class="num" style="background:#fef3c7;">신청→약정</th>
-              <th>메모</th>
-            </tr>
-          </thead>
-          <tbody id="july-body"></tbody>
-        </table>
-      </div>
-    </div>
-  </section>
-
   <!-- 🔥 P6 타사한도조회자 약정 프로모션 진행 추적 (현재 진행중) -->
   <section class="block">
     <h2 class="section-title">🔥 타사한도조회자 대상 약정 프로모션 진행 추적 <span id="p6-status-badge" class="badge" style="background:#fcd34d;color:#92400e;">진행중 · 2차</span></h2>
@@ -599,6 +547,58 @@
             </tr>
           </thead>
           <tbody id="p6-daily-body"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- 🚀 P7 7월 대고객 한도조회유도 상시화 1차 진행 추적 (완료 · P6 진행추적 아래로 이동) -->
+  <section class="block">
+    <h2 class="section-title">🚀 7월 대고객 한도조회유도 상시화 1차 진행 추적 <span class="badge" style="background:#e2e8f0;color:#475569;">완료 · 1차</span></h2>
+    <div class="panel">
+      <div class="panel-header">
+        <div>
+          <div class="title">26.07.01 ~ 26.07.15 (총 15일)</div>
+          <div class="desc">핵심 KPI = <strong>한도조회 수 2주 누적 15,000건 이상</strong> · 예상비용 350만원 · 인트로→한도조회 / 한도조회→신청 CVR 추적</div>
+        </div>
+        <div id="july-dday-pill" style="font-size:12px; padding:4px 10px; border-radius:4px; background:#e0e7ff; color:#3730a3; font-weight:600;"></div>
+      </div>
+
+      <h3 style="font-size:13px; font-weight:600; margin-bottom:6px; color:var(--text-2);">🎯 목표 vs 누적</h3>
+      <div style="font-size:11px; color:var(--text-2); margin-bottom:10px; padding:7px 11px; background:#eef2ff; border-left:3px solid #a5b4fc; border-radius:4px; line-height:1.6;">
+        💡 <strong>페이스</strong> = 실제 누적 ÷ 기대치 (기대치 = 목표 15,000 × 경과일÷15, 즉 하루 균등 1,000건 기준).
+        <strong style="color:#047857;">100%↑ 초과</strong> · <strong style="color:#b45309;">80~100% 진행중</strong> · <strong style="color:#b91c1c;">80%↓ 미달</strong>.
+        기간 중 진척 속도 지표이며 최종 달성 여부가 아님.
+      </div>
+      <div class="kpi-grid" id="july-progress"></div>
+
+      <h3 style="font-size:13px; font-weight:600; margin: 22px 0 10px; color:var(--text-2);">📅 일자별 누적 로그 <span style="font-weight:400;font-size:11px;color:var(--text-2);">(매일 오전 11시 자동 갱신 · 주말은 월요일 일괄)</span></h3>
+      <div style="font-size:11px; color:var(--text-2); margin-bottom:10px; padding:8px 12px; background:#f8fafc; border-left:3px solid #a5b4fc; border-radius:4px; line-height:1.6;">
+        * 프로모션 조회 / 가승인 / 올거절 / 신청 = <strong>Mixpanel (promo_name=julyevt, 날짜별 unique)</strong> · 약정 수 / 포인트 비용 = <strong>Google Sheet</strong><br>
+        * 한도조회 = 가승인+올거절 · <strong>재방문자는 방문한 날마다 카운트</strong> (누적 = 일별 합)
+      </div>
+      <div class="table-wrap daily-log">
+        <table id="july-daily-table">
+          <thead>
+            <tr>
+              <th>일자</th>
+              <th>경과일</th>
+              <th class="num">프로모션 조회</th>
+              <th class="num">가승인</th>
+              <th class="num">올거절</th>
+              <th class="num" style="background:#e0e7ff;">한도조회<br><span style="font-weight:400;font-size:10px;color:var(--text-2);">(가승인+올거절)</span></th>
+              <th class="num">신용대출 신청</th>
+              <th class="num">대부 신청</th>
+              <th class="num" style="background:#e0e7ff;">신청 수<br><span style="font-weight:400;font-size:10px;color:var(--text-2);">(자동)</span></th>
+              <th class="num">약정수</th>
+              <th class="num">지급비용</th>
+              <th class="num">인트로→한도조회</th>
+              <th class="num">한도조회→신청</th>
+              <th class="num" style="background:#fef3c7;">신청→약정</th>
+              <th>메모</th>
+            </tr>
+          </thead>
+          <tbody id="july-body"></tbody>
         </table>
       </div>
     </div>
