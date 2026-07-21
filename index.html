@@ -500,7 +500,7 @@
 
   <!-- 🚀 P7 7월 대고객 한도조회유도 상시화 1차 진행 추적 (현재 진행중 · 최상단 노출) -->
   <section class="block">
-    <h2 class="section-title">🚀 7월 대고객 한도조회유도 상시화 1차 진행 추적 <span class="badge" style="background:#c7d2fe;color:#3730a3;">진행중 · 1차</span></h2>
+    <h2 class="section-title">🚀 7월 대고객 한도조회유도 상시화 1차 진행 추적 <span class="badge" style="background:#e2e8f0;color:#475569;">완료 · 1차</span></h2>
     <div class="panel">
       <div class="panel-header">
         <div>
@@ -673,7 +673,7 @@
     <h2 class="section-title">2. KPI 달성률 <span class="badge">프로모션별</span></h2>
     <div class="panel">
       <div class="tab-bar" id="kpi-tab-bar">
-        <button class="tab active" onclick="switchKpiTab('p7', event)">🚀 7월 한도조회유도 <span class="kpi-tag" style="background:#c7d2fe;color:#3730a3;">진행중</span></button>
+        <button class="tab active" onclick="switchKpiTab('p7', event)">🚀 7월 한도조회유도 <span class="kpi-tag" style="background:#e2e8f0;color:#475569;">완료</span></button>
         <button class="tab" onclick="switchKpiTab('p6', event)">🔥 타사한도조회자 약정 <span class="kpi-tag" style="background:#fcd34d;color:#92400e;">진행중</span></button>
         <button class="tab" onclick="switchKpiTab('p1', event)">🎴 신년 행운카드</button>
         <button class="tab" onclick="switchKpiTab('p2', event)">🧧 세뱃돈</button>
@@ -1201,7 +1201,7 @@ function renderComparison() {
     rows.push(`<tr>
       <td class="ko">${p.id}</td>
       <td>${p.month}</td>
-      <td class="ko">${p.name}${isMay?' <span class="kpi-tag" style="background:#fef3c7">진행중</span>':''}${isLoan?' <span class="kpi-tag">신청전환율 KPI</span>':''}</td>
+      <td class="ko">${p.name}${(isMay && p.status==='진행중')?' <span class="kpi-tag" style="background:#fef3c7">진행중</span>':''}${isLoan?' <span class="kpi-tag">신청전환율 KPI</span>':''}</td>
       <td style="color:var(--text-2);font-size:12px;">${p.period}</td>
       <td class="center">${statusBadge(p.status)}</td>
       ${isMay ? `<td class="num" style="color:var(--blue)">${fmt(a.introView)}</td>` : inputCell(a.introView, path+'.introView')}
