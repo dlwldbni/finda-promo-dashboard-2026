@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>2026년 프로모션 성과 리뷰 대시보드</title>
+<title>핀다 Growth팀 성과 대시보드</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -291,6 +291,45 @@
   .tab-content { display: none; }
   .tab-content.active { display: block; }
 
+  /* Category top-level tabs (2-depth navigation) */
+  .cat-bar {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+  }
+  .cat-tab {
+    background: var(--grey-bg);
+    border: 1px solid var(--border);
+    padding: 9px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-2);
+    transition: all 0.15s;
+    font-family: inherit;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+  }
+  .cat-tab:hover { color: var(--text); border-color: #c7cdd6; }
+  .cat-tab.active {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--blue) 100%);
+    color: white;
+    border-color: transparent;
+    box-shadow: var(--shadow);
+  }
+  .cat-tab .cat-count {
+    font-size: 11px; font-weight: 700;
+    background: rgba(0,0,0,0.06); color: var(--text-2);
+    padding: 1px 7px; border-radius: 10px;
+  }
+  .cat-tab.active .cat-count { background: rgba(255,255,255,0.22); color: white; }
+  /* sub-tab visibility driven by active category */
+  #kpi-tab-bar .tab[data-cat] { display: none; }
+  #kpi-tab-bar .tab[data-cat].cat-visible { display: inline-flex; }
+
   /* Daily log */
   .daily-log table td.date { font-variant-numeric: tabular-nums; font-weight: 600; color: var(--navy); }
   .daily-log tr.filled-day td.date::before { content: '✓ '; color: var(--green); }
@@ -413,7 +452,7 @@
   <div class="gate-card">
     <div class="gate-logo">🔒</div>
     <h2>대시보드 접속</h2>
-    <div class="gate-desc">2026년 프로모션 성과 리뷰<br>비밀번호를 입력해주세요</div>
+    <div class="gate-desc">핀다 Growth팀 성과 대시보드<br>비밀번호를 입력해주세요</div>
     <input type="password" id="pwd-input" autofocus autocomplete="off" placeholder="비밀번호">
     <button id="pwd-submit" type="button">접속</button>
     <div id="pwd-error">비밀번호가 일치하지 않습니다</div>
@@ -470,11 +509,11 @@
 
 <header class="top">
   <div class="inner">
-    <h1>📊 2026년 프로모션 성과 리뷰</h1>
+    <h1>📊 핀다 Growth팀 성과 대시보드</h1>
     <div class="meta">
       <span>분석 기간: 2026.01.01 ~ 진행중</span>
       <span class="dot"></span>
-      <span>대상 프로모션 6건 (마수동 유도 · 차번호 입력 제외)</span>
+      <span>프로모션 · 팀 프로젝트 통합</span>
       <span class="dot"></span>
       <span>마지막 업데이트: <span id="last-update">—</span></span>
     </div>
@@ -728,15 +767,21 @@
 
   <!-- KPI 달성률 (프로모션별 탭) -->
   <section class="block">
-    <h2 class="section-title">2. KPI 달성률 <span class="badge">프로모션별</span></h2>
+    <h2 class="section-title">2. KPI 달성률 <span class="badge">프로젝트별</span></h2>
     <div class="panel">
+      <!-- 카테고리 큰탭 (1-depth) -->
+      <div class="cat-bar" id="kpi-cat-bar">
+        <button class="cat-tab active" data-cat="promo" onclick="switchCategory('promo', event)">🎯 프로모션 <span class="cat-count">5</span></button>
+        <button class="cat-tab" data-cat="ongoing" onclick="switchCategory('ongoing', event)">🔁 상시 운영 <span class="cat-count">1</span></button>
+      </div>
+      <!-- 프로젝트 하위탭 (2-depth) — data-cat 으로 카테고리에 소속 -->
       <div class="tab-bar" id="kpi-tab-bar">
-        <button class="tab active" onclick="switchKpiTab('p7', event)">🚀 7월 한도조회유도 <span class="kpi-tag" style="background:#e2e8f0;color:#475569;">완료</span></button>
-        <button class="tab" onclick="switchKpiTab('p6', event)">🔥 타사한도조회자 약정 <span class="kpi-tag" style="background:#fcd34d;color:#92400e;">진행중</span></button>
-        <button class="tab" onclick="switchKpiTab('p1', event)">🎴 신년 행운카드</button>
-        <button class="tab" onclick="switchKpiTab('p2', event)">🧧 세뱃돈</button>
-        <button class="tab" onclick="switchKpiTab('loan', event)">💳 대출신청 상시</button>
-        <button class="tab" onclick="switchKpiTab('p5', event)">🌷 가정의달 <span class="kpi-tag" style="background:#e2e8f0;color:#475569;">완료</span></button>
+        <button class="tab active cat-visible" data-cat="promo" onclick="switchKpiTab('p7', event)">🚀 7월 한도조회유도 <span class="kpi-tag" style="background:#e2e8f0;color:#475569;">완료</span></button>
+        <button class="tab cat-visible" data-cat="promo" onclick="switchKpiTab('p6', event)">🔥 타사한도조회자 약정 <span class="kpi-tag" style="background:#fcd34d;color:#92400e;">진행중</span></button>
+        <button class="tab cat-visible" data-cat="promo" onclick="switchKpiTab('p1', event)">🎴 신년 행운카드</button>
+        <button class="tab cat-visible" data-cat="promo" onclick="switchKpiTab('p2', event)">🧧 세뱃돈</button>
+        <button class="tab cat-visible" data-cat="promo" onclick="switchKpiTab('p5', event)">🌷 가정의달 <span class="kpi-tag" style="background:#e2e8f0;color:#475569;">완료</span></button>
+        <button class="tab" data-cat="ongoing" onclick="switchKpiTab('loan', event)">💳 대출신청 상시</button>
       </div>
       <div id="tab-p7" class="tab-content active"></div>
       <div id="tab-p6" class="tab-content"></div>
@@ -749,7 +794,7 @@
 
 
   <footer class="foot">
-    <div>2026년 프로모션 성과 리뷰 대시보드 · <span id="footer-update">—</span></div>
+    <div>핀다 Growth팀 성과 대시보드 · <span id="footer-update">—</span></div>
     <div style="margin-top:6px;">데이터는 브라우저 <code>localStorage</code>에 저장됩니다. 팀 공유는 <strong>JSON 내보내기</strong>로.</div>
   </footer>
 </div>
@@ -2143,6 +2188,17 @@ function switchKpiTab(which, ev) {
   document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
   if (ev && ev.currentTarget) ev.currentTarget.classList.add('active');
   document.getElementById('tab-' + which).classList.add('active');
+}
+
+// 카테고리 큰탭 전환: 해당 카테고리의 하위탭만 보이게 하고, 첫 하위탭을 자동 선택
+function switchCategory(cat, ev) {
+  document.querySelectorAll('#kpi-cat-bar .cat-tab').forEach(t =>
+    t.classList.toggle('active', t.dataset.cat === cat));
+  document.querySelectorAll('#kpi-tab-bar .tab').forEach(t =>
+    t.classList.toggle('cat-visible', t.dataset.cat === cat));
+  // 이 카테고리의 첫 하위탭을 눌러 콘텐츠까지 전환 (기존 switchKpiTab 재사용)
+  const first = document.querySelector('#kpi-tab-bar .tab[data-cat="' + cat + '"]');
+  if (first) first.click();
 }
 
 function renderProf() {
