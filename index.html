@@ -133,6 +133,9 @@
   .pc-metrics { display:grid; grid-template-columns:repeat(3,1fr); gap:11px 6px; margin-top:14px; }
   .pc-m-v { font-size:14px; font-weight:800; font-variant-numeric:tabular-nums; letter-spacing:-0.3px; }
   .pc-m-l { font-size:10.5px; color:var(--text-3); margin-top:1px; line-height:1.25; }
+  .pc-m-sub { font-size:9.5px; color:var(--text-3); margin-top:2px; opacity:.9; line-height:1.3; }
+  .kpi-sub { font-size:11px; color:var(--text-2); margin-top:4px; font-weight:600; }
+  .kpi.cvr-kpi { background:#fff; border-left-style:dashed; }
   /* 월별/차수 breakdown */
   .pc-runs { margin-top:13px; border-top:1px dashed var(--border); padding-top:10px; }
   .pc-runs-title { font-size:10px; font-weight:800; color:var(--text-3); margin-bottom:5px; letter-spacing:0.4px; }
@@ -307,13 +310,14 @@ const LINES = {
             headline:{key:'inquiry', label:'한도조회 수', fmt:'int'},
             metrics:[
               {key:'introView', label:'인트로 조회', fmt:'int', agg:'sum'},
-              {key:'inquiry',   label:'한도조회 수', fmt:'int', agg:'sum'},
-              {key:'apply',     label:'대출 신청 수', fmt:'int', agg:'sum'},
+              {key:'inquiry',   label:'한도조회 수', fmt:'int', agg:'sum', sub:[{key:'approve',label:'가승인'},{key:'reject',label:'올거절'}]},
+              {key:'apply',     label:'대출 신청 수', fmt:'int', agg:'sum', sub:[{key:'creditLoan',label:'신용대출'},{key:'otherLoan',label:'우수대부'}]},
               {key:'contract',  label:'약정 수',     fmt:'int', agg:'sum'},
               {key:'amount',    label:'약정 금액',   fmt:'won', agg:'sum'},
               {key:'revenue',   label:'매출',        fmt:'won', agg:'sum'},
             ],
             heroKeys:['inquiry','apply','contract'],
+            funnel:['introView','inquiry','apply','contract'],
             cvrs:[
               {num:'inquiry',  den:'introView', label:'인트로→한도조회 CVR'},
               {num:'apply',    den:'inquiry',   label:'한도조회→신청 CVR'},
@@ -392,6 +396,10 @@ function projInRange(proj){ return inRange(proj.daily); }
 function aggDaily(rows, cfg){
   const agg = {}; const cnt = rows.length;
   cfg.metrics.forEach(mt => { let s=0; rows.forEach(r=> s += (r.m[mt.key]||0)); agg[mt.key] = mt.agg==='avg' ? (cnt? s/cnt : 0) : s; });
+  // 서브 지표(가승인/올거절/신용대출/우수대부 등 cfg.metrics 외 숫자 키)도 sum 집계
+  const extra = new Set();
+  rows.forEach(r=> Object.keys(r.m).forEach(k=> { if(!(k in agg) && typeof r.m[k]==='number') extra.add(k); }));
+  extra.forEach(k=> { let s=0; rows.forEach(r=> s += (r.m[k]||0)); agg[k]=s; });
   return { agg, activeDays:cnt, hasData: cnt>0 };
 }
 
@@ -541,6 +549,37 @@ function renderDetailTabs(){
 
 function projCvr(pp,cfg){ if(!cfg.cvr) return null; const d=pp.agg[cfg.cvr.den]; return d? pp.agg[cfg.cvr.num]/d : 0; }
 
+// 지표 세부 breakdown 텍스트 (예: "가승인 1,219 · 올거절 1,635") — 해당 서브 데이터 있을 때만
+function subText(mt, agg){
+  if(!mt.sub) return '';
+  const parts = mt.sub.filter(s=> agg[s.key]!=null).map(s=> `${s.label} ${fmtInt(agg[s.key])}`);
+  return parts.join(' · ');
+}
+// 퍼널 순서 KPI 아이템 (지표 → CVR → 지표 …). 프로젝트가 추적하는 것만.
+function funnelItems(cfg, agg, metricKeys){
+  const has = k => (metricKeys||[]).includes(k);
+  const funnel = cfg.funnel || cfg.heroKeys || cfg.metrics.map(m=>m.key);
+  const items = [];
+  funnel.forEach((key, i) => {
+    if(has(key)){ const mt=cfg.metrics.find(m=>m.key===key); items.push({type:'metric', mt, value:agg[key]}); }
+    if(i < funnel.length-1){
+      const nextKey = funnel[i+1];
+      const c = (cfg.cvrs||[]).find(x=> x.den===key && x.num===nextKey);
+      if(c && has(key) && has(nextKey)) items.push({type:'cvr', label:c.label, value: agg[key]? agg[nextKey]/agg[key] : null});
+    }
+  });
+  // 퍼널 밖 지표(약정금액·매출 등)는 뒤에
+  cfg.metrics.forEach(mt=>{ if(!funnel.includes(mt.key) && has(mt.key)) items.push({type:'metric', mt, value:agg[mt.key]}); });
+  return items;
+}
+function renderKpiItems(items, cfg, agg){
+  return items.map(it=>{
+    if(it.type==='cvr') return `<div class="kpi cvr-kpi" style="--c:${cfg.color}"><div class="l">${it.label}</div><div class="v">${it.value==null?'—':(it.value*100).toFixed(1)+'%'}</div></div>`;
+    const st = subText(it.mt, agg||{});
+    return `<div class="kpi" style="--c:${cfg.color};--cbg:var(${cfg.cvar}-bg)"><div class="l">${it.mt.label}${it.mt.agg==='avg'?' (일평균)':''}</div><div class="v">${fmtCell(it.mt, it.value)}</div>${st?`<div class="kpi-sub">${st}</div>`:''}</div>`;
+  }).join('');
+}
+
 let trendChart=null;
 function renderDetail(){
   const k = state.line; const cfg = LINES[k];
@@ -588,7 +627,7 @@ function renderDetail(){
   const cards = withData.map(pp=>{
     const p = pp.proj; const share = pp.agg[basis]/grand; const cvr = projCvr(pp,cfg);
     const pmets = cfg.metrics.filter(mt=> (p.metricKeys||[]).includes(mt.key));
-    const metrics = pmets.map(mt=>`<div><div class="pc-m-v">${fmtCell(mt, pp.agg[mt.key])}</div><div class="pc-m-l">${mt.label}${mt.agg==='avg'?' (일평균)':''}</div></div>`).join('');
+    const metrics = pmets.map(mt=>{ const st=subText(mt, pp.agg); return `<div><div class="pc-m-v">${fmtCell(mt, pp.agg[mt.key])}</div><div class="pc-m-l">${mt.label}${mt.agg==='avg'?' (일평균)':''}</div>${st?`<div class="pc-m-sub">${st}</div>`:''}</div>`; }).join('');
     const cvrM = cvr!=null ? `<div><div class="pc-m-v" style="color:${cfg.color}">${(cvr*100).toFixed(1)}%</div><div class="pc-m-l">${cfg.cvr.label}</div></div>` : '';
     // 월별/차수 breakdown (run 2개 이상 & 선택 기간에 데이터 있는 run 만)
     let runsHtml = '';
@@ -688,12 +727,11 @@ function renderModalContent(){
   const span = modalSpan(p);
   const rows = modalDailyRows(p);
   const tot = aggDaily(rows, cfg);
-  // 이 프로젝트가 실제 추적하는 지표만
+  // 이 프로젝트가 실제 추적하는 지표만 (표 컬럼용)
   const pmets = cfg.metrics.filter(mt=> (p.metricKeys||[]).includes(mt.key));
-  const pcvrs = (cfg.cvrs||[]).filter(c=> (p.metricKeys||[]).includes(c.num) && (p.metricKeys||[]).includes(c.den))
-    .map(c=>({ ...c, value: tot.agg[c.den] ? tot.agg[c.num]/tot.agg[c.den] : null }));
-  const kpis = pmets.map(mt=>`<div class="kpi" style="--c:${cfg.color};--cbg:var(${cfg.cvar}-bg)"><div class="l">${mt.label}${mt.agg==='avg'?' (일평균)':''}</div><div class="v">${fmtCell(mt, tot.agg[mt.key])}</div></div>`).join('');
-  const cvrKpi = pcvrs.map(c=>`<div class="kpi" style="--c:${cfg.color}"><div class="l">${c.label}</div><div class="v">${c.value==null?'—':(c.value*100).toFixed(1)+'%'}</div></div>`).join('');
+  // 상세 지표 = 퍼널 순서 (인트로조회 → CVR → 한도조회(가승인/올거절) → CVR → 신청(신용대출/우수대부) → CVR → 약정 …)
+  const kpis = renderKpiItems(funnelItems(cfg, tot.agg, p.metricKeys), cfg, tot.agg);
+  const cvrKpi = '';
 
   // 회차(월별) 탭
   let runTabs='';

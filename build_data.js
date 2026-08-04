@@ -53,7 +53,11 @@ function dailyRunP5P7(P, label) {
     date: d.date,
     introView: nn(d.introView),
     inquiry: d.paymentCount != null ? d.paymentCount : ((d.approve || 0) + (d.reject || 0)),
+    approve: nn(d.approve),   // 가승인 (한도조회 세부)
+    reject: nn(d.reject),     // 올거절 (한도조회 세부)
     apply: (d.creditLoan != null || d.otherLoan != null) ? (d.creditLoan || 0) + (d.otherLoan || 0) : null,
+    creditLoan: nn(d.creditLoan),  // 신용대출 신청 (신청 세부)
+    otherLoan: nn(d.otherLoan),    // 우수대부 신청 (신청 세부)
     contract: nn(d.contract),
     amount: null,
     revenue: null,
