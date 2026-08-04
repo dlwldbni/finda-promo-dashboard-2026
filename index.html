@@ -572,6 +572,29 @@ function funnelItems(cfg, agg, metricKeys){
   cfg.metrics.forEach(mt=>{ if(!funnel.includes(mt.key) && has(mt.key)) items.push({type:'metric', mt, value:agg[mt.key]}); });
   return items;
 }
+// 표(회차별·일자별) 컬럼 = 핵심지표와 동일 (퍼널 순서 + 가승인/올거절·신용대출/우수대부 세부 + CVR)
+function detailColumns(cfg, metricKeys){
+  const has = k => (metricKeys||[]).includes(k);
+  const funnel = cfg.funnel || cfg.metrics.map(m=>m.key);
+  const cols = [];
+  funnel.forEach((key, i) => {
+    if(has(key)){
+      const mt = cfg.metrics.find(m=>m.key===key);
+      cols.push({label:mt.label, fmt:mt.fmt, kind:'val', key});
+      if(mt.sub) mt.sub.forEach(s=> cols.push({label:s.label, fmt:'int', kind:'sub', key:s.key}));
+    }
+    if(i < funnel.length-1){
+      const nk = funnel[i+1]; const c=(cfg.cvrs||[]).find(x=> x.den===key && x.num===nk);
+      if(c && has(key) && has(nk)) cols.push({label:c.label, kind:'cvr', num:nk, den:key});
+    }
+  });
+  cfg.metrics.forEach(mt=>{ if(!funnel.includes(mt.key) && has(mt.key)) cols.push({label:mt.label, fmt:mt.fmt, kind:'val', key:mt.key}); });
+  return cols;
+}
+function colValue(col, obj){
+  if(col.kind==='cvr'){ const num=obj[col.num], den=obj[col.den]; return (den && num!=null) ? ((num/den)*100).toFixed(1)+'%' : '—'; }
+  const v = obj[col.key]; return v==null ? '—' : fmtVal(v, col.fmt||'int');
+}
 function renderKpiItems(items, cfg, agg){
   return items.map(it=>{
     if(it.type==='cvr') return `<div class="kpi cvr-kpi" style="--c:${cfg.color}"><div class="l">${it.label}</div><div class="v">${it.value==null?'—':(it.value*100).toFixed(1)+'%'}</div></div>`;
@@ -750,20 +773,21 @@ function renderModalContent(){
       <span class="m-days">${daysBetween(modalState.start,modalState.end)+1}일</span>
     </div>`;
 
+  // 표 컬럼 = 핵심지표와 동일 (세부 지표·CVR 포함)
+  const dcolsSpec = detailColumns(cfg, p.metricKeys);
+  const colHead = dcolsSpec.map(c=>`<th class="num">${c.label}</th>`).join('');
   // 회차별 표 (전체 볼 때만)
   let runTable='';
   if(p.runs.length>1 && modalState.run==='ALL'){
     const rr = p.runs.map(run=>({run, ...aggDaily(run.daily.filter(d=>d.date>=modalState.start && d.date<=modalState.end), cfg)})).filter(x=>x.hasData);
     if(rr.length){
-      const cols = pmets.map(mt=>`<th class="num">${mt.label}</th>`).join('');
-      const body = rr.map(x=>`<tr><td style="font-weight:700">${x.run.label}</td>${pmets.map(mt=>`<td class="num">${fmtCell(mt, x.agg[mt.key])}</td>`).join('')}</tr>`).join('');
-      runTable = `<div class="modal-section-title">회차별 성과</div><div class="dlog-wrap"><table class="dlog"><thead><tr><th>회차</th>${cols}</tr></thead><tbody>${body}</tbody></table></div>`;
+      const body = rr.map(x=>`<tr><td style="font-weight:700">${x.run.label}</td>${dcolsSpec.map(c=>`<td class="num">${colValue(c, x.agg)}</td>`).join('')}</tr>`).join('');
+      runTable = `<div class="modal-section-title">회차별 성과</div><div class="dlog-wrap"><table class="dlog"><thead><tr><th>회차</th>${colHead}</tr></thead><tbody>${body}</tbody></table></div>`;
     }
   }
-  // 일자별 로그
-  const dcols = pmets.map(mt=>`<th class="num">${mt.label}</th>`).join('');
-  const dbody = rows.map(r=>`<tr><td>${r.date.slice(5)}</td>${pmets.map(mt=>`<td class="num">${fmtCell(mt, r.m[mt.key])}</td>`).join('')}</tr>`).join('');
-  const dtable = `<div class="modal-section-title">일자별 로그 (${rows.length}일)</div><div class="dlog-wrap"><table class="dlog"><thead><tr><th>날짜</th>${dcols}</tr></thead><tbody>${dbody || `<tr><td colspan="${pmets.length+1}" style="text-align:center;color:var(--text-3);padding:18px">선택 기간에 데이터 없음</td></tr>`}</tbody></table></div>`;
+  // 일자별 로그 (핵심지표와 동일 컬럼)
+  const dbody = rows.map(r=>`<tr><td>${r.date.slice(5)}</td>${dcolsSpec.map(c=>`<td class="num">${colValue(c, r.m)}</td>`).join('')}</tr>`).join('');
+  const dtable = `<div class="modal-section-title">일자별 로그 (${rows.length}일)</div><div class="dlog-wrap"><table class="dlog"><thead><tr><th>날짜</th>${colHead}</tr></thead><tbody>${dbody || `<tr><td colspan="${dcolsSpec.length+1}" style="text-align:center;color:var(--text-3);padding:18px">선택 기간에 데이터 없음</td></tr>`}</tbody></table></div>`;
 
   const back = document.getElementById('proj-modal');
   back.style.setProperty('--c', cfg.color);
