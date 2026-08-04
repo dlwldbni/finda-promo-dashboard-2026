@@ -1,0 +1,320 @@
+{
+  "id": "tasa",
+  "line": "loan",
+  "emoji": "🔥",
+  "name": "타사한도조회자 약정",
+  "owner": "지윤",
+  "status": "live",
+  "runs": [
+    {
+      "label": "1차",
+      "start": "2026-05-28",
+      "end": "2026-06-10",
+      "granularity": "daily",
+      "daily": [
+        {
+          "date": "2026-05-28",
+          "introView": null,
+          "inquiry": 23,
+          "apply": 6,
+          "contract": 0,
+          "amount": 0,
+          "revenue": 0
+        },
+        {
+          "date": "2026-05-29",
+          "introView": null,
+          "inquiry": 161,
+          "apply": 38,
+          "contract": 5,
+          "amount": 32700000,
+          "revenue": 450162
+        },
+        {
+          "date": "2026-06-01",
+          "introView": null,
+          "inquiry": 173,
+          "apply": 44,
+          "contract": 13,
+          "amount": 90900000,
+          "revenue": 580343
+        },
+        {
+          "date": "2026-06-02",
+          "introView": null,
+          "inquiry": 192,
+          "apply": 46,
+          "contract": 18,
+          "amount": 289000000,
+          "revenue": 2746780
+        },
+        {
+          "date": "2026-06-04",
+          "introView": null,
+          "inquiry": 172,
+          "apply": 42,
+          "contract": 16,
+          "amount": 130980000,
+          "revenue": 1311450
+        },
+        {
+          "date": "2026-06-05",
+          "introView": null,
+          "inquiry": 181,
+          "apply": 37,
+          "contract": 18,
+          "amount": 255300000,
+          "revenue": 3399345
+        },
+        {
+          "date": "2026-06-08",
+          "introView": null,
+          "inquiry": 171,
+          "apply": 46,
+          "contract": 21,
+          "amount": 259100000,
+          "revenue": 2689424
+        },
+        {
+          "date": "2026-06-09",
+          "introView": null,
+          "inquiry": 151,
+          "apply": 37,
+          "contract": 10,
+          "amount": 68500000,
+          "revenue": 830189
+        },
+        {
+          "date": "2026-06-10",
+          "introView": null,
+          "inquiry": 222,
+          "apply": 51,
+          "contract": 16,
+          "amount": 151300000,
+          "revenue": 1749527
+        }
+      ]
+    },
+    {
+      "label": "2차",
+      "start": "2026-06-15",
+      "end": "2026-06-22",
+      "granularity": "daily",
+      "daily": [
+        {
+          "date": "2026-06-15",
+          "introView": null,
+          "inquiry": 25,
+          "apply": 5,
+          "contract": 1,
+          "amount": 2000000,
+          "revenue": 34400
+        },
+        {
+          "date": "2026-06-16",
+          "introView": null,
+          "inquiry": 25,
+          "apply": 8,
+          "contract": 2,
+          "amount": 20000000,
+          "revenue": 239800
+        },
+        {
+          "date": "2026-06-17",
+          "introView": null,
+          "inquiry": 22,
+          "apply": 3,
+          "contract": 1,
+          "amount": 3000000,
+          "revenue": 37500
+        },
+        {
+          "date": "2026-06-18",
+          "introView": null,
+          "inquiry": 22,
+          "apply": 6,
+          "contract": 2,
+          "amount": 7300000,
+          "revenue": 59150
+        },
+        {
+          "date": "2026-06-19",
+          "introView": null,
+          "inquiry": 19,
+          "apply": 3,
+          "contract": 2,
+          "amount": 37000000,
+          "revenue": 606300
+        },
+        {
+          "date": "2026-06-22",
+          "introView": null,
+          "inquiry": 33,
+          "apply": 6,
+          "contract": 1,
+          "amount": 3000000,
+          "revenue": 37500
+        }
+      ]
+    },
+    {
+      "label": "3차 · 상시",
+      "start": "2026-07-13",
+      "end": "2026-08-03",
+      "granularity": "daily",
+      "daily": [
+        {
+          "date": "2026-07-13",
+          "introView": null,
+          "inquiry": 251,
+          "apply": 56,
+          "contract": 11,
+          "amount": 126080000,
+          "revenue": 980775
+        },
+        {
+          "date": "2026-07-14",
+          "introView": null,
+          "inquiry": 192,
+          "apply": 51,
+          "contract": 12,
+          "amount": 84100000,
+          "revenue": 825137
+        },
+        {
+          "date": "2026-07-15",
+          "introView": null,
+          "inquiry": 185,
+          "apply": 49,
+          "contract": 12,
+          "amount": 140100000,
+          "revenue": 1704176
+        },
+        {
+          "date": "2026-07-16",
+          "introView": null,
+          "inquiry": 165,
+          "apply": 34,
+          "contract": 8,
+          "amount": 61600000,
+          "revenue": 904140
+        },
+        {
+          "date": "2026-07-17",
+          "introView": null,
+          "inquiry": 83,
+          "apply": 27,
+          "contract": 5,
+          "amount": 47500000,
+          "revenue": 1704176
+        },
+        {
+          "date": "2026-07-20",
+          "introView": null,
+          "inquiry": 164,
+          "apply": 42,
+          "contract": 14,
+          "amount": 149000000,
+          "revenue": 1103610
+        },
+        {
+          "date": "2026-07-21",
+          "introView": null,
+          "inquiry": 184,
+          "apply": 49,
+          "contract": 13,
+          "amount": 181200000,
+          "revenue": 1911362
+        },
+        {
+          "date": "2026-07-22",
+          "introView": null,
+          "inquiry": 158,
+          "apply": 31,
+          "contract": 8,
+          "amount": 156800000,
+          "revenue": 1901250
+        },
+        {
+          "date": "2026-07-23",
+          "introView": null,
+          "inquiry": 133,
+          "apply": 43,
+          "contract": 11,
+          "amount": 83000000,
+          "revenue": 893783
+        },
+        {
+          "date": "2026-07-24",
+          "introView": null,
+          "inquiry": 157,
+          "apply": 33,
+          "contract": 5,
+          "amount": 512000000,
+          "revenue": 521232
+        },
+        {
+          "date": "2026-07-27",
+          "introView": null,
+          "inquiry": 201,
+          "apply": 52,
+          "contract": 23,
+          "amount": 234700000,
+          "revenue": 3069782
+        },
+        {
+          "date": "2026-07-28",
+          "introView": null,
+          "inquiry": 193,
+          "apply": 46,
+          "contract": 15,
+          "amount": 305200000,
+          "revenue": 4071930
+        },
+        {
+          "date": "2026-07-29",
+          "introView": null,
+          "inquiry": 196,
+          "apply": 63,
+          "contract": 18,
+          "amount": 180900000,
+          "revenue": 2233285
+        },
+        {
+          "date": "2026-07-30",
+          "introView": null,
+          "inquiry": 172,
+          "apply": 37,
+          "contract": 12,
+          "amount": 158500000,
+          "revenue": 2193970
+        },
+        {
+          "date": "2026-07-31",
+          "introView": null,
+          "inquiry": 152,
+          "apply": 40,
+          "contract": 22,
+          "amount": 264600000,
+          "revenue": 2925750
+        },
+        {
+          "date": "2026-08-03",
+          "introView": null,
+          "inquiry": 151,
+          "apply": 35,
+          "contract": null,
+          "amount": null,
+          "revenue": null
+        }
+      ]
+    }
+  ],
+  "metricKeys": [
+    "inquiry",
+    "apply",
+    "contract",
+    "amount",
+    "revenue"
+  ]
+}

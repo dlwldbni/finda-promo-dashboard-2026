@@ -1,0 +1,362 @@
+{
+  "id": "daegaek",
+  "line": "loan",
+  "emoji": "🎯",
+  "name": "대고객 한도조회 유도",
+  "owner": "지윤",
+  "status": "live",
+  "runs": [
+    {
+      "label": "1월 · 신년 행운카드",
+      "start": "2026-01-06",
+      "end": "2026-01-13",
+      "granularity": "total",
+      "daily": [
+        {
+          "date": "2026-01-06",
+          "introView": 14985,
+          "inquiry": 7395,
+          "apply": null,
+          "contract": 504,
+          "amount": null,
+          "revenue": null
+        }
+      ]
+    },
+    {
+      "label": "5월 · 가정의달",
+      "start": "2026-05-11",
+      "end": "2026-05-29",
+      "granularity": "daily",
+      "daily": [
+        {
+          "date": "2026-05-11",
+          "introView": 4936,
+          "inquiry": 3439,
+          "apply": 754,
+          "contract": 13,
+          "amount": null,
+          "revenue": null
+        },
+        {
+          "date": "2026-05-12",
+          "introView": 2674,
+          "inquiry": 1970,
+          "apply": 611,
+          "contract": 32,
+          "amount": null,
+          "revenue": null
+        },
+        {
+          "date": "2026-05-13",
+          "introView": 2040,
+          "inquiry": 1466,
+          "apply": 444,
+          "contract": 47,
+          "amount": null,
+          "revenue": null
+        },
+        {
+          "date": "2026-05-14",
+          "introView": 2247,
+          "inquiry": 1624,
+          "apply": 504,
+          "contract": 43,
+          "amount": null,
+          "revenue": null
+        },
+        {
+          "date": "2026-05-15",
+          "introView": 2042,
+          "inquiry": 1372,
+          "apply": 418,
+          "contract": 61,
+          "amount": null,
+          "revenue": null
+        },
+        {
+          "date": "2026-05-16",
+          "introView": 902,
+          "inquiry": 619,
+          "apply": 162,
+          "contract": 5,
+          "amount": null,
+          "revenue": null
+        },
+        {
+          "date": "2026-05-17",
+          "introView": 862,
+          "inquiry": 565,
+          "apply": 165,
+          "contract": 5,
+          "amount": null,
+          "revenue": null
+        },
+        {
+          "date": "2026-05-18",
+          "introView": 2564,
+          "inquiry": 1607,
+          "apply": 566,
+          "contract": 82,
+          "amount": null,
+          "revenue": null
+        },
+        {
+          "date": "2026-05-19",
+          "introView": 1578,
+          "inquiry": 1090,
+          "apply": 345,
+          "contract": 55,
+          "amount": null,
+          "revenue": null
+        },
+        {
+          "date": "2026-05-20",
+          "introView": 1926,
+          "inquiry": 1362,
+          "apply": 437,
+          "contract": 48,
+          "amount": null,
+          "revenue": null
+        },
+        {
+          "date": "2026-05-21",
+          "introView": 1459,
+          "inquiry": 984,
+          "apply": 269,
+          "contract": 52,
+          "amount": null,
+          "revenue": null
+        },
+        {
+          "date": "2026-05-22",
+          "introView": 1578,
+          "inquiry": 1078,
+          "apply": 342,
+          "contract": 42,
+          "amount": null,
+          "revenue": null
+        },
+        {
+          "date": "2026-05-23",
+          "introView": 858,
+          "inquiry": 512,
+          "apply": 133,
+          "contract": 6,
+          "amount": null,
+          "revenue": null
+        },
+        {
+          "date": "2026-05-24",
+          "introView": 787,
+          "inquiry": 443,
+          "apply": 109,
+          "contract": 8,
+          "amount": null,
+          "revenue": null
+        },
+        {
+          "date": "2026-05-25",
+          "introView": 1570,
+          "inquiry": 868,
+          "apply": 258,
+          "contract": 12,
+          "amount": null,
+          "revenue": null
+        },
+        {
+          "date": "2026-05-26",
+          "introView": 1912,
+          "inquiry": 981,
+          "apply": 415,
+          "contract": 105,
+          "amount": null,
+          "revenue": null
+        },
+        {
+          "date": "2026-05-27",
+          "introView": 2357,
+          "inquiry": 1656,
+          "apply": 475,
+          "contract": 72,
+          "amount": null,
+          "revenue": null
+        },
+        {
+          "date": "2026-05-28",
+          "introView": 2291,
+          "inquiry": 987,
+          "apply": 301,
+          "contract": 63,
+          "amount": null,
+          "revenue": null
+        },
+        {
+          "date": "2026-05-29",
+          "introView": 1401,
+          "inquiry": 949,
+          "apply": 305,
+          "contract": 76,
+          "amount": null,
+          "revenue": null
+        }
+      ]
+    },
+    {
+      "label": "7월",
+      "start": "2026-07-01",
+      "end": "2026-07-15",
+      "granularity": "daily",
+      "daily": [
+        {
+          "date": "2026-07-01",
+          "introView": 1949,
+          "inquiry": 914,
+          "apply": 173,
+          "contract": 5,
+          "amount": null,
+          "revenue": null
+        },
+        {
+          "date": "2026-07-02",
+          "introView": 1672,
+          "inquiry": 1041,
+          "apply": 256,
+          "contract": 16,
+          "amount": null,
+          "revenue": null
+        },
+        {
+          "date": "2026-07-03",
+          "introView": 1311,
+          "inquiry": 903,
+          "apply": 235,
+          "contract": 19,
+          "amount": null,
+          "revenue": null
+        },
+        {
+          "date": "2026-07-04",
+          "introView": 696,
+          "inquiry": 436,
+          "apply": 96,
+          "contract": 6,
+          "amount": null,
+          "revenue": null
+        },
+        {
+          "date": "2026-07-05",
+          "introView": 694,
+          "inquiry": 460,
+          "apply": 95,
+          "contract": 4,
+          "amount": null,
+          "revenue": null
+        },
+        {
+          "date": "2026-07-06",
+          "introView": 1704,
+          "inquiry": 1334,
+          "apply": 320,
+          "contract": 12,
+          "amount": null,
+          "revenue": null
+        },
+        {
+          "date": "2026-07-07",
+          "introView": 1285,
+          "inquiry": 1158,
+          "apply": 276,
+          "contract": 14,
+          "amount": null,
+          "revenue": null
+        },
+        {
+          "date": "2026-07-08",
+          "introView": 1076,
+          "inquiry": 1053,
+          "apply": 272,
+          "contract": 19,
+          "amount": null,
+          "revenue": null
+        },
+        {
+          "date": "2026-07-09",
+          "introView": 2428,
+          "inquiry": 1193,
+          "apply": 249,
+          "contract": 20,
+          "amount": null,
+          "revenue": null
+        },
+        {
+          "date": "2026-07-10",
+          "introView": 2328,
+          "inquiry": 1127,
+          "apply": 245,
+          "contract": 20,
+          "amount": null,
+          "revenue": null
+        },
+        {
+          "date": "2026-07-11",
+          "introView": 1598,
+          "inquiry": 616,
+          "apply": 112,
+          "contract": 2,
+          "amount": null,
+          "revenue": null
+        },
+        {
+          "date": "2026-07-12",
+          "introView": 1366,
+          "inquiry": 554,
+          "apply": 122,
+          "contract": 6,
+          "amount": null,
+          "revenue": null
+        },
+        {
+          "date": "2026-07-13",
+          "introView": 2725,
+          "inquiry": 1997,
+          "apply": 456,
+          "contract": 29,
+          "amount": null,
+          "revenue": null
+        },
+        {
+          "date": "2026-07-14",
+          "introView": 2033,
+          "inquiry": 1863,
+          "apply": 438,
+          "contract": 34,
+          "amount": null,
+          "revenue": null
+        },
+        {
+          "date": "2026-07-15",
+          "introView": 1649,
+          "inquiry": 1596,
+          "apply": 369,
+          "contract": 24,
+          "amount": null,
+          "revenue": null
+        }
+      ]
+    },
+    {
+      "label": "8월",
+      "start": "2026-08-03",
+      "end": "2026-08-15",
+      "granularity": "daily",
+      "daily": []
+    }
+  ],
+  "metricKeys": [
+    "introView",
+    "inquiry",
+    "apply",
+    "contract"
+  ]
+}

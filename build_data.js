@@ -1,0 +1,117 @@
+// build_data.js — 기존 index.html 의 DEFAULT_DATA(실데이터)를 v2 기여도 대시보드용 data/*.json 으로 변환.
+// 실행: node build_data.js   (레포 루트에서)
+// 나중에 자동갱신 파이프라인이 이 스크립트를 재사용해 JSON 을 갱신하는 "관" 역할.
+const fs = require('fs');
+const path = require('path');
+
+const REPO = __dirname;
+const html = fs.readFileSync(path.join(REPO, 'detail.html'), 'utf8');  // 데이터 소스(구 index.html) — 자동갱신 로봇이 채우는 상세 대시보드
+
+// ---- index.html 에서 DEFAULT_DATA 객체 텍스트를 브레이스 매칭으로 추출 ----
+function extractDefaultData(src) {
+  const marker = 'const DEFAULT_DATA = ';
+  const i = src.indexOf(marker);
+  if (i < 0) throw new Error('DEFAULT_DATA not found');
+  let j = i + marker.length;
+  while (src[j] !== '{') j++;
+  let depth = 0, inStr = null;
+  for (let k = j; k < src.length; k++) {
+    const c = src[k], n = src[k + 1];
+    if (inStr) { if (c === '\\') { k++; continue; } if (c === inStr) inStr = null; continue; }
+    if (c === '/' && n === '/') { while (k < src.length && src[k] !== '\n') k++; continue; }
+    if (c === '/' && n === '*') { k += 2; while (k < src.length && !(src[k] === '*' && src[k + 1] === '/')) k++; k++; continue; }
+    if (c === '"' || c === "'" || c === '`') { inStr = c; continue; }
+    if (c === '{') depth++;
+    else if (c === '}') { depth--; if (depth === 0) return src.slice(j, k + 1); }
+  }
+  throw new Error('unbalanced braces');
+}
+
+const DEFAULT_DATA = eval('(' + extractDefaultData(html) + ')');
+const byId = Object.fromEntries(DEFAULT_DATA.promotions.map(p => [p.id, p]));
+
+// ---- 유틸 ----
+const nn = v => (v === undefined || v === '' ? null : v);
+function periodDates(str) {
+  const m = [...String(str).matchAll(/(\d{2})\.(\d{2})\.(\d{2})/g)];
+  const d = x => `20${x[1]}-${x[2]}-${x[3]}`;
+  return [d(m[0]), m[1] ? d(m[1]) : d(m[0])];
+}
+
+// 총계만 있는 프로모션(P1/P2/P3/P4) → run 1개, 일자 1행(시작일 앵커)
+function totalRun(P, label) {
+  const [s, e] = periodDates(P.period);
+  return {
+    label, start: s, end: e, granularity: 'total',
+    daily: [{ date: s, introView: nn(P.actual.introView), inquiry: nn(P.actual.intro), apply: nn(P.actual.apply), contract: nn(P.actual.contract), amount: null, revenue: nn(P.d0_revenue) }]
+  };
+}
+// P5/P7 스타일 일자별 (paymentCount=한도조회 / creditLoan+otherLoan=신청)
+function dailyRunP5P7(P, label) {
+  const [s, e] = periodDates(P.period);
+  const daily = P.dailyLog.map(d => ({
+    date: d.date,
+    introView: nn(d.introView),
+    inquiry: d.paymentCount != null ? d.paymentCount : ((d.approve || 0) + (d.reject || 0)),
+    apply: (d.creditLoan != null || d.otherLoan != null) ? (d.creditLoan || 0) + (d.otherLoan || 0) : null,
+    contract: nn(d.contract),
+    amount: null,
+    revenue: null,
+  }));
+  return { label, start: s, end: e, granularity: 'daily', daily };
+}
+// P6 (라운드) 일자별 (limitCheck=한도조회 / applyCount=신청 / contractAmount / revenue 있음)
+function p6Runs(P) {
+  return P.rounds.map(r => {
+    const rows = P.dailyLog.filter(d => d.group === r.group);
+    const daily = rows.map(d => ({
+      date: d.date, introView: null, inquiry: nn(d.limitCheck), apply: nn(d.applyCount),
+      contract: nn(d.contract), amount: nn(d.contractAmount), revenue: nn(d.revenue),
+    }));
+    const label = r.group + (r.status === '진행중' ? ' · 상시' : '');
+    const end = r.end || (rows.length ? rows[rows.length - 1].date : r.start);
+    return { label, start: r.start, end, granularity: 'daily', daily };
+  });
+}
+
+// ---- v2 프로젝트 구성 (사용자 정의 그룹핑) ----
+const projects = [
+  { id: 'daegaek', line: 'loan', emoji: '🎯', name: '대고객 한도조회 유도', owner: '지윤', status: 'live',
+    runs: [ totalRun(byId.P1, '1월 · 신년 행운카드'), dailyRunP5P7(byId.P5, '5월 · 가정의달'), dailyRunP5P7(byId.P7, '7월'),
+      // 8월 (augevt) — 8/3~8/15. 데이터 입력 전(내일 아침 시트 채운 뒤 채움).
+      //   TODO 내일: 한도조회(포인트지급)·약정 = 시트 CSV(1_f4xlaNgaI7atD3PlY6XEvhjBt8-ctyflbB9Gafgb6k, gid=0)
+      //             인트로조회·신청 = Mixpanel augevt (LA_intro_view / LA_loandetail_clickCTA + LD_loandetail_clickCTA)
+      { label: '8월', start: '2026-08-03', end: '2026-08-15', granularity: 'daily', daily: [] } ] },
+  { id: 'sebet', line: 'loan', emoji: '🧧', name: '세뱃돈 프로모션', owner: '지윤', status: 'done',
+    runs: [ totalRun(byId.P2, '2월') ] },
+  { id: 'tasa', line: 'loan', emoji: '🔥', name: '타사한도조회자 약정', owner: '지윤', status: 'live',
+    runs: p6Runs(byId.P6) },
+  { id: 'sangsi', line: 'loan', emoji: '💳', name: '대출신청 상시', owner: '지윤', status: 'done',
+    runs: [ totalRun(byId.P3, '4월 · 신규유저'), totalRun(byId.P4, '4월 · 타사한도조회') ] },
+];
+
+// ---- 프로젝트별 실제 추적 지표(metricKeys) 자동 도출 ----
+// (해당 프로젝트가 값을 하나라도 가진 지표만 → 프로젝트마다 지표 세트가 다름)
+const ALL_KEYS = ['introView', 'inquiry', 'apply', 'contract', 'amount', 'revenue'];
+projects.forEach(p => {
+  const rows = p.runs.flatMap(r => r.daily);
+  p.metricKeys = ALL_KEYS.filter(k => rows.some(d => d[k] != null));
+});
+
+// ---- 파일 쓰기 ----
+const dataDir = path.join(REPO, 'data');
+fs.mkdirSync(dataDir, { recursive: true });
+projects.forEach(p => fs.writeFileSync(path.join(dataDir, p.id + '.json'), JSON.stringify(p, null, 2)));
+const list = { loan: projects.filter(p => p.line === 'loan').map(p => p.id), credit: [], asset: [] };
+fs.writeFileSync(path.join(dataDir, 'list.json'), JSON.stringify(list, null, 2));
+
+// ---- 요약 출력 ----
+console.log('생성 완료 → data/');
+projects.forEach(p => {
+  const days = p.runs.reduce((s, r) => s + r.daily.length, 0);
+  const tot = p.runs.flatMap(r => r.daily).reduce((a, d) => {
+    a.inquiry += d.inquiry || 0; a.contract += d.contract || 0; return a;
+  }, { inquiry: 0, contract: 0 });
+  console.log(`  ${p.id.padEnd(8)} runs=${p.runs.length} rows=${days}  한도조회합=${tot.inquiry}  약정합=${tot.contract}  지표=[${p.metricKeys.join(',')}]`);
+});
+console.log('list.json:', JSON.stringify(list));

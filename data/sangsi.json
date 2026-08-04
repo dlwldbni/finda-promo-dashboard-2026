@@ -1,0 +1,50 @@
+{
+  "id": "sangsi",
+  "line": "loan",
+  "emoji": "💳",
+  "name": "대출신청 상시",
+  "owner": "지윤",
+  "status": "done",
+  "runs": [
+    {
+      "label": "4월 · 신규유저",
+      "start": "2026-04-13",
+      "end": "2026-04-29",
+      "granularity": "total",
+      "daily": [
+        {
+          "date": "2026-04-13",
+          "introView": 826,
+          "inquiry": 239,
+          "apply": 105,
+          "contract": 20,
+          "amount": null,
+          "revenue": null
+        }
+      ]
+    },
+    {
+      "label": "4월 · 타사한도조회",
+      "start": "2026-04-14",
+      "end": "2026-04-29",
+      "granularity": "total",
+      "daily": [
+        {
+          "date": "2026-04-14",
+          "introView": 2737,
+          "inquiry": 1704,
+          "apply": 339,
+          "contract": 30,
+          "amount": null,
+          "revenue": null
+        }
+      ]
+    }
+  ],
+  "metricKeys": [
+    "introView",
+    "inquiry",
+    "apply",
+    "contract"
+  ]
+}

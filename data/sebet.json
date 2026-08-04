@@ -1,0 +1,33 @@
+{
+  "id": "sebet",
+  "line": "loan",
+  "emoji": "🧧",
+  "name": "세뱃돈 프로모션",
+  "owner": "지윤",
+  "status": "done",
+  "runs": [
+    {
+      "label": "2월",
+      "start": "2026-02-09",
+      "end": "2026-02-13",
+      "granularity": "total",
+      "daily": [
+        {
+          "date": "2026-02-09",
+          "introView": 5855,
+          "inquiry": 1045,
+          "apply": null,
+          "contract": 21,
+          "amount": null,
+          "revenue": 1355715
+        }
+      ]
+    }
+  ],
+  "metricKeys": [
+    "introView",
+    "inquiry",
+    "contract",
+    "revenue"
+  ]
+}
