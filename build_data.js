@@ -78,14 +78,27 @@ function p6Runs(P) {
   });
 }
 
+// 8월 (augevt) — data/_augevt_daily.json 에서 읽음 (자동갱신 로봇이 이 파일만 갱신).
+//   한도조회(inquiry)=지급건수(시트) / 인트로조회·가승인·올거절·신용대출·우수대부=Mixpanel augevt / 약정=시트
+function augustRun() {
+  let rows = [];
+  try { rows = JSON.parse(fs.readFileSync(path.join(REPO, 'data', '_augevt_daily.json'), 'utf8')); } catch (e) { rows = []; }
+  const daily = rows.map(d => ({
+    date: d.date,
+    introView: nn(d.introView),
+    inquiry: d.paymentCount != null ? d.paymentCount : ((d.approve || 0) + (d.reject || 0)),
+    approve: nn(d.approve), reject: nn(d.reject),
+    apply: (d.creditLoan != null || d.otherLoan != null) ? (d.creditLoan || 0) + (d.otherLoan || 0) : null,
+    creditLoan: nn(d.creditLoan), otherLoan: nn(d.otherLoan),
+    contract: nn(d.contract), amount: null, revenue: null,
+  }));
+  return { label: '8월', start: '2026-08-03', end: '2026-08-15', granularity: 'daily', daily };
+}
+
 // ---- v2 프로젝트 구성 (사용자 정의 그룹핑) ----
 const projects = [
   { id: 'daegaek', line: 'loan', emoji: '🎯', name: '대고객 한도조회 유도', owner: '지윤', status: 'live',
-    runs: [ totalRun(byId.P1, '1월 · 신년 행운카드'), dailyRunP5P7(byId.P5, '5월 · 가정의달'), dailyRunP5P7(byId.P7, '7월'),
-      // 8월 (augevt) — 8/3~8/15. 데이터 입력 전(내일 아침 시트 채운 뒤 채움).
-      //   TODO 내일: 한도조회(포인트지급)·약정 = 시트 CSV(1_f4xlaNgaI7atD3PlY6XEvhjBt8-ctyflbB9Gafgb6k, gid=0)
-      //             인트로조회·신청 = Mixpanel augevt (LA_intro_view / LA_loandetail_clickCTA + LD_loandetail_clickCTA)
-      { label: '8월', start: '2026-08-03', end: '2026-08-15', granularity: 'daily', daily: [] } ] },
+    runs: [ totalRun(byId.P1, '1월 · 신년 행운카드'), dailyRunP5P7(byId.P5, '5월 · 가정의달'), dailyRunP5P7(byId.P7, '7월'), augustRun() ] },
   { id: 'sebet', line: 'loan', emoji: '🧧', name: '세뱃돈 프로모션', owner: '지윤', status: 'done',
     runs: [ totalRun(byId.P2, '2월') ] },
   { id: 'tasa', line: 'loan', emoji: '🔥', name: '타사한도조회자 약정', owner: '지윤', status: 'live',

@@ -486,7 +486,34 @@
       "start": "2026-08-03",
       "end": "2026-08-15",
       "granularity": "daily",
-      "daily": []
+      "daily": [
+        {
+          "date": "2026-08-03",
+          "introView": 4512,
+          "inquiry": 2373,
+          "approve": 939,
+          "reject": 1306,
+          "apply": 448,
+          "creditLoan": 294,
+          "otherLoan": 154,
+          "contract": 13,
+          "amount": null,
+          "revenue": null
+        },
+        {
+          "date": "2026-08-04",
+          "introView": 3037,
+          "inquiry": 1587,
+          "approve": 674,
+          "reject": 1210,
+          "apply": 394,
+          "creditLoan": 231,
+          "otherLoan": 163,
+          "contract": 14,
+          "amount": null,
+          "revenue": null
+        }
+      ]
     }
   ],
   "metricKeys": [
