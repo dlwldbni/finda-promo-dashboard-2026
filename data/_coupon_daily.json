@@ -1,0 +1,16 @@
+[
+  {"date":"2026-07-14","click":88,"inquiry":73,"approve":46,"apply":15,"contract":5,"revenue":749980},
+  {"date":"2026-07-15","click":52,"inquiry":65,"approve":42,"apply":10,"contract":3,"revenue":550044},
+  {"date":"2026-07-16","click":92,"inquiry":81,"approve":53,"apply":18,"contract":2,"revenue":307400},
+  {"date":"2026-07-17","click":23,"inquiry":31,"approve":15,"apply":6,"contract":0,"revenue":0},
+  {"date":"2026-07-18","click":19,"inquiry":26,"approve":16,"apply":7,"contract":0,"revenue":0},
+  {"date":"2026-07-19","click":13,"inquiry":22,"approve":8,"apply":4,"contract":0,"revenue":0},
+  {"date":"2026-07-20","click":123,"inquiry":130,"approve":77,"apply":24,"contract":9,"revenue":857378},
+  {"date":"2026-07-21","click":47,"inquiry":85,"approve":50,"apply":19,"contract":2,"revenue":329980},
+  {"date":"2026-07-22","click":46,"inquiry":70,"approve":42,"apply":8,"contract":4,"revenue":791800},
+  {"date":"2026-07-23","click":34,"inquiry":61,"approve":39,"apply":17,"contract":3,"revenue":1059945},
+  {"date":"2026-07-24","click":37,"inquiry":65,"approve":45,"apply":13,"contract":7,"revenue":989706},
+  {"date":"2026-07-25","click":18,"inquiry":37,"approve":19,"apply":7,"contract":0,"revenue":0},
+  {"date":"2026-07-26","click":13,"inquiry":28,"approve":16,"apply":7,"contract":0,"revenue":0},
+  {"date":"2026-07-27","click":58,"inquiry":103,"approve":70,"apply":28,"contract":9,"revenue":410460}
+]

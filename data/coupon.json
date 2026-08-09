@@ -1,0 +1,150 @@
+{
+  "id": "coupon",
+  "line": "loan",
+  "emoji": "🎟️",
+  "name": "쿠폰함 프로모션",
+  "owner": "민주",
+  "status": "done",
+  "runs": [
+    {
+      "label": "7월",
+      "start": "2026-07-14",
+      "end": "2026-07-27",
+      "granularity": "daily",
+      "daily": [
+        {
+          "date": "2026-07-14",
+          "inquiry": 73,
+          "approve": 46,
+          "apply": 15,
+          "contract": 5,
+          "revenue": 749980,
+          "amount": null
+        },
+        {
+          "date": "2026-07-15",
+          "inquiry": 65,
+          "approve": 42,
+          "apply": 10,
+          "contract": 3,
+          "revenue": 550044,
+          "amount": null
+        },
+        {
+          "date": "2026-07-16",
+          "inquiry": 81,
+          "approve": 53,
+          "apply": 18,
+          "contract": 2,
+          "revenue": 307400,
+          "amount": null
+        },
+        {
+          "date": "2026-07-17",
+          "inquiry": 31,
+          "approve": 15,
+          "apply": 6,
+          "contract": 0,
+          "revenue": 0,
+          "amount": null
+        },
+        {
+          "date": "2026-07-18",
+          "inquiry": 26,
+          "approve": 16,
+          "apply": 7,
+          "contract": 0,
+          "revenue": 0,
+          "amount": null
+        },
+        {
+          "date": "2026-07-19",
+          "inquiry": 22,
+          "approve": 8,
+          "apply": 4,
+          "contract": 0,
+          "revenue": 0,
+          "amount": null
+        },
+        {
+          "date": "2026-07-20",
+          "inquiry": 130,
+          "approve": 77,
+          "apply": 24,
+          "contract": 9,
+          "revenue": 857378,
+          "amount": null
+        },
+        {
+          "date": "2026-07-21",
+          "inquiry": 85,
+          "approve": 50,
+          "apply": 19,
+          "contract": 2,
+          "revenue": 329980,
+          "amount": null
+        },
+        {
+          "date": "2026-07-22",
+          "inquiry": 70,
+          "approve": 42,
+          "apply": 8,
+          "contract": 4,
+          "revenue": 791800,
+          "amount": null
+        },
+        {
+          "date": "2026-07-23",
+          "inquiry": 61,
+          "approve": 39,
+          "apply": 17,
+          "contract": 3,
+          "revenue": 1059945,
+          "amount": null
+        },
+        {
+          "date": "2026-07-24",
+          "inquiry": 65,
+          "approve": 45,
+          "apply": 13,
+          "contract": 7,
+          "revenue": 989706,
+          "amount": null
+        },
+        {
+          "date": "2026-07-25",
+          "inquiry": 37,
+          "approve": 19,
+          "apply": 7,
+          "contract": 0,
+          "revenue": 0,
+          "amount": null
+        },
+        {
+          "date": "2026-07-26",
+          "inquiry": 28,
+          "approve": 16,
+          "apply": 7,
+          "contract": 0,
+          "revenue": 0,
+          "amount": null
+        },
+        {
+          "date": "2026-07-27",
+          "inquiry": 103,
+          "approve": 70,
+          "apply": 28,
+          "contract": 9,
+          "revenue": 410460,
+          "amount": null
+        }
+      ]
+    }
+  ],
+  "metricKeys": [
+    "inquiry",
+    "apply",
+    "contract",
+    "revenue"
+  ]
+}
