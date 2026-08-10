@@ -137,8 +137,19 @@ projects.forEach(p => {
 // ---- 파일 쓰기 ----
 const dataDir = path.join(REPO, 'data');
 fs.mkdirSync(dataDir, { recursive: true });
+// build_data 가 생성하는 프로젝트(지윤)만 파일 덮어씀. 팀원(외부) JSON 은 건드리지 않음.
 projects.forEach(p => fs.writeFileSync(path.join(dataDir, p.id + '.json'), JSON.stringify(p, null, 2)));
-const list = { loan: projects.filter(p => p.line === 'loan').map(p => p.id), credit: [], asset: [] };
+
+// list.json: 생성 프로젝트 + 기존 list 의 팀원(외부) id 보존 병합
+const ownIds = new Set(projects.map(p => p.id));
+let existing = { loan: [], credit: [], asset: [] };
+try { existing = JSON.parse(fs.readFileSync(path.join(dataDir, 'list.json'), 'utf8')); } catch (e) {}
+const list = { loan: [], credit: [], asset: [] };
+['loan', 'credit', 'asset'].forEach(line => {
+  const own = projects.filter(p => p.line === line).map(p => p.id);
+  const ext = (existing[line] || []).filter(id => !ownIds.has(id));  // 팀원이 등록한 외부 프로젝트
+  list[line] = [...own, ...ext];
+});
 fs.writeFileSync(path.join(dataDir, 'list.json'), JSON.stringify(list, null, 2));
 
 // ---- 요약 출력 ----

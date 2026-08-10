@@ -335,19 +335,20 @@ const LINES = {
             cvr:{num:'manageSignup', den:'scoreView', label:'조회 → 관리 전환'},
             subs:['manageSignup','activeUser'] },
   asset:  { key:'asset',  emoji:'💳', name:'자산 서비스 (마이데이터)', color:'var(--asset)', cvar:'--asset',
-            headline:{key:'connect', label:'마이데이터 신규 연동', fmt:'int'},
+            headline:{key:'contributedMau', label:'기여 MAU', fmt:'int'},
             metrics:[
-              {key:'connect',  label:'마이데이터 신규 연동', fmt:'int', agg:'sum'},
-              {key:'accounts', label:'평균 연결 계좌 수',    fmt:'int', agg:'avg'},
-              {key:'mau',      label:'자산조회 일평균 MAU',  fmt:'int', agg:'avg'},
+              {key:'contributedMau', label:'기여 MAU', fmt:'int', agg:'sum'},
+              {key:'connectDone',    label:'연동 완료', fmt:'int', agg:'sum'},
+              {key:'retention',      label:'재방문(리텐션)', fmt:'int', agg:'avg'},
             ],
+            mauDenom:true,   // 기여도 분모 = 전체 마이데이터 당월 MAU (data/_asset_mau.json)
             cvr:null,
-            subs:['accounts','mau'] },
+            subs:['connectDone'] },
 };
 // 기여도(share) 기준으로 쓸 수 있는 지표 후보 & 기본값
 LINES.loan.basisOptions   = ['inquiry','contract'];                   LINES.loan.defaultBasis   = 'inquiry';
 LINES.credit.basisOptions = ['scoreView','manageSignup'];              LINES.credit.defaultBasis = 'scoreView';
-LINES.asset.basisOptions  = ['connect'];                              LINES.asset.defaultBasis  = 'connect';
+LINES.asset.basisOptions  = ['contributedMau'];                       LINES.asset.defaultBasis  = 'contributedMau';
 
 // =====================================================================
 // 프로젝트 데이터: data/list.json + data/<id>.json 에서 로드 (build_data.js 가 생성)
@@ -363,32 +364,51 @@ function eachDay(start,end){ const out=[]; let cur=start; while(cur<=end){ out.p
 
 // ---- data/*.json 로드 → 내부 PROJECTS 구조로 변환 ----
 let PROJECTS = [];
-function metricObj(d){ const m = Object.assign({}, d); delete m.date; return m; }  // date 제외한 지표 키
+let ASSET_MAU = {};  // 전체 마이데이터 월별 MAU (자산 축 기여도 분모)
+function metricObj(d){ const m = Object.assign({}, d); delete m.date; delete m.month; return m; }
 function toInternal(p){
-  const runs = (p.runs||[]).map(r => ({
+  // 자산(월별) 스키마 지원: monthly[] → runs 1개로 변환 (date = 월초 YYYY-MM-01)
+  let runsSrc = p.runs;
+  if (!runsSrc && Array.isArray(p.monthly)) {
+    const rows = p.monthly.map(mo => Object.assign({ date: mo.month + '-01' }, mo));
+    const s = rows.length ? rows[0].date : null, e = rows.length ? rows[rows.length-1].date : null;
+    runsSrc = [{ label: '월별', start: s, end: e, granularity: 'monthly', daily: rows }];
+  }
+  runsSrc = runsSrc || [];
+  const runs = runsSrc.map(r => ({
     label: r.label, start: r.start, end: r.end, granularity: r.granularity,
     daily: (r.daily||[]).map(d => ({ date: d.date, m: metricObj(d) })),
   }));
   const daily = runs.flatMap(r => r.daily);
-  const first = p.runs && p.runs.length ? p.runs[0].start : null;
-  const last  = p.runs && p.runs.length ? p.runs[p.runs.length-1].end : null;
-  return { id:p.id, line:p.line, emoji:p.emoji||'📁', name:p.name, owner:p.owner||'—', status:p.status||'done', metricKeys:p.metricKeys||[], runs, daily, start:first, end:last };
+  // metricKeys 미지정 시 자동 도출 (값 있는 숫자 키) — 팀원 JSON 이 metricKeys 안 넣어도 됨
+  let metricKeys = p.metricKeys;
+  if (!metricKeys) { const ks = new Set(); daily.forEach(r => Object.keys(r.m).forEach(k => { if (typeof r.m[k] === 'number') ks.add(k); })); metricKeys = [...ks]; }
+  const first = runs.length ? runs[0].start : null;
+  const last  = runs.length ? runs[runs.length-1].end : null;
+  return { id:p.id, line:p.line, emoji:p.emoji||'📁', name:p.name, owner:p.owner||'—', status:p.status||'done', metricKeys, runs, daily, start:first, end:last };
 }
 async function loadProjects(){
   const base = 'data/';
-  const list = await fetch(base+'list.json').then(r=>r.json());
+  const [list, mau] = await Promise.all([
+    fetch(base+'list.json').then(r=>r.json()),
+    fetch(base+'_asset_mau.json').then(r=> r.ok ? r.json() : {monthly:{}}).catch(()=>({monthly:{}})),
+  ]);
+  ASSET_MAU = mau.monthly || {};
   const ids = [].concat(list.loan||[], list.credit||[], list.asset||[]);
   const raws = await Promise.all(ids.map(id =>
     fetch(base+id+'.json').then(r=> r.ok ? r.json() : null).catch(()=>null)
   ));
   PROJECTS = raws.filter(Boolean).map(toInternal);
 }
+// 자산 축 기여도 분모 = 전체 마이데이터 '당월'(최신 월) MAU
+function assetMauMonth(){ const ks = Object.keys(ASSET_MAU).sort(); return ks.length ? ks[ks.length-1] : ''; }
+function assetMauTotal(){ const mo = assetMauMonth(); return mo ? (ASSET_MAU[mo]||0) : 0; }
 
 // =====================================================================
 // 상태 & 집계
 // =====================================================================
 const state = { line:'loan', start:'2026-01-01', end: TODAY, preset:'all',
-  basis: { loan:'inquiry', credit:'scoreView', asset:'connect' }, owner:'ALL' };
+  basis: { loan:'inquiry', credit:'scoreView', asset:'contributedMau' }, owner:'ALL' };
 
 function inRange(daily){ return daily.filter(d => d.date >= state.start && d.date <= state.end); }
 function projInRange(proj){ return inRange(proj.daily); }
@@ -497,14 +517,22 @@ function renderLineCards(){
     const cfg = LINES[k];
     const { total, perProject } = aggregateLine(k);
     const active = perProject.filter(p=>p.hasData).length;
-    const hv = total[cfg.headline.key];
-    const subs = cfg.subs.map(sk=>{ const mt=cfg.metrics.find(m=>m.key===sk); return `<div class="lc-sub"><div class="v">${fmtCell(mt, total[sk])}</div><div class="l">${mt.label}</div></div>`; }).join('');
-    let cvrHtml='';
-    if (cfg.cvr){ const cv = total[cfg.cvr.den] ? total[cfg.cvr.num]/total[cfg.cvr.den] : 0; cvrHtml = `<div class="lc-cvr">${cfg.cvr.label} ${(cv*100).toFixed(1)}%</div>`; }
+    const isMau = cfg.mauDenom;
+    const hv = isMau ? assetMauTotal() : total[cfg.headline.key];
+    const headLabel = isMau ? `전체 마이데이터 MAU · ${(+String(assetMauMonth()).slice(5) || 0)}월` : cfg.headline.label;
+    let subs, cvrHtml = '';
+    if (isMau) {
+      const contrib = total.contributedMau || 0; const pct = assetMauTotal() ? contrib / assetMauTotal() * 100 : 0;
+      subs = `<div class="lc-sub"><div class="v">${fmtInt(contrib)}</div><div class="l">팀 기여 MAU</div></div>`;
+      cvrHtml = `<div class="lc-cvr">전체 MAU 대비 ${pct.toFixed(1)}%</div>`;
+    } else {
+      subs = cfg.subs.map(sk=>{ const mt=cfg.metrics.find(m=>m.key===sk); return `<div class="lc-sub"><div class="v">${fmtCell(mt, total[sk])}</div><div class="l">${mt.label}</div></div>`; }).join('');
+      if (cfg.cvr){ const cv = total[cfg.cvr.den] ? total[cfg.cvr.num]/total[cfg.cvr.den] : 0; cvrHtml = `<div class="lc-cvr">${cfg.cvr.label} ${(cv*100).toFixed(1)}%</div>`; }
+    }
     const body = active===0
       ? `<div class="lc-body"><div class="lc-empty">아직 등록된 프로젝트가 없어요<br><span>data/ 에 JSON 추가 시 자동 표시</span></div></div>`
       : `<div class="lc-body">
-          <div class="lc-headline-label">${cfg.headline.label}</div>
+          <div class="lc-headline-label">${headLabel}</div>
           <div class="lc-headline">${fmtVal(hv,cfg.headline.fmt)}</div>
           <div class="lc-spark"><canvas id="spark-${k}"></canvas></div>
           <div class="lc-subs">${subs}</div>
@@ -632,7 +660,8 @@ function renderDetail(){
   const basis = state.basis[k];
   const basisMt = cfg.metrics.find(m=>m.key===basis);
   const allWithData = perProject.filter(p=>p.hasData).sort((a,b)=> b.agg[basis]-a.agg[basis]);
-  const grand = allWithData.reduce((s,p)=>s+p.agg[basis],0) || 1;  // 분모 = 이 축 전체 (담당자 필터와 무관)
+  // 분모 = 이 축 전체 (담당자 필터와 무관). 자산 축은 전체 마이데이터 당월 MAU 를 분모로.
+  const grand = cfg.mauDenom ? (assetMauTotal() || 1) : (allWithData.reduce((s,p)=>s+p.agg[basis],0) || 1);
 
   // 담당자 필터 탭
   const owners = [...new Set(allWithData.map(p=>p.proj.owner))];
