@@ -95,6 +95,23 @@ function augustRun() {
   return { label: '8월', start: '2026-08-03', end: '2026-08-15', granularity: 'daily', daily };
 }
 
+// 쿠폰함 프로모션 (민주) — data/_coupon_daily.json. 지표: 한도조회(가승인 세부)·신청·약정·매출 (인트로조회·올거절·신용대출/우수대부 미집계).
+function couponRun() {
+  let rows = [];
+  try { rows = JSON.parse(fs.readFileSync(path.join(REPO, 'data', '_coupon_daily.json'), 'utf8')); } catch (e) { rows = []; }
+  const daily = rows.map(d => ({
+    date: d.date,
+    inquiry: nn(d.inquiry),
+    approve: nn(d.approve),   // 가승인 (한도조회 세부)
+    apply: nn(d.apply),
+    contract: nn(d.contract),
+    revenue: nn(d.revenue),
+    amount: null,
+  }));
+  const dates = rows.map(r => r.date);
+  return { label: '7월', start: dates[0] || '2026-07-14', end: dates[dates.length - 1] || '2026-07-27', granularity: 'daily', daily };
+}
+
 // ---- v2 프로젝트 구성 (사용자 정의 그룹핑) ----
 const projects = [
   { id: 'daegaek', line: 'loan', emoji: '🎯', name: '대고객 한도조회 유도', owner: '지윤', status: 'live',
@@ -105,6 +122,8 @@ const projects = [
     runs: p6Runs(byId.P6) },
   { id: 'sangsi', line: 'loan', emoji: '💳', name: '대출신청 상시', owner: '지윤', status: 'done',
     runs: [ totalRun(byId.P3, '4월 · 신규유저'), totalRun(byId.P4, '4월 · 타사한도조회') ] },
+  { id: 'coupon', line: 'loan', emoji: '🎟️', name: '쿠폰함 프로모션', owner: '민주', status: 'done',
+    runs: [ couponRun() ] },
 ];
 
 // ---- 프로젝트별 실제 추적 지표(metricKeys) 자동 도출 ----
