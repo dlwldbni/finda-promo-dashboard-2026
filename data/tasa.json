@@ -160,7 +160,7 @@
     {
       "label": "3차 · 상시",
       "start": "2026-07-13",
-      "end": "2026-08-04",
+      "end": "2026-08-07",
       "granularity": "daily",
       "daily": [
         {
@@ -312,9 +312,36 @@
           "introView": null,
           "inquiry": 129,
           "apply": 25,
-          "contract": null,
-          "amount": null,
-          "revenue": null
+          "contract": 6,
+          "amount": 68000000,
+          "revenue": 466330
+        },
+        {
+          "date": "2026-08-05",
+          "introView": null,
+          "inquiry": 157,
+          "apply": 48,
+          "contract": 12,
+          "amount": 112940000,
+          "revenue": 1631986
+        },
+        {
+          "date": "2026-08-06",
+          "introView": null,
+          "inquiry": 126,
+          "apply": 37,
+          "contract": 16,
+          "amount": 130200000,
+          "revenue": 1605002
+        },
+        {
+          "date": "2026-08-07",
+          "introView": null,
+          "inquiry": 140,
+          "apply": 36,
+          "contract": 12,
+          "amount": 34090000,
+          "revenue": 1667347
         }
       ]
     }

@@ -304,7 +304,9 @@
 // =====================================================================
 // 설정: 3개 사업 축 & 지표 정의  (지표는 초안 — 실제 정의로 교체 예정)
 // =====================================================================
-const TODAY = '2026-08-04';
+// 데이터에 존재하는 가장 최신 일자. loadProjects() 에서 실제 데이터 기준으로 덮어씀.
+// (하드코딩하면 갱신된 데이터가 기본 '전체' 구간 밖으로 잘려 화면에 안 나옴)
+let TODAY = '2026-08-04';
 const LINES = {
   loan:   { key:'loan',   emoji:'🏦', name:'비교대출',            color:'var(--loan)',   cvar:'--loan',
             headline:{key:'inquiry', label:'한도조회 수', fmt:'int'},
@@ -399,6 +401,13 @@ async function loadProjects(){
     fetch(base+id+'.json').then(r=> r.ok ? r.json() : null).catch(()=>null)
   ));
   PROJECTS = raws.filter(Boolean).map(toInternal);
+  // 최신 데이터 일자를 TODAY 에 반영 → 데이터가 늘어나면 '전체'/'최근 N일' 구간이 자동으로 따라감
+  const allDates = PROJECTS.flatMap(p => p.daily.map(d => d.date)).filter(Boolean);
+  if (allDates.length) {
+    TODAY = allDates.reduce((a, b) => (a > b ? a : b));
+    document.querySelectorAll('#d-start, #d-end').forEach(el => { el.max = TODAY; });
+    if (state.preset === 'all') state.end = TODAY;   // 기본 진입(전체)일 때만 끝을 최신일로
+  }
 }
 // 자산 축 기여도 분모 = 전체 마이데이터 '당월'(최신 월) MAU
 function assetMauMonth(){ const ks = Object.keys(ASSET_MAU).sort(); return ks.length ? ks[ks.length-1] : ''; }
@@ -875,6 +884,7 @@ syncRangeUI();
 (async function(){
   try { await loadProjects(); }
   catch(e){ console.error('데이터 로드 실패', e); }
+  syncRangeUI();   // TODAY 가 실제 최신 데이터 일자로 갱신된 뒤 기간 UI 재동기화
   renderAll();
 })();
 </script>

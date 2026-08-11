@@ -122,8 +122,10 @@ const projects = [
     runs: p6Runs(byId.P6) },
   { id: 'sangsi', line: 'loan', emoji: '💳', name: '대출신청 상시', owner: '지윤', status: 'done',
     runs: [ totalRun(byId.P3, '4월 · 신규유저'), totalRun(byId.P4, '4월 · 타사한도조회') ] },
+  // ⚠️ coupon 은 민주님이 data/coupon.json 을 직접 관리한다. external:true → 파일 덮어쓰기 제외.
+  // (detail.html 기준으로 재생성하면 수기 추가한 회차·status 가 날아감. list.json 등록용으로만 남겨둠.)
   { id: 'coupon', line: 'loan', emoji: '🎟️', name: '쿠폰함 프로모션', owner: '민주', status: 'done',
-    runs: [ couponRun() ] },
+    external: true, runs: [ couponRun() ] },
 ];
 
 // ---- 프로젝트별 실제 추적 지표(metricKeys) 자동 도출 ----
@@ -138,7 +140,12 @@ projects.forEach(p => {
 const dataDir = path.join(REPO, 'data');
 fs.mkdirSync(dataDir, { recursive: true });
 // build_data 가 생성하는 프로젝트(지윤)만 파일 덮어씀. 팀원(외부) JSON 은 건드리지 않음.
-projects.forEach(p => fs.writeFileSync(path.join(dataDir, p.id + '.json'), JSON.stringify(p, null, 2)));
+const skipped = [];
+projects.forEach(p => {
+  if (p.external) { skipped.push(p.id); return; }   // 팀원이 직접 관리 → 덮어쓰기 금지
+  const { external, ...out } = p;
+  fs.writeFileSync(path.join(dataDir, p.id + '.json'), JSON.stringify(out, null, 2));
+});
 
 // list.json: 생성 프로젝트 + 기존 list 의 팀원(외부) id 보존 병합
 const ownIds = new Set(projects.map(p => p.id));
@@ -162,3 +169,4 @@ projects.forEach(p => {
   console.log(`  ${p.id.padEnd(8)} runs=${p.runs.length} rows=${days}  한도조회합=${tot.inquiry}  약정합=${tot.contract}  지표=[${p.metricKeys.join(',')}]`);
 });
 console.log('list.json:', JSON.stringify(list));
+if (skipped.length) console.log(`⏭  덮어쓰기 제외(팀원 직접 관리): ${skipped.join(', ')}`);
