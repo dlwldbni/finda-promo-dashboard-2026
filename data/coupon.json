@@ -7,18 +7,135 @@
   "status": "live",
   "runs": [
     {
-      "label": "8월",
-      "start": "2026-08-10",
-      "end": "2026-08-23",
+      "label": "6월",
+      "start": "2026-06-16",
+      "end": "2026-06-29",
       "granularity": "daily",
       "daily": [
         {
-          "date": "2026-08-10",
-          "inquiry": 42,
-          "approve": 39,
+          "date": "2026-06-16",
+          "inquiry": 410,
+          "approve": 266,
+          "apply": 93,
+          "contract": 27,
+          "revenue": 2324786,
+          "amount": null
+        },
+        {
+          "date": "2026-06-17",
+          "inquiry": 159,
+          "approve": 114,
+          "apply": 67,
+          "contract": 21,
+          "revenue": 1216237,
+          "amount": null
+        },
+        {
+          "date": "2026-06-18",
+          "inquiry": 111,
+          "approve": 73,
+          "apply": 32,
+          "contract": 12,
+          "revenue": 1003574,
+          "amount": null
+        },
+        {
+          "date": "2026-06-19",
+          "inquiry": 105,
+          "approve": 73,
+          "apply": 31,
+          "contract": 2,
+          "revenue": 101000,
+          "amount": null
+        },
+        {
+          "date": "2026-06-20",
+          "inquiry": 39,
+          "approve": 30,
           "apply": 14,
           "contract": 3,
-          "revenue": 249056,
+          "revenue": 181000,
+          "amount": null
+        },
+        {
+          "date": "2026-06-21",
+          "inquiry": 53,
+          "approve": 36,
+          "apply": 17,
+          "contract": 5,
+          "revenue": 445900,
+          "amount": null
+        },
+        {
+          "date": "2026-06-22",
+          "inquiry": 114,
+          "approve": 71,
+          "apply": 29,
+          "contract": 12,
+          "revenue": 1446361,
+          "amount": null
+        },
+        {
+          "date": "2026-06-23",
+          "inquiry": 31,
+          "approve": 19,
+          "apply": 11,
+          "contract": 2,
+          "revenue": 532200,
+          "amount": null
+        },
+        {
+          "date": "2026-06-24",
+          "inquiry": 0,
+          "approve": 0,
+          "apply": 1,
+          "contract": 1,
+          "revenue": 60000,
+          "amount": null
+        },
+        {
+          "date": "2026-06-25",
+          "inquiry": 0,
+          "approve": 0,
+          "apply": 0,
+          "contract": 0,
+          "revenue": 0,
+          "amount": null
+        },
+        {
+          "date": "2026-06-26",
+          "inquiry": 15,
+          "approve": 7,
+          "apply": 0,
+          "contract": 0,
+          "revenue": 0,
+          "amount": null
+        },
+        {
+          "date": "2026-06-27",
+          "inquiry": 33,
+          "approve": 20,
+          "apply": 9,
+          "contract": 0,
+          "revenue": 0,
+          "amount": null
+        },
+        {
+          "date": "2026-06-28",
+          "inquiry": 21,
+          "approve": 13,
+          "apply": 7,
+          "contract": 2,
+          "revenue": 228000,
+          "amount": null
+        },
+        {
+          "date": "2026-06-29",
+          "inquiry": 66,
+          "approve": 44,
+          "apply": 15,
+          "contract": 2,
+          "revenue": 218340,
           "amount": null
         }
       ]
@@ -158,135 +275,18 @@
       ]
     },
     {
-      "label": "6월",
-      "start": "2026-06-16",
-      "end": "2026-06-29",
+      "label": "8월",
+      "start": "2026-08-10",
+      "end": "2026-08-23",
       "granularity": "daily",
       "daily": [
         {
-          "date": "2026-06-16",
-          "inquiry": 410,
-          "approve": 266,
-          "apply": 93,
-          "contract": 27,
-          "revenue": 2324786,
-          "amount": null
-        },
-        {
-          "date": "2026-06-17",
-          "inquiry": 159,
-          "approve": 114,
-          "apply": 67,
-          "contract": 21,
-          "revenue": 1216237,
-          "amount": null
-        },
-        {
-          "date": "2026-06-18",
-          "inquiry": 111,
-          "approve": 73,
-          "apply": 32,
-          "contract": 12,
-          "revenue": 1003574,
-          "amount": null
-        },
-        {
-          "date": "2026-06-19",
-          "inquiry": 105,
-          "approve": 73,
-          "apply": 31,
-          "contract": 2,
-          "revenue": 101000,
-          "amount": null
-        },
-        {
-          "date": "2026-06-20",
-          "inquiry": 39,
-          "approve": 30,
+          "date": "2026-08-10",
+          "inquiry": 42,
+          "approve": 39,
           "apply": 14,
           "contract": 3,
-          "revenue": 181000,
-          "amount": null
-        },
-        {
-          "date": "2026-06-21",
-          "inquiry": 53,
-          "approve": 36,
-          "apply": 17,
-          "contract": 5,
-          "revenue": 445900,
-          "amount": null
-        },
-        {
-          "date": "2026-06-22",
-          "inquiry": 114,
-          "approve": 71,
-          "apply": 29,
-          "contract": 12,
-          "revenue": 1446361,
-          "amount": null
-        },
-        {
-          "date": "2026-06-23",
-          "inquiry": 31,
-          "approve": 19,
-          "apply": 11,
-          "contract": 2,
-          "revenue": 532200,
-          "amount": null
-        },
-        {
-          "date": "2026-06-24",
-          "inquiry": 0,
-          "approve": 0,
-          "apply": 1,
-          "contract": 1,
-          "revenue": 60000,
-          "amount": null
-        },
-        {
-          "date": "2026-06-25",
-          "inquiry": 0,
-          "approve": 0,
-          "apply": 0,
-          "contract": 0,
-          "revenue": 0,
-          "amount": null
-        },
-        {
-          "date": "2026-06-26",
-          "inquiry": 15,
-          "approve": 7,
-          "apply": 0,
-          "contract": 0,
-          "revenue": 0,
-          "amount": null
-        },
-        {
-          "date": "2026-06-27",
-          "inquiry": 33,
-          "approve": 20,
-          "apply": 9,
-          "contract": 0,
-          "revenue": 0,
-          "amount": null
-        },
-        {
-          "date": "2026-06-28",
-          "inquiry": 21,
-          "approve": 13,
-          "apply": 7,
-          "contract": 2,
-          "revenue": 228000,
-          "amount": null
-        },
-        {
-          "date": "2026-06-29",
-          "inquiry": 66,
-          "approve": 44,
-          "apply": 15,
-          "contract": 2,
-          "revenue": 218340,
+          "revenue": 249056,
           "amount": null
         }
       ]
