@@ -348,18 +348,18 @@
           "introView": null,
           "inquiry": 167,
           "apply": 48,
-          "contract": null,
-          "amount": null,
-          "revenue": null
+          "contract": 20,
+          "amount": 177500000,
+          "revenue": 1786717
         },
         {
           "date": "2026-08-11",
           "introView": null,
           "inquiry": 125,
           "apply": 24,
-          "contract": null,
-          "amount": null,
-          "revenue": null
+          "contract": 20,
+          "amount": 324820000,
+          "revenue": 3947777
         }
       ]
     }
