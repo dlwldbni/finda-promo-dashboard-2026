@@ -160,7 +160,7 @@
     {
       "label": "3차 · 상시",
       "start": "2026-07-13",
-      "end": "2026-08-11",
+      "end": "2026-08-12",
       "granularity": "daily",
       "daily": [
         {
@@ -360,6 +360,15 @@
           "contract": 20,
           "amount": 324820000,
           "revenue": 3947777
+        },
+        {
+          "date": "2026-08-12",
+          "introView": null,
+          "inquiry": 117,
+          "apply": 34,
+          "contract": null,
+          "amount": null,
+          "revenue": null
         }
       ]
     }
