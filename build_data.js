@@ -100,7 +100,12 @@ function augustRun() {
   let pointTab = null;
   try { pointTab = JSON.parse(fs.readFileSync(path.join(REPO, 'data', '_augevt_meta.json'), 'utf8')); } catch (e) {}
   return { label: '8월', start: '2026-08-03', end: '2026-08-15', granularity: 'daily', daily,
-    pointTab: pointTab ? { inquiry: nn(pointTab.pointTabInquiry), approve: nn(pointTab.pointTabApprove), reject: nn(pointTab.pointTabReject), asOf: pointTab.asOf || null } : null };
+    pointTab: pointTab ? {
+      introView: nn(pointTab.pointTabIntroView),
+      inquiry: nn(pointTab.pointTabInquiry), approve: nn(pointTab.pointTabApprove), reject: nn(pointTab.pointTabReject),
+      apply: nn(pointTab.pointTabApply), creditLoan: nn(pointTab.pointTabCreditLoan), otherLoan: nn(pointTab.pointTabOtherLoan),
+      asOf: pointTab.asOf || null,
+    } : null };
 }
 
 // 쿠폰함 프로모션 (민주) — data/_coupon_daily.json. 지표: 한도조회(가승인 세부)·신청·약정·매출 (인트로조회·올거절·신용대출/우수대부 미집계).

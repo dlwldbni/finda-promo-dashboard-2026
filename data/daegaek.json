@@ -643,9 +643,13 @@
         }
       ],
       "pointTab": {
+        "introView": 5175,
         "inquiry": 1257,
         "approve": 695,
         "reject": 562,
+        "apply": 108,
+        "creditLoan": 78,
+        "otherLoan": 30,
         "asOf": "2026-08-13"
       }
     }
