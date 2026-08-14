@@ -160,7 +160,7 @@
     {
       "label": "3차 · 상시",
       "start": "2026-07-13",
-      "end": "2026-08-12",
+      "end": "2026-08-13",
       "granularity": "daily",
       "daily": [
         {
@@ -196,7 +196,7 @@
           "inquiry": 165,
           "apply": 34,
           "contract": 8,
-          "amount": 61600000,
+          "amount": 30600000,
           "revenue": 904140
         },
         {
@@ -250,7 +250,7 @@
           "inquiry": 157,
           "apply": 33,
           "contract": 5,
-          "amount": 512000000,
+          "amount": 51200000,
           "revenue": 521232
         },
         {
@@ -285,9 +285,9 @@
           "introView": null,
           "inquiry": 172,
           "apply": 37,
-          "contract": 12,
-          "amount": 158500000,
-          "revenue": 2193970
+          "contract": 11,
+          "amount": 156900000,
+          "revenue": 2177650
         },
         {
           "date": "2026-07-31",
@@ -295,7 +295,7 @@
           "inquiry": 152,
           "apply": 40,
           "contract": 22,
-          "amount": 264600000,
+          "amount": 246400000,
           "revenue": 2925750
         },
         {
@@ -340,7 +340,7 @@
           "inquiry": 140,
           "apply": 36,
           "contract": 12,
-          "amount": 34090000,
+          "amount": 106900000,
           "revenue": 1667347
         },
         {
@@ -366,9 +366,18 @@
           "introView": null,
           "inquiry": 117,
           "apply": 34,
-          "contract": null,
-          "amount": null,
-          "revenue": null
+          "contract": 20,
+          "amount": 242370000,
+          "revenue": 2453080
+        },
+        {
+          "date": "2026-08-13",
+          "introView": null,
+          "inquiry": 122,
+          "apply": 28,
+          "contract": 10,
+          "amount": 120500000,
+          "revenue": 1526060
         }
       ]
     }
