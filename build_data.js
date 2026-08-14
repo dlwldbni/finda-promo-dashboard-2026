@@ -79,14 +79,16 @@ function p6Runs(P) {
 }
 
 // 8월 (augevt) — data/_augevt_daily.json 에서 읽음 (자동갱신 로봇이 이 파일만 갱신).
-//   한도조회(inquiry)=지급건수(시트) / 인트로조회·가승인·올거절·신용대출·우수대부=Mixpanel augevt / 약정=시트
+//   한도조회(inquiry)=가승인+올거절(Mixpanel, 날짜별 unique) / 인트로조회·가승인·올거절·신용대출·우수대부=Mixpanel augevt / 약정=시트
+//   ⚠ 2026-08-14 전환: 기존엔 지급건수(시트, 1인1회)였으나 한도조회=가승인+올거절 등식이 안 맞아 Mixpanel 기준으로 변경.
+//     paymentCount 는 세부(지급건수)로만 보존, 한도조회 집계엔 미사용.
 function augustRun() {
   let rows = [];
   try { rows = JSON.parse(fs.readFileSync(path.join(REPO, 'data', '_augevt_daily.json'), 'utf8')); } catch (e) { rows = []; }
   const daily = rows.map(d => ({
     date: d.date,
     introView: nn(d.introView),
-    inquiry: d.paymentCount != null ? d.paymentCount : ((d.approve || 0) + (d.reject || 0)),
+    inquiry: (d.approve || 0) + (d.reject || 0),
     approve: nn(d.approve), reject: nn(d.reject),
     apply: (d.creditLoan != null || d.otherLoan != null) ? (d.creditLoan || 0) + (d.otherLoan || 0) : null,
     creditLoan: nn(d.creditLoan), otherLoan: nn(d.otherLoan),
