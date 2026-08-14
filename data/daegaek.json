@@ -641,7 +641,13 @@
           "amount": null,
           "revenue": null
         }
-      ]
+      ],
+      "pointTab": {
+        "inquiry": 1257,
+        "approve": 695,
+        "reject": 562,
+        "asOf": "2026-08-13"
+      }
     }
   ],
   "metricKeys": [

@@ -1,0 +1,7 @@
+{
+  "_comment": "포인트탭 진입점(슬롯+그리드) 퍼널 기준 한도조회 — 8월 누적. 자동갱신이 4개 period 퍼널로 재계산. 전체 한도조회에서 이걸 빼면 포인트탭 외 유입.",
+  "pointTabInquiry": 1257,
+  "pointTabApprove": 695,
+  "pointTabReject": 562,
+  "asOf": "2026-08-13"
+}

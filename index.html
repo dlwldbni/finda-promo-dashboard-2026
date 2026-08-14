@@ -381,6 +381,7 @@ function toInternal(p){
   const runs = runsSrc.map(r => ({
     label: r.label, start: r.start, end: r.end, granularity: r.granularity,
     daily: (r.daily||[]).map(d => ({ date: d.date, m: metricObj(d) })),
+    pointTab: r.pointTab || null,   // 포인트탭 진입 한도조회(8월 run 전용) 보존
   }));
   const daily = runs.flatMap(r => r.daily);
   // metricKeys 미지정 시 자동 도출 (값 있는 숫자 키) — 팀원 JSON 이 metricKeys 안 넣어도 됨
@@ -637,11 +638,12 @@ function colValue(col, obj){
   if(col.kind==='cvr'){ const num=obj[col.num], den=obj[col.den]; return (den && num!=null) ? ((num/den)*100).toFixed(1)+'%' : '—'; }
   const v = obj[col.key]; return v==null ? '—' : fmtVal(v, col.fmt||'int');
 }
-function renderKpiItems(items, cfg, agg){
+function renderKpiItems(items, cfg, agg, extraSub){
   return items.map(it=>{
     if(it.type==='cvr') return `<div class="kpi cvr-kpi" style="--c:${cfg.color}"><div class="l">${it.label}</div><div class="v">${it.value==null?'—':(it.value*100).toFixed(1)+'%'}</div></div>`;
     const st = subText(it.mt, agg||{});
-    return `<div class="kpi" style="--c:${cfg.color};--cbg:var(${cfg.cvar}-bg)"><div class="l">${it.mt.label}${it.mt.agg==='avg'?' (일평균)':''}</div><div class="v">${fmtCell(it.mt, it.value)}</div>${st?`<div class="kpi-sub">${st}</div>`:''}</div>`;
+    const ex = (extraSub && extraSub[it.mt.key]) ? `<div class="kpi-sub" style="color:${cfg.color};font-weight:700">${extraSub[it.mt.key]}</div>` : '';
+    return `<div class="kpi" style="--c:${cfg.color};--cbg:var(${cfg.cvar}-bg)"><div class="l">${it.mt.label}${it.mt.agg==='avg'?' (일평균)':''}</div><div class="v">${fmtCell(it.mt, it.value)}</div>${st?`<div class="kpi-sub">${st}</div>`:''}${ex}</div>`;
   }).join('');
 }
 
@@ -795,8 +797,24 @@ function renderModalContent(){
   const tot = aggDaily(rows, cfg);
   // 이 프로젝트가 실제 추적하는 지표만 (표 컬럼용)
   const pmets = cfg.metrics.filter(mt=> (p.metricKeys||[]).includes(mt.key));
+  // 포인트탭 진입점(슬롯+그리드) 퍼널 한도조회 — 8월 회차 탭에서만, 전체 한도조회에서 빼서 '포인트탭 외 유입' 표시
+  let ptExtraSub = null, ptNote = '';
+  const selRun = modalState.run==='ALL' ? null : p.runs[+modalState.run];
+  if(selRun && selRun.pointTab && selRun.pointTab.inquiry!=null){
+    const fullRange = modalState.start<=selRun.start && modalState.end>=selRun.end;
+    const totalInq = selRun.daily.reduce((s,d)=> s+((d.m&&d.m.inquiry)||0), 0);
+    const pt = selRun.pointTab, excl = totalInq - pt.inquiry;
+    if(fullRange && excl>=0){
+      ptExtraSub = { inquiry: `포인트탭 제외 ${comma(excl)}` };
+      ptNote = `<div style="margin:14px 0 2px;padding:11px 13px;border:1px dashed ${cfg.color};border-radius:9px;background:var(${cfg.cvar}-bg);font-size:12px;line-height:1.75">
+        <b style="color:${cfg.color}">📊 포인트탭 제외 한도조회 · ${selRun.label} 누적</b><br>
+        전체 한도조회 <b>${comma(totalInq)}</b> − 포인트탭 진입 <b>${comma(pt.inquiry)}</b> <span style="color:var(--text-3)">(가승인 ${comma(pt.approve)} · 올거절 ${comma(pt.reject)})</span> = <b style="color:${cfg.color};font-size:15px">${comma(excl)}</b><br>
+        <span style="color:var(--text-3)">포인트탭 진입점(홈슬롯+퀵그리드, CH2608_VIEW_LOAN_LIMIT) 퍼널 기준${pt.asOf?` · 기준일 ${pt.asOf}`:''}</span>
+      </div>`;
+    }
+  }
   // 상세 지표 = 퍼널 순서 (인트로조회 → CVR → 한도조회(가승인/올거절) → CVR → 신청(신용대출/우수대부) → CVR → 약정 …)
-  const kpis = renderKpiItems(funnelItems(cfg, tot.agg, p.metricKeys), cfg, tot.agg);
+  const kpis = renderKpiItems(funnelItems(cfg, tot.agg, p.metricKeys), cfg, tot.agg, ptExtraSub);
   const cvrKpi = '';
 
   // 회차(월별) 탭
@@ -847,7 +865,8 @@ function renderModalContent(){
     <div class="kpi-row">${kpis}${cvrKpi}</div>
     <div class="modal-section-title">📈 ${cfg.headline.label} 추이</div>
     <div class="chart-wrap" style="height:200px"><canvas id="modal-canvas"></canvas></div>
-    ${runTable}${dtable}`;
+    ${runTable}${dtable}
+    ${ptNote}`;
 
   // 핸들러 (innerHTML 재생성마다 새로 바인딩)
   back.querySelectorAll('.rt').forEach(b=> b.onclick = ()=>{ modalState.run=b.dataset.run; const sp=modalSpan(p); modalState.start=sp.s; modalState.end=sp.e; renderModalContent(); });
