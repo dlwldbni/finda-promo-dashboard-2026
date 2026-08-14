@@ -79,9 +79,10 @@ function p6Runs(P) {
 }
 
 // 8월 (augevt) — data/_augevt_daily.json 에서 읽음 (자동갱신 로봇이 이 파일만 갱신).
-//   한도조회(inquiry)=가승인+올거절(Mixpanel, 날짜별 unique) / 인트로조회·가승인·올거절·신용대출·우수대부=Mixpanel augevt / 약정=시트
-//   ⚠ 2026-08-14 전환: 기존엔 지급건수(시트, 1인1회)였으나 한도조회=가승인+올거절 등식이 안 맞아 Mixpanel 기준으로 변경.
-//     paymentCount 는 세부(지급건수)로만 보존, 한도조회 집계엔 미사용.
+//   한도조회(inquiry)=가승인+올거절(Mixpanel 퍼널 기준, 날짜별 unique) / 약정=시트
+//   ⚠ 2026-08-14 전환2: 인사이트 unique(promo_name=augevt 태그 전부)는 프로모션 미경유 트래픽까지 긁어 과집계(누적 17,922).
+//     → 5월과 동일하게 퍼널(PM_augevt_intro_view→intro_clickCTA→LA_loanlist_view/LD_intro_view, conv 1d, unique)로 변경 → 누적 11,306(≈지급 10,741).
+//     approve=가승인 퍼널 step3, reject=올거절 퍼널 step3. paymentCount 는 지급건수(1인1회) 세부로만 보존.
 function augustRun() {
   let rows = [];
   try { rows = JSON.parse(fs.readFileSync(path.join(REPO, 'data', '_augevt_daily.json'), 'utf8')); } catch (e) { rows = []; }
