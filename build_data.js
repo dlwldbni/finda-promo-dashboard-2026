@@ -162,10 +162,10 @@ projects.forEach(p => {
 
 // list.json: 생성 프로젝트 + 기존 list 의 팀원(외부) id 보존 병합
 const ownIds = new Set(projects.map(p => p.id));
-let existing = { loan: [], credit: [], asset: [] };
+let existing = { loan: [], asset: [], app: [] };
 try { existing = JSON.parse(fs.readFileSync(path.join(dataDir, 'list.json'), 'utf8')); } catch (e) {}
-const list = { loan: [], credit: [], asset: [] };
-['loan', 'credit', 'asset'].forEach(line => {
+const list = { loan: [], asset: [], app: [] };
+['loan', 'asset', 'app'].forEach(line => {
   const own = projects.filter(p => p.line === line).map(p => p.id);
   const ext = (existing[line] || []).filter(id => !ownIds.has(id));  // 팀원이 등록한 외부 프로젝트
   list[line] = [...own, ...ext];

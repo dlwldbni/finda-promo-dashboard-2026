@@ -6,6 +6,8 @@
     "sangsi",
     "coupon"
   ],
-  "credit": [],
-  "asset": []
+  "asset": [],
+  "app": [
+    "car_promo"
+  ]
 }

@@ -1,0 +1,123 @@
+{
+  "id": "car_promo",
+  "line": "app",
+  "emoji": "📱",
+  "name": "차번호 프로모션",
+  "owner": "민주",
+  "status": "live",
+  "runs": [
+    {
+      "label": "전체",
+      "start": "2026-08-03",
+      "end": "2026-08-14",
+      "granularity": "daily",
+      "daily": [
+        {
+          "date": "2026-08-03",
+          "view": 324,
+          "click": 156,
+          "terms": 148,
+          "result_view": 119,
+          "result_click": 50
+        },
+        {
+          "date": "2026-08-04",
+          "view": 1225,
+          "click": 550,
+          "terms": 471,
+          "result_view": 429,
+          "result_click": 176
+        },
+        {
+          "date": "2026-08-05",
+          "view": 508,
+          "click": 238,
+          "terms": 141,
+          "result_view": 205,
+          "result_click": 74
+        },
+        {
+          "date": "2026-08-06",
+          "view": 442,
+          "click": 242,
+          "terms": 127,
+          "result_view": 209,
+          "result_click": 69
+        },
+        {
+          "date": "2026-08-07",
+          "view": 402,
+          "click": 222,
+          "terms": 104,
+          "result_view": 192,
+          "result_click": 55
+        },
+        {
+          "date": "2026-08-08",
+          "view": 304,
+          "click": 176,
+          "terms": 49,
+          "result_view": 158,
+          "result_click": 45
+        },
+        {
+          "date": "2026-08-09",
+          "view": 267,
+          "click": 159,
+          "terms": 34,
+          "result_view": 146,
+          "result_click": 30
+        },
+        {
+          "date": "2026-08-10",
+          "view": 1348,
+          "click": 493,
+          "terms": 276,
+          "result_view": 400,
+          "result_click": 131
+        },
+        {
+          "date": "2026-08-11",
+          "view": 577,
+          "click": 287,
+          "terms": 115,
+          "result_view": 238,
+          "result_click": 62
+        },
+        {
+          "date": "2026-08-12",
+          "view": 605,
+          "click": 306,
+          "terms": 127,
+          "result_view": 264,
+          "result_click": 48
+        },
+        {
+          "date": "2026-08-13",
+          "view": 521,
+          "click": 296,
+          "terms": 105,
+          "result_view": 257,
+          "result_click": 61
+        },
+        {
+          "date": "2026-08-14",
+          "view": 175,
+          "click": 103,
+          "terms": 29,
+          "result_view": 94,
+          "result_click": 21,
+          "contributedActive": 1323
+        }
+      ]
+    }
+  ],
+  "metricKeys": [
+    "contributedActive",
+    "view",
+    "click",
+    "terms",
+    "result_view",
+    "result_click"
+  ]
+}
