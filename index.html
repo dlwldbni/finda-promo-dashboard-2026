@@ -313,6 +313,7 @@ const LINES = {
             metrics:[
               {key:'introView', label:'인트로 조회', fmt:'int', agg:'sum'},
               {key:'inquiry',   label:'한도조회 수', fmt:'int', agg:'sum', sub:[{key:'approve',label:'가승인'},{key:'reject',label:'올거절'}]},
+              {key:'paymentCount', label:'실제 포인트 지급 수', fmt:'int', agg:'sum', after:'inquiry'},   // 시트 지급건수(1인1회). 한도조회(Mixpanel)−지급 ≈ 재한도조회. 퍼널/CVR엔 미포함, 한도조회 카드 바로 뒤에 표시.
               {key:'apply',     label:'대출 신청 수', fmt:'int', agg:'sum', sub:[{key:'creditLoan',label:'신용대출'},{key:'otherLoan',label:'우수대부'}]},
               {key:'contract',  label:'약정 수',     fmt:'int', agg:'sum'},
               {key:'amount',    label:'약정 금액',   fmt:'won', agg:'sum'},
@@ -598,15 +599,18 @@ function funnelItems(cfg, agg, metricKeys){
   const funnel = cfg.funnel || cfg.heroKeys || cfg.metrics.map(m=>m.key);
   const items = [];
   funnel.forEach((key, i) => {
-    if(has(key)){ const mt=cfg.metrics.find(m=>m.key===key); items.push({type:'metric', mt, value:agg[key]}); }
+    if(has(key)){ const mt=cfg.metrics.find(m=>m.key===key); items.push({type:'metric', mt, value:agg[key]});
+      // 퍼널 밖이지만 특정 단계 바로 뒤에 붙이도록 지정된 지표(after) — 예: 실제 포인트 지급 수 → 한도조회 뒤
+      cfg.metrics.forEach(m2=>{ if(m2.after===key && !funnel.includes(m2.key) && has(m2.key)) items.push({type:'metric', mt:m2, value:agg[m2.key]}); });
+    }
     if(i < funnel.length-1){
       const nextKey = funnel[i+1];
       const c = (cfg.cvrs||[]).find(x=> x.den===key && x.num===nextKey);
       if(c && has(key) && has(nextKey)) items.push({type:'cvr', label:c.label, value: agg[key]? agg[nextKey]/agg[key] : null});
     }
   });
-  // 퍼널 밖 지표(약정금액·매출 등)는 뒤에
-  cfg.metrics.forEach(mt=>{ if(!funnel.includes(mt.key) && has(mt.key)) items.push({type:'metric', mt, value:agg[mt.key]}); });
+  // 퍼널 밖 지표(약정금액·매출 등, after 미지정)는 뒤에
+  cfg.metrics.forEach(mt=>{ if(!funnel.includes(mt.key) && !mt.after && has(mt.key)) items.push({type:'metric', mt, value:agg[mt.key]}); });
   return items;
 }
 // 표(회차별·일자별) 컬럼 = 핵심지표와 동일 (퍼널 순서 + 가승인/올거절·신용대출/우수대부 세부 + CVR)
@@ -619,13 +623,14 @@ function detailColumns(cfg, metricKeys){
       const mt = cfg.metrics.find(m=>m.key===key);
       cols.push({label:mt.label, fmt:mt.fmt, kind:'val', key});
       if(mt.sub) mt.sub.forEach(s=> cols.push({label:s.label, fmt:'int', kind:'sub', key:s.key}));
+      cfg.metrics.forEach(m2=>{ if(m2.after===key && !funnel.includes(m2.key) && has(m2.key)) cols.push({label:m2.label, fmt:m2.fmt, kind:'val', key:m2.key}); });
     }
     if(i < funnel.length-1){
       const nk = funnel[i+1]; const c=(cfg.cvrs||[]).find(x=> x.den===key && x.num===nk);
       if(c && has(key) && has(nk)) cols.push({label:c.label, kind:'cvr', num:nk, den:key});
     }
   });
-  cfg.metrics.forEach(mt=>{ if(!funnel.includes(mt.key) && has(mt.key)) cols.push({label:mt.label, fmt:mt.fmt, kind:'val', key:mt.key}); });
+  cfg.metrics.forEach(mt=>{ if(!funnel.includes(mt.key) && !mt.after && has(mt.key)) cols.push({label:mt.label, fmt:mt.fmt, kind:'val', key:mt.key}); });
   return cols;
 }
 function colValue(col, obj){

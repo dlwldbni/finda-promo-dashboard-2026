@@ -89,6 +89,7 @@ function augustRun() {
     date: d.date,
     introView: nn(d.introView),
     inquiry: (d.approve || 0) + (d.reject || 0),
+    paymentCount: nn(d.paymentCount),   // 실제 포인트 지급 수(시트 지급건수, 1인1회) — 한도조회(Mixpanel)와의 차이 ≈ 재한도조회
     approve: nn(d.approve), reject: nn(d.reject),
     apply: (d.creditLoan != null || d.otherLoan != null) ? (d.creditLoan || 0) + (d.otherLoan || 0) : null,
     creditLoan: nn(d.creditLoan), otherLoan: nn(d.otherLoan),
@@ -132,7 +133,7 @@ const projects = [
 
 // ---- 프로젝트별 실제 추적 지표(metricKeys) 자동 도출 ----
 // (해당 프로젝트가 값을 하나라도 가진 지표만 → 프로젝트마다 지표 세트가 다름)
-const ALL_KEYS = ['introView', 'inquiry', 'apply', 'contract', 'amount', 'revenue'];
+const ALL_KEYS = ['introView', 'inquiry', 'paymentCount', 'apply', 'contract', 'amount', 'revenue'];
 projects.forEach(p => {
   const rows = p.runs.flatMap(r => r.daily);
   p.metricKeys = ALL_KEYS.filter(k => rows.some(d => d[k] != null));
