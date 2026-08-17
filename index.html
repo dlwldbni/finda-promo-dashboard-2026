@@ -660,7 +660,10 @@ function colValue(col, obj){
 }
 function renderKpiItems(items, cfg, agg, extraSub){
   return items.map(it=>{
-    if(it.type==='cvr') return `<div class="kpi cvr-kpi" style="--c:${cfg.color}"><div class="l">${it.label}</div><div class="v">${it.value==null?'—':(it.value*100).toFixed(1)+'%'}</div></div>`;
+    if(it.type==='cvr'){
+      const exc = (extraSub && extraSub['cvr:'+it.label]) ? `<div class="kpi-sub" style="color:${cfg.color};font-weight:700">${extraSub['cvr:'+it.label]}</div>` : '';
+      return `<div class="kpi cvr-kpi" style="--c:${cfg.color}"><div class="l">${it.label}</div><div class="v">${it.value==null?'—':(it.value*100).toFixed(1)+'%'}</div>${exc}</div>`;
+    }
     const st = subText(it.mt, agg||{});
     const ex = (extraSub && extraSub[it.mt.key]) ? `<div class="kpi-sub" style="color:${cfg.color};font-weight:700">${extraSub[it.mt.key]}</div>` : '';
     return `<div class="kpi" style="--c:${cfg.color};--cbg:var(${cfg.cvar}-bg)"><div class="l">${it.mt.label}${it.mt.agg==='avg'?' (일평균)':''}</div><div class="v">${fmtCell(it.mt, it.value)}</div>${st?`<div class="kpi-sub">${st}</div>`:''}${ex}</div>`;
@@ -841,8 +844,11 @@ function renderModalContent(){
         ptExtraSub[x.key] = `포인트탭 제외 ${comma(excl)}`;
         noteRows.push(`<tr><td style="padding:2px 10px 2px 0">${x.label}</td><td class="num" style="padding:2px 10px">${comma(tot)}</td><td class="num" style="padding:2px 10px;color:var(--text-3)">−${comma(pt[x.key])}</td><td class="num" style="padding:2px 0;color:${cfg.color};font-weight:700">${comma(excl)}</td></tr>`);
       });
+      const pctOf = (a,b)=> (b>0 && a!=null) ? (a/b*100).toFixed(1)+'%' : '—';
+      // 포인트탭 제외 기준 CVR 을 CVR 카드 보조지표로도 노출
+      if(ex.introView!=null && ex.inquiry!=null) ptExtraSub['cvr:인트로→한도조회 CVR'] = `포인트탭 제외 ${pctOf(ex.inquiry, ex.introView)}`;
+      if(ex.inquiry!=null && ex.apply!=null) ptExtraSub['cvr:한도조회→신청 CVR'] = `포인트탭 제외 ${pctOf(ex.apply, ex.inquiry)}`;
       if(noteRows.length){
-        const pctOf = (a,b)=> (b>0 && a!=null) ? (a/b*100).toFixed(1)+'%' : '—';
         const cvrRows = [];
         if(ex.introView!=null && ex.inquiry!=null) cvrRows.push(`인트로→한도조회 <b style="color:${cfg.color}">${pctOf(ex.inquiry, ex.introView)}</b>`);
         if(ex.inquiry!=null && ex.apply!=null) cvrRows.push(`한도조회→신청 <b style="color:${cfg.color}">${pctOf(ex.apply, ex.inquiry)}</b>`);
