@@ -99,7 +99,7 @@ function augustRun() {
   // 포인트탭 진입점(슬롯+그리드) 퍼널 한도조회 — 전체 한도조회에서 빼면 '포인트탭 외 유입'. 8월 누적 값(자동갱신이 재계산).
   let pointTab = null;
   try { pointTab = JSON.parse(fs.readFileSync(path.join(REPO, 'data', '_augevt_meta.json'), 'utf8')); } catch (e) {}
-  return { label: '8월', start: '2026-08-03', end: '2026-08-15', granularity: 'daily', daily,
+  return { label: '8월', start: '2026-08-03', end: '2026-08-14', granularity: 'daily', daily,
     pointTab: pointTab ? {
       introView: nn(pointTab.pointTabIntroView),
       inquiry: nn(pointTab.pointTabInquiry), approve: nn(pointTab.pointTabApprove), reject: nn(pointTab.pointTabReject),

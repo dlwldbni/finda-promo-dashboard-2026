@@ -10,7 +10,5 @@
   {"date":"2026-08-11","introView":1362,"paymentCount":616,"approve":253,"reject":379,"creditLoan":112,"otherLoan":58,"contract":42,"cost":96254},
   {"date":"2026-08-12","introView":997,"paymentCount":335,"approve":145,"reject":214,"creditLoan":46,"otherLoan":19,"contract":27,"cost":55800},
   {"date":"2026-08-13","introView":917,"paymentCount":null,"approve":123,"reject":176,"creditLoan":44,"otherLoan":24,"contract":null,"cost":null},
-  {"date":"2026-08-14","introView":910,"paymentCount":null,"approve":136,"reject":168,"creditLoan":58,"otherLoan":17,"contract":null,"cost":null},
-  {"date":"2026-08-15","introView":308,"paymentCount":null,"approve":26,"reject":7,"creditLoan":1,"otherLoan":1,"contract":null,"cost":null},
-  {"date":"2026-08-16","introView":262,"paymentCount":null,"approve":21,"reject":14,"creditLoan":1,"otherLoan":0,"contract":null,"cost":null}
+  {"date":"2026-08-14","introView":910,"paymentCount":null,"approve":136,"reject":168,"creditLoan":58,"otherLoan":17,"contract":null,"cost":null}
 ]

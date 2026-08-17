@@ -484,7 +484,7 @@
     {
       "label": "8월",
       "start": "2026-08-03",
-      "end": "2026-08-15",
+      "end": "2026-08-14",
       "granularity": "daily",
       "daily": [
         {
@@ -654,45 +654,17 @@
           "contract": null,
           "amount": null,
           "revenue": null
-        },
-        {
-          "date": "2026-08-15",
-          "introView": 308,
-          "inquiry": 33,
-          "paymentCount": null,
-          "approve": 26,
-          "reject": 7,
-          "apply": 2,
-          "creditLoan": 1,
-          "otherLoan": 1,
-          "contract": null,
-          "amount": null,
-          "revenue": null
-        },
-        {
-          "date": "2026-08-16",
-          "introView": 262,
-          "inquiry": 35,
-          "paymentCount": null,
-          "approve": 21,
-          "reject": 14,
-          "apply": 1,
-          "creditLoan": 1,
-          "otherLoan": 0,
-          "contract": null,
-          "amount": null,
-          "revenue": null
         }
       ],
       "pointTab": {
-        "introView": 5579,
-        "inquiry": 1317,
-        "approve": 724,
-        "reject": 593,
-        "apply": 121,
-        "creditLoan": 89,
-        "otherLoan": 32,
-        "asOf": "2026-08-16"
+        "introView": 5373,
+        "inquiry": 1298,
+        "approve": 716,
+        "reject": 582,
+        "apply": 119,
+        "creditLoan": 88,
+        "otherLoan": 31,
+        "asOf": "2026-08-14"
       }
     }
   ],
