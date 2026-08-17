@@ -1,11 +1,1 @@
-{
-  "_comment": "포인트탭 진입점(홈슬롯+퀵그리드, CH2608_VIEW_LOAN_LIMIT) 퍼널 기준 단계별 수치 — 8월 누적. 각 퍼널 지표에서 이걸 빼면 '포인트탭 외 유입'. 자동갱신이 4개 4-step 퍼널로 재계산.",
-  "pointTabIntroView": 5175,
-  "pointTabInquiry": 1257,
-  "pointTabApprove": 695,
-  "pointTabReject": 562,
-  "pointTabApply": 108,
-  "pointTabCreditLoan": 78,
-  "pointTabOtherLoan": 30,
-  "asOf": "2026-08-13"
-}
+{"pointTabIntroView":5579,"pointTabInquiry":1317,"pointTabApprove":724,"pointTabReject":593,"pointTabApply":121,"pointTabCreditLoan":89,"pointTabOtherLoan":32,"asOf":"2026-08-16"}
