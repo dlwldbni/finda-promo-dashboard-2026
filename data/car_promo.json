@@ -4,7 +4,7 @@
   "emoji": "📱",
   "name": "차번호 프로모션",
   "owner": "민주",
-  "status": "live",
+  "status": "done",
   "runs": [
     {
       "label": "전체",
@@ -14,83 +14,83 @@
       "daily": [
         {
           "date": "2026-08-03",
-          "view": 324,
-          "click": 156,
-          "terms": 148,
-          "result_view": 119,
-          "result_click": 50
+          "view": 321,
+          "click": 154,
+          "terms": 146,
+          "result_view": 117,
+          "result_click": 49
         },
         {
           "date": "2026-08-04",
-          "view": 1225,
-          "click": 550,
-          "terms": 471,
-          "result_view": 429,
-          "result_click": 176
+          "view": 1129,
+          "click": 517,
+          "terms": 439,
+          "result_view": 400,
+          "result_click": 166
         },
         {
           "date": "2026-08-05",
-          "view": 508,
-          "click": 238,
-          "terms": 141,
-          "result_view": 205,
-          "result_click": 74
-        },
-        {
-          "date": "2026-08-06",
-          "view": 442,
-          "click": 242,
-          "terms": 127,
-          "result_view": 209,
+          "view": 483,
+          "click": 228,
+          "terms": 136,
+          "result_view": 193,
           "result_click": 69
         },
         {
+          "date": "2026-08-06",
+          "view": 428,
+          "click": 233,
+          "terms": 119,
+          "result_view": 200,
+          "result_click": 65
+        },
+        {
           "date": "2026-08-07",
-          "view": 402,
-          "click": 222,
-          "terms": 104,
-          "result_view": 192,
-          "result_click": 55
+          "view": 393,
+          "click": 218,
+          "terms": 100,
+          "result_view": 188,
+          "result_click": 53
         },
         {
           "date": "2026-08-08",
-          "view": 304,
-          "click": 176,
-          "terms": 49,
-          "result_view": 158,
-          "result_click": 45
+          "view": 300,
+          "click": 175,
+          "terms": 48,
+          "result_view": 157,
+          "result_click": 43
         },
         {
           "date": "2026-08-09",
-          "view": 267,
-          "click": 159,
-          "terms": 34,
-          "result_view": 146,
-          "result_click": 30
+          "view": 252,
+          "click": 155,
+          "terms": 33,
+          "result_view": 142,
+          "result_click": 29
         },
         {
           "date": "2026-08-10",
-          "view": 1348,
-          "click": 493,
-          "terms": 276,
-          "result_view": 400,
-          "result_click": 131
+          "view": 1243,
+          "click": 468,
+          "terms": 262,
+          "result_view": 380,
+          "result_click": 128
         },
         {
           "date": "2026-08-11",
-          "view": 577,
-          "click": 287,
-          "terms": 115,
-          "result_view": 238,
-          "result_click": 62
+          "view": 552,
+          "click": 275,
+          "terms": 111,
+          "result_view": 228,
+          "result_click": 59
         },
         {
           "date": "2026-08-12",
-          "view": 605,
-          "click": 306,
-          "terms": 127,
-          "result_view": 264,
-          "result_click": 48
+          "view": 576,
+          "click": 295,
+          "terms": 118,
+          "result_view": 251,
+          "result_click": 43
         },
         {
           "date": "2026-08-13",
@@ -102,12 +102,12 @@
         },
         {
           "date": "2026-08-14",
-          "view": 175,
-          "click": 103,
-          "terms": 29,
-          "result_view": 94,
-          "result_click": 21,
-          "contributedActive": 1323
+          "view": 471,
+          "click": 256,
+          "terms": 70,
+          "result_view": 229,
+          "result_click": 42,
+          "contributedActive": 1355
         }
       ]
     }
