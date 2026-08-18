@@ -315,6 +315,42 @@
           "contract": 1,
           "revenue": 151300,
           "amount": null
+        },
+        {
+          "date": "2026-08-14",
+          "inquiry": 23,
+          "approve": 22,
+          "apply": 8,
+          "contract": 2,
+          "revenue": 83328,
+          "amount": null
+        },
+        {
+          "date": "2026-08-15",
+          "inquiry": 22,
+          "approve": 18,
+          "apply": 3,
+          "contract": 1,
+          "revenue": 43407,
+          "amount": null
+        },
+        {
+          "date": "2026-08-16",
+          "inquiry": 13,
+          "approve": 11,
+          "apply": 1,
+          "contract": 0,
+          "revenue": 0,
+          "amount": null
+        },
+        {
+          "date": "2026-08-17",
+          "inquiry": 38,
+          "approve": 36,
+          "apply": 6,
+          "contract": 1,
+          "revenue": 136064,
+          "amount": null
         }
       ]
     }
