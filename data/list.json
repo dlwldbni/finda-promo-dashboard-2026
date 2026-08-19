@@ -6,7 +6,9 @@
     "sangsi",
     "coupon"
   ],
-  "asset": ["kospi_promo"],
+  "asset": [
+    "kospi_promo"
+  ],
   "app": [
     "car_promo"
   ]

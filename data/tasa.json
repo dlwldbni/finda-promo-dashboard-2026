@@ -391,11 +391,11 @@
         {
           "date": "2026-08-18",
           "introView": null,
-          "inquiry": null,
-          "apply": null,
-          "contract": null,
-          "amount": null,
-          "revenue": null
+          "inquiry": 92,
+          "apply": 30,
+          "contract": 19,
+          "amount": 122400000,
+          "revenue": 1435010
         }
       ]
     }
