@@ -3,7 +3,7 @@
   "line": "asset",
   "emoji": "📈",
   "name": "코스피 예측 프로모션",
-  "owner": "이은영",
+  "owner": "은영",
   "status": "live",
   "monthly": [
     { "month": "2026-08", "contributedMau": 9509, "connectDone": 754, "retention": 57 }
