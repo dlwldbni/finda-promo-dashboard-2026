@@ -360,6 +360,15 @@
           "contract": 8,
           "revenue": 361604,
           "amount": null
+        },
+        {
+          "date": "2026-08-19",
+          "inquiry": 49,
+          "approve": 48,
+          "apply": 16,
+          "contract": 2,
+          "revenue": 73200,
+          "amount": null
         }
       ]
     }
