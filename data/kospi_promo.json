@@ -1,11 +1,10 @@
 {
-  "id": "kospi_promo",
-  "line": "asset",
-  "emoji": "📈",
-  "name": "코스피 예측 프로모션",
-  "owner": "은영",
-  "status": "live",
+  "id": "kospi_promo", "line": "asset", "emoji": "📈", "name": "코스피 예측 프로모션",
+  "owner": "이은영", "status": "live",
   "monthly": [
-    { "month": "2026-08", "contributedMau": 9509, "connectDone": 754, "retention": 57 }
-  ]
+    { "month": "2026-08", "start": "2026-08-11", "end": "2026-08-26",
+      "introView": 14453, "contributedMau": 11441, "connectDone": 990,
+      "introCvr": 79.0, "connectCvr": 8.7, "retention": 57 }
+  ],
+  "metricKeys": ["introView", "contributedMau", "connectDone", "introCvr", "connectCvr"]
 }
