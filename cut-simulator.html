@@ -1,0 +1,1294 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+</head>
+<body>
+<title>신용점수 컷 시뮬레이터</title>
+
+<style>
+:root{
+  color-scheme: light;
+  --bg:#F1F2F7; --surface:#FFFFFF; --surface-2:#F7F8FC; --surface-3:#EDEFF6;
+  --ink:#171B27; --ink-2:#474D60; --muted:#767D92;
+  --line:#DEE1EC; --line-2:#C5CAD9;
+  --accent:#3A4AB8; --accent-2:#5A69D4; --accent-tint:#E5E8F8; --accent-soft:#98A2DF;
+  --good:#0E7A56; --good-bg:#E1F2EA; --good-line:#A9D8C4;
+  --bad:#A82A20; --bad-bg:#FBE8E6; --bad-line:#EDB6B0; --bad-soft:#E0938B;
+  --warn:#8A6400; --warn-bg:#FBF1DC;
+  --shadow: 0 1px 2px rgba(23,27,39,.05), 0 8px 24px -12px rgba(23,27,39,.14);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme: dark;
+    --bg:#0F1220; --surface:#1A1D2B; --surface-2:#212534; --surface-3:#272C3D;
+    --ink:#E9EAF2; --ink-2:#B2B8CA; --muted:#858BA0;
+    --line:#2B3043; --line-2:#3D4457;
+    --accent:#6E7CE8; --accent-2:#8B96F0; --accent-tint:#242A47; --accent-soft:#5A67B4;
+    --good:#35BC8C; --good-bg:#14302A; --good-line:#245F4A;
+    --bad:#E8756A; --bad-bg:#38201E; --bad-line:#6E3630; --bad-soft:#A04A42;
+    --warn:#D9A227; --warn-bg:#332714;
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 10px 30px -14px rgba(0,0,0,.7);
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --bg:#0F1220; --surface:#1A1D2B; --surface-2:#212534; --surface-3:#272C3D;
+  --ink:#E9EAF2; --ink-2:#B2B8CA; --muted:#858BA0;
+  --line:#2B3043; --line-2:#3D4457;
+  --accent:#6E7CE8; --accent-2:#8B96F0; --accent-tint:#242A47; --accent-soft:#5A67B4;
+  --good:#35BC8C; --good-bg:#14302A; --good-line:#245F4A;
+  --bad:#E8756A; --bad-bg:#38201E; --bad-line:#6E3630; --bad-soft:#A04A42;
+  --warn:#D9A227; --warn-bg:#332714;
+  --shadow: 0 1px 2px rgba(0,0,0,.4), 0 10px 30px -14px rgba(0,0,0,.7);
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font-family:-apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard", "Malgun Gothic", "맑은 고딕", "Noto Sans KR", "Segoe UI", sans-serif;
+  font-weight:400; line-height:1.6; -webkit-font-smoothing:antialiased;
+}
+.num{font-family:ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "D2Coding", "Malgun Gothic", monospace; font-variant-numeric:tabular-nums; letter-spacing:-.01em}
+.wrap{max-width:1080px; margin:0 auto; padding:40px 22px 88px; display:flex; flex-direction:column; gap:26px}
+
+.eyebrow{font-family:ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "D2Coding", "Malgun Gothic", monospace; font-size:11px; font-weight:500; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); margin:0 0 10px}
+h1{font-size:clamp(28px,4.2vw,40px); line-height:1.18; font-weight:600; letter-spacing:-.022em; margin:0 0 12px; text-wrap:balance}
+.dek{margin:0; color:var(--ink-2); font-size:16px; max-width:64ch; font-weight:300}
+.stamp{margin-top:16px; display:flex; flex-wrap:wrap; gap:8px}
+.stamp span{font-family:ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "D2Coding", "Malgun Gothic", monospace; font-size:11.5px; color:var(--muted); border:1px solid var(--line); border-radius:999px; padding:4px 11px; background:var(--surface)}
+
+/* alert */
+.alert{
+  border-radius:14px; border:1px solid var(--bad-line); background:var(--bad-bg);
+  padding:22px 24px; display:flex; flex-direction:column; gap:12px;
+}
+.alert .tag{
+  align-self:flex-start; font-family:ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "D2Coding", "Malgun Gothic", monospace; font-size:10.5px; font-weight:600;
+  letter-spacing:.12em; text-transform:uppercase; color:var(--bad);
+  border:1px solid var(--bad); border-radius:5px; padding:3px 10px;
+}
+.alert h2{margin:0; font-size:clamp(17px,2.4vw,21px); font-weight:600; letter-spacing:-.015em; line-height:1.45; text-wrap:balance}
+.alert h2 b{font-family:ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "D2Coding", "Malgun Gothic", monospace; color:var(--bad); font-weight:600}
+.alert p{margin:0; font-size:14px; color:var(--ink-2); max-width:70ch}
+
+/* panels */
+.panel{background:var(--surface); border:1px solid var(--line); border-radius:14px; box-shadow:var(--shadow)}
+.panel-hd{padding:16px 20px; border-bottom:1px solid var(--line); display:flex; align-items:baseline; justify-content:space-between; gap:14px; flex-wrap:wrap}
+.panel-hd h2{margin:0; font-size:14px; font-weight:600; letter-spacing:-.005em}
+.panel-hd .hint{margin:0; font-size:12.5px; color:var(--muted); font-weight:300}
+.panel-bd{padding:20px}
+
+/* kpi strip */
+.derived{display:grid; grid-template-columns:repeat(auto-fit,minmax(168px,1fr)); gap:1px; background:var(--line); border:1px solid var(--line); border-radius:14px; overflow:hidden}
+.dcell{background:var(--surface); padding:15px 17px; display:flex; flex-direction:column; gap:5px}
+.dcell .k{font-size:11.5px; color:var(--muted)}
+.dcell .v{font-family:ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "D2Coding", "Malgun Gothic", monospace; font-size:20px; font-weight:500; letter-spacing:-.02em}
+.dcell .v small{font-size:12px; color:var(--ink-2); font-weight:400; margin-left:2px}
+.dcell .n{font-size:11px; color:var(--muted); font-weight:300; line-height:1.45}
+.dcell.hl{background:var(--accent-tint)} .dcell.hl .v{color:var(--accent)}
+.dcell.pos .v{color:var(--good)}
+
+/* simulator */
+.sim{background:var(--surface); border:1px solid var(--line); border-radius:16px; box-shadow:var(--shadow); overflow:hidden}
+.sim-top{padding:24px; display:grid; grid-template-columns:minmax(0,.95fr) minmax(0,1.25fr); gap:34px}
+@media (max-width:800px){ .sim-top{grid-template-columns:1fr; gap:26px; padding:20px} }
+.cutbox{display:flex; flex-direction:column; gap:13px}
+.lbl{font-family:ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "D2Coding", "Malgun Gothic", monospace; font-size:10.5px; font-weight:500; letter-spacing:.13em; text-transform:uppercase; color:var(--muted); margin:0}
+.cutval{display:flex; align-items:baseline; gap:9px}
+.cutval b{font-family:ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "D2Coding", "Malgun Gothic", monospace; font-size:58px; font-weight:600; line-height:.9; letter-spacing:-.035em; color:var(--accent)}
+.cutval i{font-style:normal; font-size:15px; color:var(--ink-2)}
+
+input[type=range]{-webkit-appearance:none; appearance:none; width:100%; height:26px; background:transparent; cursor:pointer; margin:0}
+input[type=range]::-webkit-slider-runnable-track{height:6px; border-radius:99px; background:var(--surface-3); border:1px solid var(--line)}
+input[type=range]::-moz-range-track{height:6px; border-radius:99px; background:var(--surface-3); border:1px solid var(--line)}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none; width:22px; height:22px; border-radius:50%; margin-top:-9px; background:var(--accent); border:3px solid var(--surface); box-shadow:0 0 0 1px var(--accent)}
+input[type=range]::-moz-range-thumb{width:18px; height:18px; border-radius:50%; background:var(--accent); border:3px solid var(--surface); box-shadow:0 0 0 1px var(--accent)}
+input[type=range]:focus-visible{outline:none}
+input[type=range]:focus-visible::-webkit-slider-thumb{box-shadow:0 0 0 1px var(--accent), 0 0 0 5px var(--accent-tint)}
+input[type=range]:focus-visible::-moz-range-thumb{box-shadow:0 0 0 1px var(--accent), 0 0 0 5px var(--accent-tint)}
+.ticks{display:flex; justify-content:space-between; font-family:ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "D2Coding", "Malgun Gothic", monospace; font-size:11px; color:var(--muted); margin-top:-4px}
+.sub{font-size:13px; color:var(--ink-2); margin:0}
+.sub b{font-family:ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "D2Coding", "Malgun Gothic", monospace; font-weight:500; color:var(--ink)}
+
+.big{display:flex; align-items:baseline; gap:10px; flex-wrap:wrap}
+.big b{font-family:ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "D2Coding", "Malgun Gothic", monospace; font-size:clamp(26px,3.4vw,34px); font-weight:600; letter-spacing:-.03em; line-height:1}
+.big .unit{font-size:15px; color:var(--ink-2); font-weight:400}
+.gauge{display:flex; flex-direction:column; gap:7px}
+.gauge-track{position:relative; height:12px; border-radius:99px; background:var(--surface-3); border:1px solid var(--line); overflow:hidden}
+.gauge-fill{position:absolute; inset:0 auto 0 0; border-radius:99px; background:var(--accent); transition:width .18s ease, background-color .18s ease}
+.gauge-fill.over{background:var(--bad)}
+.gauge-legend{display:flex; justify-content:space-between; font-size:11.5px; color:var(--muted); font-family:ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "D2Coding", "Malgun Gothic", monospace}
+.budget-now{display:flex; align-items:center; gap:34px; flex-wrap:wrap}
+.bn-left{display:flex; flex-direction:column; gap:7px; min-width:230px}
+.fix-row{display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:14px}
+.fix-card{border:1px solid var(--line); border-radius:11px; padding:15px 17px; background:var(--surface-2); display:flex; flex-direction:column; gap:7px}
+.fix-card:first-child{border-color:var(--accent-soft); background:var(--accent-tint)}
+.fix-v{display:flex; align-items:baseline; gap:7px}
+.fix-v b{font-family:ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "D2Coding", "Malgun Gothic", monospace; font-size:32px; font-weight:600; letter-spacing:-.03em; color:var(--accent)}
+.fix-v span{font-size:13px; color:var(--ink-2)}
+.fix-n{margin:0; font-size:12px; color:var(--muted)}
+.apply{font:inherit; font-size:12.5px; margin-top:4px; padding:7px 13px; border-radius:8px; border:1px solid var(--accent); background:var(--accent); color:#fff; cursor:pointer; transition:.12s}
+.apply.ghost{background:none; color:var(--ink-2); border-color:var(--line-2)}
+.apply:hover{filter:brightness(1.08)}
+.apply.ghost:hover{border-color:var(--ink-2); color:var(--ink)}
+.apply:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+.metric-bar{display:flex; align-items:center; gap:14px; padding:14px 24px; border-bottom:1px solid var(--line); background:var(--surface-2); flex-wrap:wrap}
+.seg{display:inline-flex; border:1px solid var(--line-2); border-radius:8px; overflow:hidden; background:var(--surface)}
+.seg-btn{font:inherit; font-size:13px; padding:6px 15px; border:none; background:none; color:var(--muted); cursor:pointer; transition:.12s}
+.seg-btn+.seg-btn{border-left:1px solid var(--line-2)}
+.seg-btn.on{background:var(--accent); color:#fff; font-weight:500}
+.seg-btn:focus-visible{outline:2px solid var(--accent); outline-offset:-3px}
+.seg-note{font-size:12.5px; color:var(--muted); font-weight:300}
+.driftbox{display:flex; flex-direction:column; gap:6px; padding:14px 0 0; border-top:1px dashed var(--line); margin-top:2px}
+.drift-hd{display:flex; align-items:center; justify-content:space-between; gap:10px}
+.drift-val{font-size:17px; font-weight:600; color:var(--warn)}
+.chip.warn{border-color:var(--warn); color:var(--warn); background:var(--warn-bg)}
+#smpSlider::-webkit-slider-thumb{background:var(--accent); box-shadow:0 0 0 1px var(--accent)}
+#smpSlider::-moz-range-thumb{background:var(--accent); box-shadow:0 0 0 1px var(--accent)}
+#driftSlider::-webkit-slider-thumb{background:var(--warn); box-shadow:0 0 0 1px var(--warn)}
+#driftSlider::-moz-range-thumb{background:var(--warn); box-shadow:0 0 0 1px var(--warn)}
+.ledger{display:flex; flex-direction:column; gap:0; align-self:center; width:100%}
+.lrow{display:flex; align-items:baseline; justify-content:space-between; gap:16px; padding:11px 0; border-bottom:1px dashed var(--line)}
+.lrow .lk{font-size:13.5px; color:var(--ink-2)}
+.lrow .lv{font-family:ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "D2Coding", "Malgun Gothic", monospace; font-size:19px; font-weight:500; letter-spacing:-.02em; white-space:nowrap}
+.lrow.save .lv{color:var(--good)}
+.lrow.loss .lv{color:var(--bad)}
+.lrow.net{border-bottom:none; border-top:2px solid var(--ink); margin-top:6px; padding-top:14px}
+.lrow.net .lk{font-size:14px; color:var(--ink); font-weight:500}
+.lrow.net .lv{font-size:28px; font-weight:600}
+.lrow.net.neg .lv{color:var(--bad)} .lrow.net.pos .lv{color:var(--good)}
+
+.verdict{display:flex; align-items:flex-start; gap:11px; padding:15px 24px; border-top:1px solid var(--line); font-size:13.5px}
+.verdict.ok{background:var(--good-bg)} .verdict.no{background:var(--bad-bg)}
+.verdict .tag{flex:none; font-family:ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "D2Coding", "Malgun Gothic", monospace; font-size:10.5px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; padding:3px 9px; border-radius:5px; border:1px solid currentColor}
+.verdict.ok .tag{color:var(--good)} .verdict.no .tag{color:var(--bad)}
+.verdict .txt{color:var(--ink); font-weight:400}
+.verdict .txt b{font-family:ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "D2Coding", "Malgun Gothic", monospace; font-weight:600}
+
+/* inputs */
+.fields{display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:16px}
+.field{display:flex; flex-direction:column; gap:6px}
+.field label{font-size:12px; color:var(--ink-2)}
+.field .note{font-size:11px; color:var(--muted); font-family:ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "D2Coding", "Malgun Gothic", monospace}
+input[type=number]{
+  width:100%; font-family:ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "D2Coding", "Malgun Gothic", monospace; font-variant-numeric:tabular-nums; font-size:14.5px;
+  padding:9px 11px; border-radius:8px; border:1px solid var(--line-2); background:var(--surface-2);
+  color:var(--ink); transition:border-color .12s, box-shadow .12s;
+}
+input[type=number]:focus{outline:none; border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-tint)}
+
+/* tables */
+.tblwrap{overflow-x:auto}
+table{width:100%; border-collapse:collapse; min-width:660px}
+th{font-family:ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "D2Coding", "Malgun Gothic", monospace; font-size:10.5px; font-weight:500; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); text-align:right; padding:0 13px 10px; white-space:nowrap; border-bottom:1px solid var(--line)}
+th:first-child{text-align:left}
+td{padding:9px 13px; border-bottom:1px solid var(--line); text-align:right; font-size:14px; white-space:nowrap}
+td:first-child{text-align:left}
+tbody tr:last-child td{border-bottom:none}
+tbody tr.cut td{background:var(--bad-bg)}
+tbody tr.top td{background:var(--accent-tint)}
+tfoot td{padding:11px 13px; border-top:2px solid var(--line-2); font-weight:500; text-align:right; font-size:14px}
+tfoot td:first-child{text-align:left}
+td.n, tfoot td.n{font-family:ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "D2Coding", "Malgun Gothic", monospace; font-variant-numeric:tabular-nums}
+td input{max-width:118px; padding:5px 8px; font-size:13.5px; text-align:right}
+.band{font-family:ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "D2Coding", "Malgun Gothic", monospace; font-weight:500}
+.chip{display:inline-block; font-family:ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "D2Coding", "Malgun Gothic", monospace; font-size:10px; font-weight:500; letter-spacing:.06em; padding:2px 7px; border-radius:4px; border:1px solid var(--line-2); color:var(--muted); vertical-align:middle}
+.chip.real{border-color:var(--accent-soft); color:var(--accent); background:var(--accent-tint)}
+.chip.cut{border-color:var(--bad-line); color:var(--bad); background:var(--bad-bg)}
+.chip.out{border-color:var(--line-2); color:var(--muted); background:var(--surface-3)}
+.minibar.out{background:var(--line-2)}
+tbody tr.out td{opacity:.6}
+.status{display:inline-flex; align-items:center; gap:5px; font-family:ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "D2Coding", "Malgun Gothic", monospace; font-size:12.5px; font-weight:500}
+.status.ok{color:var(--good)} .status.no{color:var(--bad)}
+.status .dot{width:7px; height:7px; border-radius:50%; background:currentColor; flex:none}
+.minibar{display:inline-block; height:8px; border-radius:2px; background:var(--accent-soft); vertical-align:middle; margin-right:7px}
+.minibar.cut{background:var(--bad-soft)}
+
+/* charts */
+.chartbox{position:relative}
+svg{display:block; width:100%; height:auto; overflow:visible}
+.tip{position:absolute; pointer-events:none; opacity:0; transform:translate(-50%,-100%); background:var(--ink); color:var(--bg); padding:8px 11px; border-radius:8px; font-size:12.5px; white-space:nowrap; transition:opacity .1s; z-index:5; line-height:1.45}
+.tip.on{opacity:1}
+.chart-legend{display:flex; gap:18px; flex-wrap:wrap; margin-top:14px; font-size:12.5px; color:var(--ink-2)}
+.chart-legend span{display:inline-flex; align-items:center; gap:7px}
+.swatch{width:14px; height:10px; border-radius:2px; flex:none}
+.swatch.dash{height:0; border-top:2px dashed var(--bad); width:16px; border-radius:0}
+
+/* notes */
+.notes{display:grid; grid-template-columns:repeat(auto-fit,minmax(340px,1fr)); gap:20px; align-items:start}
+.note-card{padding:18px 20px; border-radius:12px; border:1px solid var(--line); background:var(--surface)}
+.note-card h3{margin:0 0 10px; font-size:13px; font-weight:600; display:flex; align-items:center; gap:8px}
+.note-card h3 .bar{width:3px; height:14px; border-radius:2px; background:var(--muted)}
+.note-card.warn h3 .bar{background:var(--warn)}
+.note-card.down h3 .bar{background:var(--good)}
+.note-card.up h3 .bar{background:var(--bad)}
+.note-card ul{margin:0; padding-left:17px; display:flex; flex-direction:column; gap:9px}
+.note-card li{font-size:13.5px; color:var(--ink-2); line-height:1.62}
+.note-card li b{color:var(--ink); font-weight:500}
+.method{font-size:13.5px; color:var(--ink-2); line-height:1.72; margin:0; max-width:74ch}
+.method b{color:var(--ink); font-weight:500}
+code{font-family:ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "D2Coding", "Malgun Gothic", monospace; font-size:12.5px; background:var(--surface-3); padding:2px 6px; border-radius:5px; color:var(--ink)}
+pre.code{margin:0; padding:13px 15px; background:var(--surface-2); border:1px solid var(--line); border-radius:9px; overflow-x:auto}
+pre.code code{background:none; padding:0; font-size:11.5px; line-height:1.65; display:block; white-space:pre; color:var(--ink-2)}
+details{border:1px solid var(--line); border-radius:14px; background:var(--surface); box-shadow:var(--shadow)}
+summary{padding:16px 20px; cursor:pointer; font-size:14px; font-weight:600; list-style:none; display:flex; align-items:center; justify-content:space-between; gap:12px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"▾"; color:var(--muted); font-size:12px; transition:transform .15s}
+details[open] summary::after{transform:rotate(180deg)}
+details[open] summary{border-bottom:1px solid var(--line)}
+summary:focus-visible{outline:2px solid var(--accent); outline-offset:-2px; border-radius:14px}
+.reset{font:inherit; font-size:12px; color:var(--muted); background:none; border:1px solid var(--line); padding:5px 12px; border-radius:7px; cursor:pointer; transition:.12s}
+.reset:hover{color:var(--ink); border-color:var(--line-2)}
+.reset:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+footer{font-size:12px; color:var(--muted); text-align:center; padding-top:6px; line-height:1.7}
+@media (prefers-reduced-motion:reduce){*{transition:none !important}}
+
+.themetoggle{position:fixed; top:14px; right:14px; z-index:50; font:inherit; font-size:12px;
+  color:var(--ink-2); background:var(--surface); border:1px solid var(--line); border-radius:999px;
+  padding:7px 14px; cursor:pointer; box-shadow:var(--shadow)}
+.themetoggle:hover{color:var(--ink); border-color:var(--line-2)}
+.themetoggle:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+@media print{.themetoggle{display:none}}
+
+</style>
+
+<button type="button" class="themetoggle" id="themeToggle">테마 전환</button>
+<div class="wrap">
+
+  <header>
+    <p class="eyebrow">발송 예산 · 성과 트레이드오프 · 월 평균 기준</p>
+    <h1>신용점수 컷 시뮬레이터</h1>
+    <p class="dek">타사 한도조회 트리거 발송의 신용점수 하한을 조정했을 때, <b>얼마를 아끼고 얼마를 잃는지</b> 함께 계산합니다. 비용은 실측 발송 실적과 스냅샷 리텐션에서, 손실은 8월 프로모션 약정 실적에서 가져옵니다. 기본은 <b>약정 건수</b> 기준이고, 매출 기준으로도 전환할 수 있습니다.</p>
+    <div class="stamp">
+      <span id="st1">실측 539,146건 / 33일</span>
+      <span id="st2">단가 22.5원</span>
+      <span id="st3">스냅샷 650컷 111,682명</span>
+      <span>8월 약정 360명 · 매출 4,845만원</span>
+    </div>
+  </header>
+
+  <!-- ===== 경고 ===== -->
+  <section class="alert">
+    <span class="tag">점수 컷 대신 무작위 감량</span>
+    <h2>690점 컷은 약정 <b>66건</b>을 잘라내면서, 약정 1건당 비용은 오히려 <b>6.8% 올립니다.</b></h2>
+    <p>매출을 빼고 <b>약정 건수만</b>으로 봐도 같습니다. 잘라내려는 구간은 약정 1건을 전체 평균보다 <b>약 32% 싸게</b> 만들고 있습니다. 싼 것부터 버리고 비싼 것을 남기니, 예산은 줄지만 <b>효율은 나빠집니다.</b></p>
+    <p>매출 기준으로 보면 격차가 더 벌어집니다 &mdash; 실질 수수료율이 저신용일수록 높아서(1.57% → 0.47%), 같은 컷이 아끼는 비용의 <b>5.8배</b>에 달하는 매출을 버리게 됩니다.</p>
+    <p style="color:var(--ink); font-weight:500">예산이 1순위라면 <b>무작위 감량</b>이 답입니다. 현행 650컷을 유지한 채 대상의 약 10%만 무작위로 빼면 예산 안에 들어오면서 약정 손실은 최소이고, CPA는 <b>그대로 유지</b>됩니다. 아래 <b>예산 맞추기</b>에서 바로 적용할 수 있고, 이 페이지는 그 설정으로 열려 있습니다.</p>
+    <p>점수 드리프트 <b>+30점</b>을 이미 보정한 값입니다. 보정을 0점부터 60점까지 <b>어디에 놓아도</b> 결론은 같습니다 &mdash; 잃는 매출이 아끼는 비용의 <b>3.2배 ~ 11.7배</b>입니다. 드리프트 실측은 정밀도를 높일 뿐, 방향을 바꾸지 못합니다.</p>
+  </section>
+
+  <!-- ===== KPI ===== -->
+  <section class="derived" id="kpi"></section>
+
+  <!-- ===== 트레이드오프 시뮬레이터 ===== -->
+  <section class="sim">
+    <div class="metric-bar">
+      <span class="lbl">판단 기준</span>
+      <div class="seg" role="group" aria-label="판단 기준 선택">
+        <button type="button" class="seg-btn on" data-metric="deals">약정 건수</button>
+        <button type="button" class="seg-btn" data-metric="rev">매출</button>
+      </div>
+      <span class="seg-note" id="metricNote">수수료율 차이를 배제하고 건수만으로 판단합니다</span>
+    </div>
+    <div class="sim-top">
+      <div class="cutbox">
+        <p class="lbl">신용점수 컷</p>
+        <div class="cutval"><b class="num" id="cutOut">650</b><i>점 이상 또는 NULL</i></div>
+        <input type="range" id="cutSlider" min="650" max="750" step="5" value="650" aria-label="신용점수 컷">
+        <div class="ticks"><span id="tickMin">650</span><span id="tickMax">750</span></div>
+        <p class="sub">월 평균 예상 발송 <b class="num" id="volOut">432,896</b>건 · 예상 비용 <b class="num" id="costOut">974만원</b><br>스냅샷 <b class="num" id="snapOut">98,640</b>명 · 리텐션 <b class="num" id="retOut">88.3%</b></p>
+
+        <div class="driftbox">
+          <div class="drift-hd">
+            <p class="lbl">무작위 감량 <span class="chip real" id="smpChip">권장 레버</span></p>
+            <span class="num drift-val" id="smpOut" style="color:var(--accent)">89%</span>
+          </div>
+          <input type="range" id="smpSlider" min="50" max="100" step="1" value="89" aria-label="무작위 감량 비율">
+          <p class="sub" style="font-size:12px">대상 리스트에서 무작위로 일부만 발송합니다(<code>user_id % 100 &lt; N</code>). 모든 구간이 같은 비율로 줄어 <b>CPA가 그대로 유지</b>됩니다. <span id="smpNote">감량 없음</span></p>
+        </div>
+
+        <div class="driftbox">
+          <div class="drift-hd">
+            <p class="lbl">점수 드리프트 보정 <span class="chip warn" id="driftChip">가정값</span></p>
+            <span class="num drift-val" id="driftOut">+30점</span>
+          </div>
+          <input type="range" id="driftSlider" min="0" max="60" step="5" value="30" aria-label="점수 드리프트 보정">
+          <p class="sub" style="font-size:12px">약정 실적표의 점수는 <b>약정 이후</b> 값입니다 &mdash; 대출을 실행하면 점수가 떨어지니까요. 발송 당시 점수는 그만큼 <b>높았다</b>고 보정합니다. 실측 전이라 <b>+30점을 작업 가정</b>으로 걸어 뒀습니다(약정금액 평균 1,170만원 기준 통상 낙폭). 아래 민감도 표대로 <b>이 값을 어디에 놓든 결론은 같습니다.</b> <span id="driftNote">보정 없음 — 표 점수를 발송 시점 점수로 그대로 사용</span></p>
+        </div>
+      </div>
+
+      <div class="ledger">
+        <div class="lrow save">
+          <span class="lk">비용 절감 <span style="color:var(--muted); font-size:12px">(650컷 대비)</span></span>
+          <span class="lv num" id="saveOut">+1,287,826원</span>
+        </div>
+        <div class="lrow loss">
+          <span class="lk" id="lossLabel">잃는 약정 <span style="color:var(--muted); font-size:12px">(8월 실적 기준)</span></span>
+          <span class="lv num" id="lossOut">−66건</span>
+        </div>
+        <div class="lrow" id="midRow">
+          <span class="lk" id="midLabel">잘리는 구간의 한계 CPA</span>
+          <span class="lv num" id="midOut">19,454원</span>
+        </div>
+        <div class="lrow net neg">
+          <span class="lk" id="netLabel">컷 후 CPA</span>
+          <span class="lv num" id="netOut">30,745원</span>
+        </div>
+      </div>
+    </div>
+    <div class="verdict no" id="verdict">
+      <span class="tag" id="verdictTag">손해</span>
+      <span class="txt" id="verdictTxt">—</span>
+    </div>
+  </section>
+
+  <!-- ===== 예산 맞추기 ===== -->
+  <section class="panel">
+    <div class="panel-hd">
+      <h2>예산 맞추기</h2>
+      <p class="hint">목표 예산은 <b class="num" id="budgetLabel">1,000만원</b> · 전제값 패널에서 바꿀 수 있습니다</p>
+    </div>
+    <div class="panel-bd" style="display:flex; flex-direction:column; gap:20px">
+
+      <div class="budget-now">
+        <div class="bn-left">
+          <span class="lbl">현재 설정의 월 평균 예상 비용</span>
+          <div class="big"><b class="num" id="bCost">993만원</b><span class="unit num" id="bCostExact">9,925,193원</span></div>
+          <span class="num" id="bDiff" style="font-size:13.5px"></span>
+        </div>
+        <div class="gauge" style="flex:1; min-width:220px">
+          <div class="gauge-track">
+            <div class="gauge-fill" id="gaugeFill" style="width:60%"></div>
+          </div>
+          <div class="gauge-legend"><span>0</span><span id="gaugeMax">목표</span></div>
+        </div>
+      </div>
+
+      <div class="fix-row">
+        <div class="fix-card">
+          <span class="lbl">무작위 감량으로 맞추려면</span>
+          <div class="fix-v"><b class="num" id="fixSmp">90%</b><span>발송</span></div>
+          <p class="fix-n" id="fixSmpNote">약정 손실 최소 · CPA 유지</p>
+          <button type="button" class="apply" id="applySmp">이 설정 적용</button>
+        </div>
+        <div class="fix-card">
+          <span class="lbl">신용점수 컷으로 맞추려면</span>
+          <div class="fix-v"><b class="num" id="fixCut">690</b><span>점 이상</span></div>
+          <p class="fix-n" id="fixCutNote">CPA 악화</p>
+          <button type="button" class="apply ghost" id="applyCut">이 설정 적용</button>
+        </div>
+      </div>
+
+      <div class="tblwrap">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">방법</th>
+              <th scope="col">월 발송</th>
+              <th scope="col">월 비용</th>
+              <th scope="col">예산 판정</th>
+              <th scope="col">약정 (추정)</th>
+              <th scope="col">CPA</th>
+            </tr>
+          </thead>
+          <tbody id="cmpBody"></tbody>
+        </table>
+      </div>
+      <p class="method">모든 수치는 <b>월 평균(30.4일)</b> 기준입니다. 특정 달의 공휴일 배치에 좌우되지 않는 정상 상태 값이며, 약정 수는 8월 실적이 매달 재현된다고 본 추정치입니다. <b>예산만</b> 보실 거면 &ldquo;월 비용&rdquo;과 &ldquo;예산 판정&rdquo; 두 칸만 읽으시면 됩니다.</p>
+    </div>
+  </section>
+
+  <!-- ===== 드리프트 민감도 ===== -->
+  <section class="panel">
+    <div class="panel-hd">
+      <h2>점수 드리프트 민감도 &mdash; 어떤 가정에서도 결론이 같습니다</h2>
+      <p class="hint">현재 컷 <b class="num" id="sensCut">690</b>점 기준 · 어느 행을 보든 순효과가 음수입니다</p>
+    </div>
+    <div class="panel-bd">
+      <div class="tblwrap">
+        <table>
+          <thead>
+            <tr id="sensHead"></tr>
+          </thead>
+          <tbody id="sensBody"></tbody>
+        </table>
+      </div>
+      <p class="method" style="margin-top:16px">손익분기 증분율은 &ldquo;잘리는 매출 중 <b>이 비율만 발송이 만들어낸 증분</b>이어도 컷이 손해&rdquo;라는 뜻입니다. 가장 보수적인 가정(드리프트 60점)에서도 31%에 불과합니다.</p>
+    </div>
+  </section>
+
+  <!-- ===== 잘려나가는 매출 ===== -->
+  <section class="panel">
+    <div class="panel-hd">
+      <h2><span id="revChartTitle">구간별 약정 건수</span> &mdash; 컷 아래가 잘려나갑니다</h2>
+      <p class="hint">가로축은 <b>실적표 기준(약정 이후)</b> 점수입니다 · 막대에 마우스를 올리면 상세값이 나옵니다</p>
+    </div>
+    <div class="panel-bd">
+      <div class="chartbox">
+        <svg id="revChart" viewBox="0 0 820 300" role="img" aria-label="신용점수 구간별 8월 매출 기여 막대 차트. 정확한 수치는 아래 표를 참고하세요."></svg>
+        <div class="tip" id="tip1"></div>
+      </div>
+      <div class="chart-legend">
+        <span><i class="swatch" style="background:var(--accent-soft)"></i>남는 구간</span>
+        <span><i class="swatch" style="background:var(--bad-soft)"></i>이번 컷으로 <b>새로</b> 잘리는 부분</span>
+        <span><i class="swatch" style="background:var(--line-2)"></i>현행에서도 대상 외</span>
+        <span><i class="swatch dash"></i>새 컷 위치</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 구간별 성과 표 ===== -->
+  <section class="panel">
+    <div class="panel-hd">
+      <h2>8월 프로모션 약정 성과 &mdash; 신용점수 구간별</h2>
+      <p class="hint">실질 수수료율 = 매출 ÷ 약정금액</p>
+    </div>
+    <div class="panel-bd">
+      <div class="tblwrap">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">신용점수 구간 <span style="text-transform:none; letter-spacing:0">(표 기준)</span></th>
+              <th scope="col">발송 시점 추정</th>
+              <th scope="col">약정 유저</th>
+              <th scope="col">약정 건수</th>
+              <th scope="col">약정 금액</th>
+              <th scope="col">매출</th>
+              <th scope="col">매출 점유</th>
+              <th scope="col">실질 수수료율</th>
+              <th scope="col">유저당 매출</th>
+            </tr>
+          </thead>
+          <tbody id="bandBody"></tbody>
+          <tfoot id="bandFoot"></tfoot>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 수수료율 ===== -->
+  <section class="panel">
+    <div class="panel-hd">
+      <h2>실질 수수료율은 저신용일수록 높습니다</h2>
+      <p class="hint">고신용 = 저금리 대출 = 낮은 수수료 &mdash; 컷 방향을 다시 생각해야 하는 이유</p>
+    </div>
+    <div class="panel-bd">
+      <div class="chartbox">
+        <svg id="rateChart" viewBox="0 0 820 250" role="img" aria-label="신용점수 구간별 실질 수수료율 막대 차트. 600점 미만 1.57퍼센트에서 900점 이상 0.47퍼센트까지 단조 감소합니다."></svg>
+        <div class="tip" id="tip2"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 데이터 한계 ===== -->
+  <section class="notes">
+    <div class="note-card up">
+      <h3><i class="bar"></i>왜 650점 미만이 99명이나 있나</h3>
+      <ul>
+        <li>발송 조건은 <code>650점 이상 OR NULL</code>입니다. 그런데 약정자 360명 중 <b>99명(27.5%)</b>이 650점 미만으로 잡혔습니다. 발송 시점엔 통과했다는 뜻이죠.</li>
+        <li><b>가설 1 — 약정 후 하락.</b> 대출을 실행하면 부채가 잡히며 점수가 내려갑니다. 그렇다면 이 표의 점수는 약정 이후 값이고, <b>전 구간이 실제보다 아래로 밀려</b> 있습니다. 위 드리프트 슬라이더가 이 가설을 보정합니다.</li>
+        <li><b>가설 2 — 원래 NULL이었다.</b> <code>IS NULL</code>로 통과한 유저에게 이후 점수가 생겼고, 신용 이력이 얇으면 초기 점수가 낮게 잡힙니다. 이 경우 650점 미만 2개 구간의 매출 <b>986만원(20.4%)</b>이 곧 NULL 그룹의 성과이며, 점수 컷과는 별개 레버가 됩니다.</li>
+        <li><b>가설 3 — 쿼리 오류.</b> 캠페인 발송 로그 조인이 빠져 8월 전체 약정자를 본 것이라면 분석 전체가 무효입니다. <b>이것부터 확인하세요.</b></li>
+      </ul>
+    </div>
+    <div class="note-card warn">
+      <h3><i class="bar"></i>드리프트를 실제로 측정하는 법</h3>
+      <ul>
+        <li>Delta 타임트래블로 8월 초 스냅샷을 불러와 현재 점수와 비교하면 바로 나옵니다. <b>기본 보존기간이 30일</b>이라 곧 사라지니 오늘 확인하고, 되면 별도 테이블로 떠 두세요.</li>
+      </ul>
+      <pre class="code"><code>DESCRIBE HISTORY uts.user_attributes;
+
+SELECT
+  COUNT(*)                                            AS users,
+  ROUND(AVG(now.credit_score - past.credit_score), 1) AS avg_drift,
+  SUM(CASE WHEN past.credit_score IS NULL
+           THEN 1 ELSE 0 END)                         AS was_null,
+  SUM(CASE WHEN past.credit_score &gt;= 650
+            AND now.credit_score  &lt;  650
+           THEN 1 ELSE 0 END)                         AS fell_below_650
+FROM &lt;8월약정자&gt; a
+JOIN uts.user_attributes TIMESTAMP AS OF '2026-08-01T00:00:00' past
+  ON past.user_id = a.user_id
+JOIN uts.user_attributes now
+  ON now.user_id = a.user_id;</code></pre>
+      <ul style="margin-top:12px">
+        <li><code>avg_drift</code>가 −30이면 위 슬라이더를 <b>+30</b>에 놓으세요. <code>was_null</code>이 크면 가설 2가 맞고 NULL 그룹을 따로 분석해야 합니다.</li>
+      </ul>
+    </div>
+    <div class="note-card warn">
+      <h3><i class="bar"></i>아직 분모가 없습니다</h3>
+      <ul>
+        <li>이 표는 <b>약정자(분자)만</b> 있습니다. 구간별 발송 건수가 없어 <b>전환율을 못 구합니다.</b> &ldquo;650~699가 매출의 39%&rdquo;가 효율이 좋아서인지, 발송이 그쪽에 많이 나가서인지 구분이 안 돼요.</li>
+        <li>다만 <b>이 의사결정에는 충분합니다</b> — 이유가 무엇이든 그 구간을 자르면 그 매출이 사라지니까요. 효율 판단(어디가 태우는 구간인가)은 분모가 붙어야 가능합니다.</li>
+        <li>600점 미만 구간은 하한을 <b>500점</b>으로 가정해 보간했습니다. 드리프트를 크게 잡을 때만 영향이 있습니다.</li>
+      </ul>
+    </div>
+    <div class="note-card down">
+      <h3><i class="bar"></i>그래서 지금 할 일</h3>
+      <ul>
+        <li><b>1. 쿼리 검증.</b> 8월 발송자로 제대로 걸러졌는지 확인 (가설 3 배제).</li>
+        <li><b>2. 드리프트 측정.</b> 타임트래블이 살아있는 오늘 안에. 슬라이더를 실측값으로 고정.</li>
+        <li><b>3. 분모 붙이기.</b> 구간별 발송 건수 → 전환율과 발송당 수익으로 <b>손익분기 컷</b>을 계산.</li>
+        <li><b>4. 컷 방향 재검토.</b> 800점 이상 3개 구간은 약정 <b>67건(17.5%)</b>, 매출 519만원(<b>10.7%</b>)입니다. 발송량이 많은데 기여가 이 정도라면 여기가 태우는 구간입니다. 예산이 절대 제약이라면 위쪽을 자르세요.</li>
+        <li><b>5. 예산 재협상.</b> 캠페인 전체 ROAS가 <b>4.25배</b>입니다. 1,000만원이 어디서 나온 숫자인지 되짚어볼 만합니다.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===== 비용 측 계산 (접기) ===== -->
+  <details>
+    <summary>비용 측 계산 &mdash; 전제값과 컷별 스냅샷 인원</summary>
+    <div class="panel-bd" style="display:flex; flex-direction:column; gap:22px">
+      <div>
+        <p class="lbl" style="margin:0 0 12px">전제값</p>
+        <div class="fields">
+          <div class="field"><label for="f_sent">실측 발송 건수</label><input type="number" id="f_sent" value="539146" min="1"><span class="note">7/13 – 8/14</span></div>
+          <div class="field"><label for="f_days">해당 기간 일수</label><input type="number" id="f_days" value="33" min="1"><span class="note">달력일 기준</span></div>
+          <div class="field"><label for="f_cpm">발송 단가 (원)</label><input type="number" id="f_cpm" value="22.5" step="0.1" min="0"><span class="note">건당</span></div>
+          <div class="field"><label for="f_budget">목표 예산 (원)</label><input type="number" id="f_budget" value="10000000" step="100000" min="0"><span class="note">월 기준</span></div>
+          <div class="field"><label for="f_month">월 평균 일수</label><input type="number" id="f_month" value="30.4" step="0.1" min="1"><span class="note">365 ÷ 12</span></div>
+          <div class="field"><label for="f_adj">트래픽 조정 (%)</label><input type="number" id="f_adj" value="0" step="1"><span class="note">시즌 보정</span></div>
+          <div class="field"><label for="f_inc">증분 반영률 (%)</label><input type="number" id="f_inc" value="100" step="5" min="0" max="100"><span class="note">잃는 매출에 곱함</span></div>
+          <div class="field"><label for="f_drift">점수 드리프트 (점)</label><input type="number" id="f_drift" value="30" step="5" min="0" max="120"><span class="note">위 슬라이더와 연동</span></div>
+          <div class="field"><label for="f_sample">무작위 감량 (%)</label><input type="number" id="f_sample" value="89" step="1" min="10" max="100"><span class="note">위 슬라이더와 연동</span></div>
+        </div>
+      </div>
+
+      <div>
+        <p class="lbl" style="margin:0 0 12px">컷별 스냅샷 인원 &mdash; 실측값을 넣으면 보간이 갱신됩니다</p>
+        <div class="tblwrap">
+          <table>
+            <thead>
+              <tr>
+                <th scope="col">컷</th><th scope="col">스냅샷 인원</th><th scope="col">근거</th>
+                <th scope="col">리텐션</th><th scope="col">월 예상 발송</th>
+                <th scope="col">월 예상 비용</th><th scope="col">예산 판정</th>
+              </tr>
+            </thead>
+            <tbody id="costBody"></tbody>
+          </table>
+        </div>
+        <div style="display:flex; justify-content:flex-end; margin-top:14px">
+          <button class="reset" id="resetBtn" type="button">입력값 초기화</button>
+        </div>
+      </div>
+
+      <p class="method">스냅샷 인원을 그대로 월 단위로 환산하면 틀립니다. 스냅샷은 &ldquo;7일 이내 조회자를 중복제거한 <b>스톡</b>&rdquo;이고 실제 발송은 &ldquo;10분 전 조회 트리거 <b>플로우</b>&rdquo;이기 때문입니다. 그래서 스냅샷에서는 <b>상대 비율만</b> 뽑고 절대량은 실적에서 가져옵니다. &nbsp;<code>베이스라인 = (실측건수 ÷ 기간일수) × 월일수 × (1+조정)</code> &nbsp;<code>예상발송(c) = 베이스라인 × 리텐션(c)</code></p>
+      <p class="method"><b>CPA</b>는 발송 비용 ÷ 약정 건수입니다. 컷 후 CPA는 <code>예상 비용(c) ÷ (383건 − 잘리는 건수)</code>로 계산합니다. 잘리는 구간의 <b>한계 CPA</b>는 <code>절감액 ÷ 잘리는 건수</code>이며, 이 값이 현행 평균 CPA보다 <b>낮으면 싼 구간을 버리는 것</b>이라 컷 후 효율이 나빠집니다.</p>
+      <p class="method"><b>잃는 손실</b>은 8월 약정 실적에서 650점과 선택한 컷 사이의 매출을 구간 내 균등분포로 보간해 계산합니다. 8월 실적이 매달 그대로 재현된다고 가정한 값이며, 증분 반영률로 보수적으로 낮춰 볼 수 있습니다. <b>점수 드리프트</b>를 <code>d</code>로 두면 실적표의 점수축이 발송 시점보다 <code>d</code>만큼 낮다는 뜻이므로, 컷 <code>c</code>는 표 기준 <code>c − d</code>에 대응시켜 <code>revBetween(650−d, c−d)</code>로 계산합니다.</p>
+    </div>
+  </details>
+
+  <footer>
+    입력값은 이 브라우저에만 저장됩니다 · 컷을 확정하기 전에 구간별 <b>발송 건수(분모)</b>를 반드시 붙이세요
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ===== 8월 약정 실적 (고정 데이터) ===== */
+  var BANDS = [
+    { lo:500, hi:600,  label:"600점 미만",  users:26, deals:31,  amt:231290000, rev:3622356  },
+    { lo:600, hi:650,  label:"600~649",    users:73, deals:76,  amt:450400000, rev:6240841  },
+    { lo:650, hi:700,  label:"650~699",    users:96, deals:103, amt:1322520000,rev:18893139 },
+    { lo:700, hi:750,  label:"700~749",    users:59, deals:63,  amt:698900000, rev:8953658  },
+    { lo:750, hi:800,  label:"750~799",    users:42, deals:43,  amt:592300000, rev:5544156  },
+    { lo:800, hi:850,  label:"800~849",    users:20, deals:21,  amt:254700000, rev:1789822  },
+    { lo:850, hi:900,  label:"850~899",    users:15, deals:16,  amt:155500000, rev:1063702  },
+    { lo:900, hi:1000, label:"900점 이상", users:29, deals:30,  amt:499300000, rev:2342585  }
+  ];
+  var TOT = BANDS.reduce(function(a,b){
+    return { users:a.users+b.users, deals:a.deals+b.deals, amt:a.amt+b.amt, rev:a.rev+b.rev };
+  }, {users:0,deals:0,amt:0,rev:0});
+
+  var SCORES = [650,660,670,680,690,700,710,720,730,740,750];
+  var DEFAULT_ANCHORS = { 650:111682, 750:79077 };
+  var DEFAULT_FIELDS = { f_sent:539146, f_days:33, f_cpm:22.5, f_budget:10000000, f_month:30.4, f_adj:0, f_inc:100, f_drift:30, f_sample:89 };
+  var KEY = "cut-sim-v8";
+  var state = { anchors:{}, fields:{}, cut:690, metric:'deals' };
+
+  function load(){
+    var s=null; try{ s=JSON.parse(localStorage.getItem(KEY)||"null"); }catch(e){}
+    state.anchors = Object.assign({}, DEFAULT_ANCHORS, (s&&s.anchors)||{});
+    state.fields  = Object.assign({}, DEFAULT_FIELDS,  (s&&s.fields)||{});
+    state.cut     = (s&&s.cut) || 650;
+    state.metric  = (s&&s.metric) || 'deals';
+  }
+  function save(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
+
+  var nf = new Intl.NumberFormat("ko-KR");
+  function n(v){ return nf.format(Math.round(v)); }
+  function won(v){ return n(v)+"원"; }
+  function manwon(v){
+    var m=v/10000;
+    if (Math.abs(m)>=10000) return (m/10000).toFixed(2).replace(/\.?0+$/,"")+"억원";
+    return n(m)+"만원";
+  }
+  function pct(v,d){ return (v*100).toFixed(d==null?1:d)+"%"; }
+  function sgn(v){ return (v>=0?"+":"−")+won(Math.abs(v)); }
+
+  /* ===== 비용 모델 ===== */
+  function anchorList(){
+    return Object.keys(state.anchors).map(Number)
+      .filter(function(s){ return isFinite(state.anchors[s]) && state.anchors[s]>0; })
+      .sort(function(a,b){ return a-b; });
+  }
+  function snapAt(score){
+    var a=anchorList(); if(!a.length) return null;
+    if (state.anchors[score]>0) return { v:state.anchors[score], real:true };
+    if (score<a[0] || score>a[a.length-1]) return null;
+    for (var i=0;i<a.length-1;i++){
+      if (score>a[i] && score<a[i+1]){
+        var t=(score-a[i])/(a[i+1]-a[i]);
+        return { v: state.anchors[a[i]] + (state.anchors[a[i+1]]-state.anchors[a[i]])*t, real:false };
+      }
+    }
+    return null;
+  }
+  function derive(){
+    var f=state.fields, a=anchorList();
+    var base = a.length ? a[0] : null;
+    var baseSnap = base!=null ? state.anchors[base] : 0;
+    var daily = f.f_sent/Math.max(1,f.f_days);
+    var baseVol = daily*f.f_month*(1+f.f_adj/100);
+    return {
+      baseScore:base, baseSnap:baseSnap, daily:daily,
+      baseVol:baseVol, baseCost:baseVol*f.f_cpm,
+      targetVol: f.f_cpm>0 ? f.f_budget/f.f_cpm : 0
+    };
+  }
+  function smp(){ return (state.fields.f_sample==null ? 100 : state.fields.f_sample)/100; }
+
+  function rowFor(score,d){
+    var s=snapAt(score);
+    if(!s) return { score:score, snap:null };
+    var ret = d.baseSnap>0 ? s.v/d.baseSnap : 0;
+    var vol = d.baseVol*ret*smp();
+    return { score:score, snap:s.v, real:s.real, ret:ret, vol:vol, cost:vol*state.fields.f_cpm };
+  }
+
+  // 시나리오 한 개 평가: 컷 + 샘플링 → 비용 / 약정 / CPA
+  function scenario(cut, samplePct, d){
+    var sp = samplePct/100;
+    var sn = snapAt(cut);
+    if (!sn) return null;
+    var ret = d.baseSnap>0 ? sn.v/d.baseSnap : 0;
+    var vol = d.baseVol*ret*sp;
+    var cost = vol*state.fields.f_cpm;
+    var dr = state.fields.f_drift||0;
+    var lost = revBetweenDeals((d.baseScore||650)-dr, cut-dr);
+    var deals = (TOT.deals - lost)*sp;
+    return { cut:cut, sample:samplePct, vol:vol, cost:cost, deals:deals,
+             cpa: deals>0 ? cost/deals : 0 };
+  }
+
+  /* ===== 매출 손실: from~to 사이 매출 (구간 내 균등 보간) ===== */
+  var M = {
+    deals: { key:"deals", name:"약정 건수", unit:"건",
+             fmt:function(v){ return n(v)+"건"; }, sfmt:function(v){ return (v>=0?"+":"−")+n(Math.abs(v))+"건"; } },
+    rev:   { key:"rev",   name:"매출",     unit:"원",
+             fmt:function(v){ return won(v); },   sfmt:function(v){ return sgn(v); } }
+  };
+  function m(){ return M[state.metric] || M.deals; }
+  function valOf(b){ return b[m().key]; }
+  function totVal(){ return state.metric==="deals" ? TOT.deals : TOT.rev; }
+
+  // 표의 점수축은 "약정 이후" 점수. 컷은 "발송 시점" 점수에 걸리므로 드리프트만큼 왼쪽으로 옮겨 대응시킨다.
+  function effCut(){ return state.cut - (state.fields.f_drift||0); }
+  function effBase(base){ return base - (state.fields.f_drift||0); }
+
+  function revBetweenDeals(from, to){
+    if (to<=from) return 0;
+    var sum=0;
+    BANDS.forEach(function(b){
+      var lo=Math.max(b.lo, from), hi=Math.min(b.hi, to);
+      if (hi>lo) sum += b.deals * (hi-lo)/(b.hi-b.lo);
+    });
+    return sum;
+  }
+
+  function revBetween(from, to){
+    if (to<=from) return 0;
+    var sum=0;
+    BANDS.forEach(function(b){
+      var lo=Math.max(b.lo, from), hi=Math.min(b.hi, to);
+      if (hi>lo) sum += valOf(b) * (hi-lo)/(b.hi-b.lo);
+    });
+    return sum;
+  }
+
+  var $ = function(id){ return document.getElementById(id); };
+
+  function render(){
+    var d = derive();
+    var r = rowFor(state.cut, d);
+    var baseScore = d.baseScore || 650;
+    var keptRaw = (totVal() - revBetween(effBase(baseScore), effCut())) * smp();
+    var rawLoss = totVal() - keptRaw;
+    var loss = rawLoss * (state.fields.f_inc/100);
+    var saveAmt = r.snap!=null ? d.baseCost - r.cost : 0;
+    var net = saveAmt - loss;
+
+    renderStamps(d);
+    renderKpi(d);
+    renderSlider(d);
+    renderHero(d, r, saveAmt, rawLoss, loss, net);
+    renderBudget(d, r);
+    renderSensitivity(d, saveAmt);
+    renderBandTable();
+    renderCostTable(d);
+    $("revChartTitle").textContent = "구간별 "+m().name;
+    renderRevChart();
+    renderRateChart();
+  }
+
+  function renderStamps(d){
+    $("st1").textContent = "실측 "+n(state.fields.f_sent)+"건 / "+n(state.fields.f_days)+"일";
+    $("st2").textContent = "단가 "+state.fields.f_cpm+"원";
+    $("st3").textContent = "스냅샷 "+d.baseScore+"컷 "+n(d.baseSnap)+"명";
+  }
+
+  function renderKpi(d){
+    var roas = TOT.rev/d.baseCost;
+    var isDeals = state.metric==="deals";
+    var top3 = isDeals ? (BANDS[5].deals+BANDS[6].deals+BANDS[7].deals)
+                       : (BANDS[5].rev+BANDS[6].rev+BANDS[7].rev);
+    var cells = [
+      { k:"8월 약정", v:n(TOT.deals), u:"건", n:"약정 유저 "+n(TOT.users)+"명" },
+      { k:"월 평균 발송 비용", v:manwon(d.baseCost), n:"일평균 "+n(d.daily)+"건 × "+state.fields.f_month+"일" },
+      { k:"현행 CPA (650컷)", v:n(d.baseCost/TOT.deals), u:"원", n:"약정 1건 확보 비용", hl:true },
+      isDeals
+        ? { k:"약정 1건당 매출", v:n(TOT.rev/TOT.deals), u:"원", n:"참고 · 구간마다 크게 다름" }
+        : { k:"캠페인 ROAS", v:roas.toFixed(2), u:"배", n:"매출 ÷ 발송비", pos:true },
+      { k:"650~699 "+m().name+" 점유", v:pct(valOf(BANDS[2])/totVal()), n:"자르려던 바로 그 구간", hl:true },
+      { k:"800점 이상 점유", v:pct(top3/totVal()), n:"3개 구간 합계 · "+m().name+" 기준" }
+    ];
+    $("kpi").innerHTML = cells.map(function(c){
+      return '<div class="dcell'+(c.hl?" hl":"")+(c.pos?" pos":"")+'">'+
+        '<span class="k">'+c.k+'</span>'+
+        '<span class="v">'+c.v+(c.u?'<small>'+c.u+'</small>':'')+'</span>'+
+        '<span class="n">'+c.n+'</span></div>';
+    }).join("");
+  }
+
+  function renderSlider(d){
+    var a=anchorList(); var lo=a.length?a[0]:650, hi=a.length?a[a.length-1]:750;
+    var sl=$("cutSlider"); sl.min=lo; sl.max=hi;
+    state.cut = Math.min(hi, Math.max(lo, state.cut));
+    sl.value = state.cut;
+    $("tickMin").textContent=lo; $("tickMax").textContent=hi;
+  }
+
+  function renderHero(d, r, saveAmt, rawLoss, loss, net){
+    $("cutOut").textContent = state.cut;
+    var dr = state.fields.f_drift||0;
+    var sp = state.fields.f_sample==null?100:state.fields.f_sample;
+    $("smpOut").textContent = sp+"%";
+    $("smpChip").textContent = sp<100 ? "적용 중" : "권장 레버";
+    $("smpNote").innerHTML = sp<100
+      ? "대상의 <b>"+(100-sp)+"%</b>를 무작위 제외 · <code>user_id % 100 &lt; "+sp+"</code>"
+      : "감량 없음";
+    $("driftOut").textContent = (dr>0?"+":"")+dr+"점";
+    $("driftChip").textContent = dr>0 ? "가정값" : "보정 없음";
+    $("driftNote").innerHTML = dr>0
+      ? "표에서 <b>"+(650)+"~"+(699)+"</b>으로 보이는 유저는 발송 당시 <b>"+(650+dr)+"~"+(699+dr)+"</b>였다고 봅니다 · 컷 "+state.cut+"점은 표 기준 <b>"+(state.cut-dr)+"점</b>에 해당"
+      : "보정 없음 — 표 점수를 발송 시점 점수로 그대로 사용";
+    if (r.snap==null){
+      ["volOut","costOut","snapOut","retOut","saveOut","lossOut","netOut"].forEach(function(id){ $(id).textContent="—"; });
+      return;
+    }
+    $("volOut").textContent  = n(r.vol);
+    $("costOut").textContent = manwon(r.cost);
+    $("snapOut").textContent = n(r.snap);
+    $("retOut").textContent  = pct(r.ret);
+    var MM = m();
+    var baseCPA = TOT.deals>0 ? d.baseCost/TOT.deals : 0;
+    var keptDeals = (TOT.deals - revBetweenDeals(effBase(d.baseScore||650), effCut())) * smp();
+    var lostDeals = TOT.deals - keptDeals;
+    var newCPA = keptDeals>0 ? r.cost/keptDeals : 0;
+    var margCPA = lostDeals>0.01 ? saveAmt/lostDeals : 0;
+    var isDeals = state.metric==="deals";
+    var same = isDeals && Math.abs(newCPA-baseCPA) < baseCPA*0.005;
+    var bad = isDeals ? (newCPA > baseCPA*1.005) : (net < 0);
+
+    $("saveOut").textContent = sgn(saveAmt);
+    $("lossLabel").innerHTML = "잃는 "+MM.name+" <span style=\'color:var(--muted); font-size:12px\'>(8월 실적 기준)</span>";
+    $("lossOut").textContent = MM.sfmt(-loss);
+
+    if (isDeals){
+      $("midLabel").textContent = "잘리는 구간의 한계 CPA";
+      $("midOut").textContent   = lostDeals>0 ? won(margCPA) : "—";
+      $("midOut").style.color   = (lostDeals>0 && margCPA<baseCPA) ? "var(--bad)" : "";
+      $("netLabel").innerHTML   = "컷 후 CPA <span style=\'color:var(--muted); font-size:12px\'>(현행 "+won(baseCPA)+")</span>";
+      $("netOut").textContent   = won(newCPA);
+    } else {
+      $("midLabel").textContent = "잃는 매출 ÷ 아끼는 비용";
+      $("midOut").textContent   = saveAmt>0 ? (loss/saveAmt).toFixed(1)+"배" : "—";
+      $("midOut").style.color   = "";
+      $("netLabel").textContent = "순효과";
+      $("netOut").textContent   = sgn(net);
+    }
+
+    var nrow = $("netOut").parentElement;
+    nrow.classList.toggle("neg", bad);
+    nrow.classList.toggle("pos", !bad);
+
+    var v=$("verdict");
+    v.className = "verdict "+(bad ? "no" : "ok");
+    $("verdictTag").textContent = bad ? "손해" : (same ? "효율 유지" : "이득");
+
+    var budget = state.fields.f_budget;
+    var budgetTxt = r.cost<=budget
+      ? "예산 <b class='num'>"+manwon(budget)+"</b> 안에는 들어옵니다"
+      : "예산도 <b class='num'>"+won(r.cost-budget)+"</b> 초과합니다";
+
+    if (state.cut === (d.baseScore||650)){
+      $("verdictTxt").innerHTML = "현행 컷입니다. 슬라이더를 올리면 아끼는 비용과 잃는 "+MM.name+"가 함께 계산됩니다.";
+    } else if (isDeals && same){
+      $("verdictTxt").innerHTML =
+        "무작위 감량이라 모든 구간이 같은 비율로 줄어 <b>CPA가 "+won(baseCPA)+"로 유지</b>됩니다 · "+
+        "약정 <b class='num'>"+lostDeals.toFixed(0)+"건</b> 감소 · "+budgetTxt;
+    } else if (isDeals){
+      $("verdictTxt").innerHTML = bad
+        ? "잘라내려는 구간이 평균보다 <b class='num'>"+pct(1-margCPA/baseCPA,0)+"</b> 싸게 약정을 만들고 있습니다 · "+
+          "컷 후 CPA <b class='num'>"+won(baseCPA)+" → "+won(newCPA)+"</b>으로 악화 · "+budgetTxt
+        : "잘라내려는 구간이 평균보다 비싸게 약정을 만들고 있습니다 · CPA가 <b class='num'>"+won(newCPA)+"</b>로 개선 · "+budgetTxt;
+    } else if (net<0){
+      var ratio = saveAmt>0 ? rawLoss/saveAmt : 0;
+      var be = rawLoss>0 ? saveAmt/rawLoss : 0;
+      $("verdictTxt").innerHTML =
+        "아끼는 <b class='num'>"+won(saveAmt)+"</b>보다 잃는 매출이 <b class='num'>"+ratio.toFixed(1)+"배</b> 큽니다 · "+
+        "잘리는 매출의 <b class='num'>"+pct(be)+"</b>만 발송 증분이어도 손해 · "+budgetTxt;
+    } else {
+      $("verdictTxt").innerHTML = "잃는 매출보다 아끼는 비용이 큽니다 · "+budgetTxt;
+    }
+  }
+
+  // 한 구간이 [대상 외 | 새로 잘림 | 유지] 로 각각 몇 %인지
+  function bandSplit(b){
+    var a=anchorList(); var base=(a.length?a[0]:650);
+    var eb = effBase(base), ec = effCut();
+    var w = b.hi - b.lo;
+    var ov = function(lo,hi){ var l=Math.max(b.lo,lo), h=Math.min(b.hi,hi); return h>l ? (h-l)/w : 0; };
+    return { out: ov(-1e9, eb), cut: ov(eb, ec), keep: ov(Math.max(eb,ec), 1e9) };
+  }
+
+  // 표 점수 → 발송 시점 추정 점수 범위 표기
+  function shifted(b){
+    var dr = state.fields.f_drift||0;
+    if (!dr) return "동일";
+    var lo = b.lo+dr, hi = b.hi+dr;
+    if (b.lo===500) return "~"+hi;
+    if (b.hi===1000) return (lo)+"+";
+    return lo+"~"+(hi-1);
+  }
+
+  function renderBudget(d, r){
+    var budget = state.fields.f_budget;
+    var base = d.baseScore || 650;
+    $("budgetLabel").textContent = manwon(budget);
+    $("gaugeMax").textContent = "목표 " + manwon(budget);
+
+    if (r.snap!=null){
+      $("bCost").textContent = manwon(r.cost);
+      $("bCostExact").textContent = won(r.cost);
+      var diff = budget - r.cost;
+      $("bDiff").textContent = diff>=0 ? "목표까지 "+won(diff)+" 여유" : "목표보다 "+won(-diff)+" 초과";
+      $("bDiff").style.color = diff>=0 ? "var(--good)" : "var(--bad)";
+      var f=$("gaugeFill");
+      f.style.width = Math.min(100, budget>0 ? r.cost/budget*100 : 0)+"%";
+      f.classList.toggle("over", r.cost>budget);
+    }
+
+    // 목표를 맞추는 무작위 감량 비율 (현행 컷 유지 기준)
+    var needSmp = d.baseCost>0 ? Math.floor(budget/d.baseCost*100) : 100;
+    needSmp = Math.max(10, Math.min(100, needSmp));
+    $("fixSmp").textContent = needSmp+"%";
+    $("fixSmpNote").textContent = needSmp>=100
+      ? "현행 컷만으로 이미 예산 안 — 감량 불필요"
+      : "현행 "+base+"컷 유지 + 대상의 "+(100-needSmp)+"%를 무작위 제외 · CPA 그대로";
+    $("applySmp").disabled = needSmp>=100;
+    $("applySmp").dataset.v = needSmp;
+    $("applySmp").dataset.cut = base;
+
+    // 목표를 맞추는 신용점수 컷 (감량 100% 기준)
+    var fixCut = null;
+    for (var i=0;i<SCORES.length;i++){
+      var sc=SCORES[i], sn=snapAt(sc);
+      if (!sn) continue;
+      var c = d.baseVol*(sn.v/d.baseSnap)*state.fields.f_cpm;
+      if (c<=budget){ fixCut=sc; break; }
+    }
+    $("fixCut").textContent = fixCut!=null ? fixCut : "—";
+    $("applyCut").disabled = fixCut==null;
+    $("applyCut").dataset.v = fixCut!=null ? fixCut : "";
+
+    // 비교표
+    var rows = [
+      { name:"현행 ("+base+"컷, 감량 없음)", sc:base, sp:100 },
+      { name:"무작위 감량 "+needSmp+"%", sc:base, sp:needSmp, rec:true },
+      { name:"신용점수 컷 "+(fixCut!=null?fixCut:"—")+"점", sc:fixCut, sp:100 },
+      { name:"현재 설정 ("+state.cut+"컷 · 감량 "+(state.fields.f_sample||100)+"%)",
+        sc:state.cut, sp:(state.fields.f_sample==null?100:state.fields.f_sample), cur:true }
+    ];
+    var baseCPA = TOT.deals>0 ? d.baseCost/TOT.deals : 0;
+    $("cmpBody").innerHTML = rows.map(function(x){
+      if (x.sc==null) return '<tr><td>'+x.name+'</td><td class="n" colspan="5" style="color:var(--muted)">계산 불가</td></tr>';
+      var sc0 = scenario(x.sc, x.sp, d);
+      if (!sc0) return '';
+      var ok = sc0.cost<=budget;
+      var cls = x.cur ? "top" : "";
+      return '<tr class="'+cls+'">'+
+        '<td>'+x.name+(x.rec?' <span class="chip real">권장</span>':'')+(x.cur?' <span class="chip">현재</span>':'')+'</td>'+
+        '<td class="n">'+n(sc0.vol)+'건</td>'+
+        '<td class="n">'+won(sc0.cost)+'</td>'+
+        '<td><span class="status '+(ok?"ok":"no")+'"><i class="dot"></i>'+(ok?"예산 내":"초과 "+manwon(sc0.cost-budget))+'</span></td>'+
+        '<td class="n">'+sc0.deals.toFixed(0)+'건</td>'+
+        '<td class="n" style="color:'+(sc0.cpa>baseCPA*1.005?"var(--bad)":(sc0.cpa<baseCPA*0.995?"var(--good)":""))+'">'+won(sc0.cpa)+'</td></tr>';
+    }).join("");
+  }
+
+  function renderSensitivity(d, saveAmt){
+    var base = d.baseScore || 650;
+    var cur = state.fields.f_drift||0;
+    $("sensCut").textContent = state.cut;
+    var rows = [0,15,30,45,60].map(function(dr){
+      var l = revBetween(base-dr, state.cut-dr);
+      var net = saveAmt - l*(state.fields.f_inc/100);
+      return { dr:dr, loss:l, net:net,
+               ratio: saveAmt>0 ? l/saveAmt : 0,
+               be: l>0 ? saveAmt/l : 0,
+               at: state.cut-dr };
+    });
+    var isDeals = state.metric==="deals";
+    var baseCPA = TOT.deals>0 ? d.baseCost/TOT.deals : 0;
+
+    $("sensHead").innerHTML = isDeals
+      ? '<th scope="col">드리프트 가정</th><th scope="col">표 기준 컷 위치</th><th scope="col">비용 절감</th>'+
+        '<th scope="col">잃는 약정</th><th scope="col">잘리는 구간 CPA</th><th scope="col">컷 후 CPA</th><th scope="col">현행 대비</th>'
+      : '<th scope="col">드리프트 가정</th><th scope="col">표 기준 컷 위치</th><th scope="col">비용 절감</th>'+
+        '<th scope="col">잃는 매출</th><th scope="col">순효과</th><th scope="col">손실 ÷ 절감</th><th scope="col">손익분기 증분율</th>';
+
+    $("sensBody").innerHTML = rows.map(function(r){
+      var isCur = r.dr===cur;
+      var head = '<tr class="'+(isCur?"top":"")+'">'+
+        '<td><span class="band">+'+r.dr+'점</span>'+(isCur?' <span class="chip real">현재 설정</span>':'')+'</td>'+
+        '<td class="n" style="color:var(--muted)">'+r.at+'점</td>'+
+        '<td class="n" style="color:var(--good)">'+sgn(saveAmt)+'</td>';
+      if (isDeals){
+        var kept = (TOT.deals - revBetweenDeals(base-r.dr, state.cut-r.dr)) * smp();
+        var ld = TOT.deals - kept;
+        var nc = kept>0 ? (d.baseCost - saveAmt)/kept : 0;
+        var mc = ld>0.01 ? saveAmt/ld : 0;
+        var delta = baseCPA>0 ? nc/baseCPA-1 : 0;
+        return head+
+          '<td class="n" style="color:var(--bad)">−'+ld.toFixed(0)+'건</td>'+
+          '<td class="n" style="color:'+(mc<baseCPA?"var(--bad)":"var(--good)")+'">'+won(mc)+'</td>'+
+          '<td class="n" style="font-weight:600; color:'+(nc>baseCPA?"var(--bad)":"var(--good)")+'">'+won(nc)+'</td>'+
+          '<td class="n">'+(delta>=0?"+":"−")+pct(Math.abs(delta),1)+'</td></tr>';
+      }
+      return head+
+        '<td class="n" style="color:var(--bad)">'+sgn(-r.loss)+'</td>'+
+        '<td class="n" style="color:'+(r.net<0?"var(--bad)":"var(--good)")+'; font-weight:600">'+sgn(r.net)+'</td>'+
+        '<td class="n">'+(r.ratio>=1000?"—":r.ratio.toFixed(1)+"배")+'</td>'+
+        '<td class="n">'+(r.be>0?pct(r.be):"—")+'</td></tr>';
+    }).join("");
+  }
+
+  function renderBandTable(){
+    var maxRev = Math.max.apply(null, BANDS.map(function(b){ return valOf(b); }));
+    $("bandBody").innerHTML = BANDS.map(function(b){
+      var sp = bandSplit(b);
+      var isTop = valOf(b) === maxRev;
+      var cls = sp.cut>0 ? "cut" : (sp.out>=0.999 ? "out" : (isTop ? "top" : ""));
+      var w = Math.max(3, valOf(b)/maxRev*46);
+      var chip = sp.out>=0.999 ? '<span class="chip out">현행에서도 대상 외</span>'
+               : (sp.cut>=0.999 ? '<span class="chip cut">전부 잘림</span>'
+               : (sp.cut>0 ? '<span class="chip cut">'+pct(sp.cut,0)+' 잘림</span>' : ''));
+      return '<tr class="'+cls+'">'+
+        '<td><i class="minibar'+(sp.cut>0?" cut":(sp.out>=0.999?" out":""))+'" style="width:'+w+'px"></i><span class="band">'+b.label+'</span> '+chip+'</td>'+
+        '<td class="n" style="color:var(--muted)">'+shifted(b)+'</td>'+
+        '<td class="n">'+n(b.users)+'</td>'+
+        '<td class="n">'+n(b.deals)+'</td>'+
+        '<td class="n">'+manwon(b.amt)+'</td>'+
+        '<td class="n">'+n(b.rev)+'</td>'+
+        '<td class="n">'+pct(b.rev/TOT.rev)+'</td>'+
+        '<td class="n">'+pct(b.rev/b.amt,3)+'</td>'+
+        '<td class="n">'+n(b.rev/b.users)+'</td></tr>';
+    }).join("");
+    $("bandFoot").innerHTML = '<tr><td>합계</td><td></td><td class="n">'+n(TOT.users)+'</td><td class="n">'+n(TOT.deals)+
+      '</td><td class="n">'+manwon(TOT.amt)+'</td><td class="n">'+n(TOT.rev)+'</td><td class="n">100.0%</td><td class="n">'+
+      pct(TOT.rev/TOT.amt,3)+'</td><td class="n">'+n(TOT.rev/TOT.users)+'</td></tr>';
+  }
+
+  function renderCostTable(d){
+    var budget = state.fields.f_budget;
+    $("costBody").innerHTML = SCORES.map(function(sc){
+      var r = rowFor(sc, d);
+      var cls = sc===state.cut ? "top" : "";
+      var val = state.anchors[sc]>0 ? state.anchors[sc] : "";
+      var input = '<input type="number" class="anchor" data-score="'+sc+'" value="'+val+
+        '" placeholder="'+(r.snap!=null?n(r.snap):"—")+'" aria-label="'+sc+'점 컷 스냅샷 인원" min="0">';
+      if (r.snap==null){
+        return '<tr class="'+cls+'"><td><span class="band">'+sc+'</span></td><td>'+input+
+          '</td><td class="n">—</td><td class="n">—</td><td class="n">—</td><td class="n">—</td><td>—</td></tr>';
+      }
+      var ok = r.cost<=budget;
+      return '<tr class="'+cls+'">'+
+        '<td><span class="band">'+sc+'</span></td>'+
+        '<td>'+input+'</td>'+
+        '<td><span class="chip'+(r.real?" real":"")+'">'+(r.real?"실측":"추정")+'</span></td>'+
+        '<td class="n">'+pct(r.ret)+'</td>'+
+        '<td class="n">'+n(r.vol)+'</td>'+
+        '<td class="n">'+won(r.cost)+'</td>'+
+        '<td><span class="status '+(ok?"ok":"no")+'"><i class="dot"></i>'+
+          (ok?"예산 내":"초과 "+manwon(r.cost-budget))+'</span></td></tr>';
+    }).join("");
+  }
+
+  /* ===== charts ===== */
+  var NS="http://www.w3.org/2000/svg";
+  function el(t,a){ var e=document.createElementNS(NS,t); for(var k in a) e.setAttribute(k,a[k]); return e; }
+  function barPath(x,y,w,h,r){
+    r=Math.min(r,w/2,h);
+    return "M"+x+","+(y+h)+"V"+(y+r)+"a"+r+","+r+" 0 0 1 "+r+","+(-r)+
+           "h"+(w-2*r)+"a"+r+","+r+" 0 0 1 "+r+","+r+"V"+(y+h)+"Z";
+  }
+  function niceAxis(rawMax, target){
+    var rough = rawMax/target;
+    var mag = Math.pow(10, Math.floor(Math.log10(rough)));
+    var step = mag*10;
+    [1,1.5,2,2.5,3,4,5,6,8,10].some(function(m){ if(mag*m>=rough){ step=mag*m; return true; } return false; });
+    var steps = Math.max(1, Math.ceil(rawMax/step));
+    return { step:step, steps:steps, max:step*steps };
+  }
+
+  function renderRevChart(){
+    var svg=$("revChart"); while(svg.firstChild) svg.removeChild(svg.firstChild);
+    var W=820,H=300,mL=74,mR=14,mT=26,mB=42, iw=W-mL-mR, ih=H-mT-mB;
+    var ax = niceAxis(Math.max.apply(null,BANDS.map(function(b){return valOf(b);}))*1.1, 4);
+    var y=function(v){ return mT+ih-(v/ax.max)*ih; };
+    var band=iw/BANDS.length, bw=Math.min(band*0.62,58);
+
+    for(var i=0;i<=ax.steps;i++){
+      var val=ax.step*i, gy=y(val);
+      svg.appendChild(el("line",{x1:mL,x2:mL+iw,y1:gy,y2:gy,stroke:"var(--line)","stroke-width":1,opacity:i===0?1:.7}));
+      var t=el("text",{x:mL-12,y:gy+4,"text-anchor":"end",fill:"var(--muted)","font-size":11,"font-family":"ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'D2Coding', 'Malgun Gothic', monospace"});
+      t.textContent = i===0 ? "0" : (state.metric==="deals" ? n(val)+"건" : n(val/10000)+"만");
+      svg.appendChild(t);
+    }
+
+    BANDS.forEach(function(b,i){
+      var cx=mL+band*i+band/2, by=y(valOf(b)), bh=Math.max(2,mT+ih-by);
+      var sp = bandSplit(b);
+      var frac = sp.cut;
+      var d = barPath(cx-bw/2,by,bw,bh,4);
+      var cid="revclip"+i;
+      var cp=el("clipPath",{id:cid}); cp.appendChild(el("path",{d:d})); svg.appendChild(cp);
+      svg.appendChild(el("path",{d:d, fill:"var(--accent-soft)"}));
+      if (sp.out>0) svg.appendChild(el("rect",{x:cx-bw/2, y:by, width:bw*sp.out+0.5, height:bh,
+        fill:"var(--line-2)", "clip-path":"url(#"+cid+")"}));
+      if (sp.cut>0) svg.appendChild(el("rect",{x:cx-bw/2+bw*sp.out, y:by, width:bw*sp.cut, height:bh,
+        fill:"var(--bad-soft)", "clip-path":"url(#"+cid+")"}));
+
+      var xt=el("text",{x:cx,y:mT+ih+20,"text-anchor":"middle",fill:"var(--muted)","font-size":10.5,"font-family":"ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'D2Coding', 'Malgun Gothic', monospace"});
+      xt.textContent=b.label.replace("점 미만","-").replace("점 이상","+");
+      svg.appendChild(xt);
+      var xp=el("text",{x:cx,y:mT+ih+34,"text-anchor":"middle",fill:"var(--muted)","font-size":10,"font-family":"ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'D2Coding', 'Malgun Gothic', monospace",opacity:.8});
+      xp.textContent=pct(valOf(b)/totVal(),0);
+      svg.appendChild(xp);
+
+      if (valOf(b)===Math.max.apply(null,BANDS.map(function(x){return valOf(x);}))){
+        var vt=el("text",{x:cx,y:by-9,"text-anchor":"middle",fill:frac>=.5?"var(--bad)":"var(--accent)","font-size":12,"font-weight":600,"font-family":"ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'D2Coding', 'Malgun Gothic', monospace"});
+        vt.textContent=m().fmt(valOf(b));
+        svg.appendChild(vt);
+      }
+
+      var hit=el("rect",{x:cx-band/2,y:mT,width:band,height:ih,fill:"transparent",style:"cursor:default; pointer-events:all"});
+      hit.addEventListener("mouseenter",function(){
+        showTip($("tip1"), $("revChart"),
+          '<b class="num">'+b.label+'</b><br>'+m().name+' <span class="num">'+m().fmt(valOf(b))+'</span> ('+pct(valOf(b)/totVal())+')<br>'+
+          '약정유저 <span class="num">'+b.users+'</span>명 · 약정 <span class="num">'+b.deals+'</span>건'+
+          (sp.out>=0.999 ? '<br><span style="opacity:.75">현행 컷에서도 이미 대상 외</span>'
+           : (frac>0 ? '<br>이번 컷으로 <span class="num">'+pct(frac,0)+'</span> 새로 잘림 (−<span class="num">'+m().fmt(valOf(b)*frac)+'</span>)' : '')),
+          cx, by, W, H);
+      });
+      hit.addEventListener("mouseleave",function(){ $("tip1").classList.remove("on"); });
+      svg.appendChild(hit);
+    });
+
+    // 현행 컷 위치(회색 점선)
+    var abase = anchorList(); var eb = effBase(abase.length?abase[0]:650);
+    var bpos = Math.max(0, Math.min(1, scoreFraction(eb)));
+    if (bpos>0.004){
+      var bx = mL + bpos*iw;
+      svg.appendChild(el("line",{x1:bx,x2:bx,y1:mT,y2:mT+ih,stroke:"var(--line-2)","stroke-width":2,"stroke-dasharray":"3 3"}));
+      var bl2=el("text",{x:bx-6,y:mT-1,"text-anchor":"end",fill:"var(--muted)","font-size":10.5,"font-family":"ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'D2Coding', 'Malgun Gothic', monospace"});
+      bl2.textContent="현행";
+      svg.appendChild(bl2);
+    }
+
+    // 새 컷 위치 세로선
+    var pos = Math.max(0, Math.min(1, cutFraction()));
+    var cxLine = mL + pos*iw;
+    svg.appendChild(el("line",{x1:cxLine,x2:cxLine,y1:mT-8,y2:mT+ih,stroke:"var(--bad)","stroke-width":2,"stroke-dasharray":"6 4"}));
+    var cl=el("text",{x:cxLine+7,y:mT-1,fill:"var(--bad)","font-size":11.5,"font-weight":600,"font-family":"ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'D2Coding', 'Malgun Gothic', monospace"});
+    cl.textContent = (state.fields.f_drift||0)>0
+      ? "컷 "+state.cut+" → 표기준 "+effCut()
+      : "컷 "+state.cut;
+    svg.appendChild(cl);
+  }
+
+  // 컷 점수가 밴드 축(카테고리 8칸)에서 차지하는 위치 비율
+  function scoreFraction(sc){
+    for (var i=0;i<BANDS.length;i++){
+      var b=BANDS[i];
+      if (sc>=b.lo && sc<b.hi) return (i + (sc-b.lo)/(b.hi-b.lo))/BANDS.length;
+    }
+    return sc<BANDS[0].lo ? 0 : 1;
+  }
+  function cutFraction(){ return scoreFraction(effCut()); }
+
+  function renderRateChart(){
+    var svg=$("rateChart"); while(svg.firstChild) svg.removeChild(svg.firstChild);
+    var W=820,H=250,mL=74,mR=14,mT=22,mB=40, iw=W-mL-mR, ih=H-mT-mB;
+    var rates=BANDS.map(function(b){ return b.rev/b.amt*100; });
+    var ax=niceAxis(Math.max.apply(null,rates)*1.12, 4);
+    var y=function(v){ return mT+ih-(v/ax.max)*ih; };
+    var band=iw/BANDS.length, bw=Math.min(band*0.62,58);
+
+    for(var i=0;i<=ax.steps;i++){
+      var val=ax.step*i, gy=y(val);
+      svg.appendChild(el("line",{x1:mL,x2:mL+iw,y1:gy,y2:gy,stroke:"var(--line)","stroke-width":1,opacity:i===0?1:.7}));
+      var t=el("text",{x:mL-12,y:gy+4,"text-anchor":"end",fill:"var(--muted)","font-size":11,"font-family":"ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'D2Coding', 'Malgun Gothic', monospace"});
+      t.textContent=val.toFixed(1)+"%";
+      svg.appendChild(t);
+    }
+
+    BANDS.forEach(function(b,i){
+      var v=rates[i], cx=mL+band*i+band/2, by=y(v), bh=Math.max(2,mT+ih-by);
+      svg.appendChild(el("path",{d:barPath(cx-bw/2,by,bw,bh,4),fill:"var(--accent-soft)"}));
+      var vt=el("text",{x:cx,y:by-8,"text-anchor":"middle",fill:"var(--ink-2)","font-size":11,"font-weight":500,"font-family":"ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'D2Coding', 'Malgun Gothic', monospace"});
+      vt.textContent=v.toFixed(2)+"%";
+      svg.appendChild(vt);
+      var xt=el("text",{x:cx,y:mT+ih+20,"text-anchor":"middle",fill:"var(--muted)","font-size":10.5,"font-family":"ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'D2Coding', 'Malgun Gothic', monospace"});
+      xt.textContent=b.label.replace("점 미만","-").replace("점 이상","+");
+      svg.appendChild(xt);
+
+      var hit=el("rect",{x:cx-band/2,y:mT,width:band,height:ih,fill:"transparent",style:"cursor:default; pointer-events:all"});
+      hit.addEventListener("mouseenter",function(){
+        showTip($("tip2"), $("rateChart"),
+          '<b class="num">'+b.label+'</b><br>수수료율 <span class="num">'+v.toFixed(3)+'%</span><br>'+
+          '약정금액 <span class="num">'+manwon(b.amt)+'</span> → 매출 <span class="num">'+n(b.rev)+'</span>원',
+          cx, by, W, H);
+      });
+      hit.addEventListener("mouseleave",function(){ $("tip2").classList.remove("on"); });
+      svg.appendChild(hit);
+    });
+  }
+
+  function showTip(tip, svg, html, cx, by, W, H){
+    var box=svg.getBoundingClientRect();
+    tip.innerHTML=html; tip.classList.add("on");
+    var half=tip.offsetWidth/2+6;
+    var px=cx/W*box.width;
+    var svgTop = svg.offsetTop - svg.parentElement.offsetTop;
+    tip.style.left=Math.max(half, Math.min(box.width-half, px))+"px";
+    tip.style.top =Math.max(tip.offsetHeight+12, svgTop + by/H*box.height - 10)+"px";
+  }
+
+  /* ===== events ===== */
+  $("cutSlider").addEventListener("input",function(e){ state.cut=Number(e.target.value); save(); render(); });
+  Array.prototype.forEach.call(document.querySelectorAll(".seg-btn"), function(btn){
+    btn.addEventListener("click", function(){
+      state.metric = btn.dataset.metric;
+      Array.prototype.forEach.call(document.querySelectorAll(".seg-btn"), function(o){
+        o.classList.toggle("on", o.dataset.metric===state.metric);
+      });
+      $("metricNote").textContent = state.metric==="deals"
+        ? "수수료율 차이를 배제하고 건수만으로 판단합니다"
+        : "구간별 수수료율 차이까지 반영해 판단합니다";
+      save(); render();
+    });
+  });
+  $("applySmp").addEventListener("click",function(){
+    var v=Number(this.dataset.v), c=Number(this.dataset.cut); if(!v) return;
+    state.fields.f_sample=v; if(c) { state.cut=c; $("cutSlider").value=c; }
+    $("smpSlider").value=v; $("f_sample").value=v; save(); render();
+  });
+  $("applyCut").addEventListener("click",function(){
+    var v=Number(this.dataset.v); if(!v) return;
+    state.cut=v; state.fields.f_sample=100; $("smpSlider").value=100; $("f_sample").value=100;
+    $("cutSlider").value=v; save(); render();
+  });
+  $("smpSlider").addEventListener("input",function(e){
+    state.fields.f_sample=Number(e.target.value); $("f_sample").value=state.fields.f_sample; save(); render();
+  });
+  $("driftSlider").addEventListener("input",function(e){
+    state.fields.f_drift=Number(e.target.value); $("f_drift").value=state.fields.f_drift; save(); render();
+  });
+  Object.keys(DEFAULT_FIELDS).forEach(function(id){
+    $(id).addEventListener("input",function(e){
+      var v=parseFloat(e.target.value);
+      state.fields[id]=isFinite(v)?v:DEFAULT_FIELDS[id];
+      if (id==="f_drift")  $("driftSlider").value=state.fields.f_drift;
+      if (id==="f_sample") $("smpSlider").value=state.fields.f_sample;
+      save(); render();
+    });
+  });
+  $("costBody").addEventListener("input",function(e){
+    if(!e.target.classList.contains("anchor")) return;
+    var sc=Number(e.target.dataset.score), v=parseFloat(e.target.value);
+    if(isFinite(v)&&v>0) state.anchors[sc]=v; else delete state.anchors[sc];
+    save(); render();
+  });
+  $("resetBtn").addEventListener("click",function(){
+    try{ localStorage.removeItem(KEY); }catch(e){}
+    state.anchors=Object.assign({},DEFAULT_ANCHORS);
+    state.fields=Object.assign({},DEFAULT_FIELDS);
+    state.cut=650;
+    Object.keys(DEFAULT_FIELDS).forEach(function(id){ $(id).value=DEFAULT_FIELDS[id]; });
+    $("driftSlider").value = 30;
+    $("smpSlider").value = 89;
+    $("cutSlider").value = 650;
+    render();
+  });
+  window.addEventListener("resize",function(){
+    $("tip1").classList.remove("on"); $("tip2").classList.remove("on"); render();
+  });
+
+  load();
+  Object.keys(DEFAULT_FIELDS).forEach(function(id){ $(id).value=state.fields[id]; });
+  $("driftSlider").value = state.fields.f_drift;
+  $("smpSlider").value = state.fields.f_sample;
+  Array.prototype.forEach.call(document.querySelectorAll(".seg-btn"), function(o){
+    o.classList.toggle("on", o.dataset.metric===state.metric);
+  });
+  $("metricNote").textContent = state.metric==="deals"
+    ? "수수료율 차이를 배제하고 건수만으로 판단합니다"
+    : "구간별 수수료율 차이까지 반영해 판단합니다";
+  render();
+})();
+</script>
+
+<script>
+(function(){
+  var K="cut-sim-theme", r=document.documentElement, b=document.getElementById("themeToggle");
+  function cur(){ return r.getAttribute("data-theme") ||
+    (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"); }
+  try { var v=localStorage.getItem(K); if(v) r.setAttribute("data-theme", v); } catch(e){}
+  b.addEventListener("click", function(){
+    var nx = cur()==="dark" ? "light" : "dark";
+    r.setAttribute("data-theme", nx);
+    try { localStorage.setItem(K, nx); } catch(e){}
+  });
+})();
+</script>
+
+</body>
+</html>
