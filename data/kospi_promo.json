@@ -3,7 +3,7 @@
   "line": "asset",
   "emoji": "📈",
   "name": "코스피 예측 프로모션",
-  "owner": "이은영",
+  "owner": "은영",
   "status": "done",
   "metricKeys": [
     "introView",
@@ -148,6 +148,11 @@
           "contributedMau": 2083,
           "connectDone": 1417,
           "pointCost": 374820,
+          "sendCost": 0
+        },
+        {
+          "date": "2026-08-27",
+          "pointCost": 451630,
           "sendCost": 0
         }
       ]
