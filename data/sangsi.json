@@ -19,7 +19,9 @@
           "apply": 105,
           "contract": 20,
           "amount": null,
-          "revenue": null
+          "revenue": null,
+          "pointCost": null,
+          "sendCost": 76000
         }
       ]
     },
@@ -36,7 +38,9 @@
           "apply": 339,
           "contract": 30,
           "amount": null,
-          "revenue": null
+          "revenue": null,
+          "pointCost": null,
+          "sendCost": 129000
         }
       ]
     }

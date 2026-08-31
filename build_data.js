@@ -43,7 +43,8 @@ function totalRun(P, label) {
   const [s, e] = periodDates(P.period);
   return {
     label, start: s, end: e, granularity: 'total',
-    daily: [{ date: s, introView: nn(P.actual.introView), inquiry: nn(P.actual.intro), apply: nn(P.actual.apply), contract: nn(P.actual.contract), amount: null, revenue: nn(P.d0_revenue) }]
+    // 총계 프로모션(신년·세뱃돈·대출신청상시)은 채널상 발송/광고비로 분류 (원본에 포인트/발송 구분 없음)
+    daily: [{ date: s, introView: nn(P.actual.introView), inquiry: nn(P.actual.intro), apply: nn(P.actual.apply), contract: nn(P.actual.contract), amount: null, revenue: nn(P.d0_revenue), pointCost: null, sendCost: nn(P.actual.cost) }]
   };
 }
 // P5/P7 스타일 일자별 (paymentCount=한도조회 / creditLoan+otherLoan=신청)
@@ -61,6 +62,8 @@ function dailyRunP5P7(P, label) {
     contract: nn(d.contract),
     amount: null,
     revenue: null,
+    pointCost: nn(d.cost),  // 지급 포인트 = 포인트 비용
+    sendCost: null,
   }));
   return { label, start: s, end: e, granularity: 'daily', daily };
 }
@@ -71,6 +74,7 @@ function p6Runs(P) {
     const daily = rows.map(d => ({
       date: d.date, introView: null, inquiry: nn(d.limitCheck), apply: nn(d.applyCount),
       contract: nn(d.contract), amount: nn(d.contractAmount), revenue: nn(d.revenue),
+      pointCost: nn(d.pointCost), sendCost: nn(d.sendCost),  // 타사 = 포인트+발송 둘 다
     }));
     const label = r.group + (r.status === '진행중' ? ' · 상시' : '');
     const end = r.end || (rows.length ? rows[rows.length - 1].date : r.start);
@@ -95,6 +99,7 @@ function augustRun() {
     apply: (d.creditLoan != null || d.otherLoan != null) ? (d.creditLoan || 0) + (d.otherLoan || 0) : null,
     creditLoan: nn(d.creditLoan), otherLoan: nn(d.otherLoan),
     contract: nn(d.contract), amount: null, revenue: null,
+    pointCost: nn(d.cost), sendCost: null,  // 8월 = 포인트 비용
   }));
   // 포인트탭 진입점(슬롯+그리드) 퍼널 한도조회 — 전체 한도조회에서 빼면 '포인트탭 외 유입'. 8월 누적 값(자동갱신이 재계산).
   let pointTab = null;

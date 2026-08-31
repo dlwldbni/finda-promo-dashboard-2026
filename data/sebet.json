@@ -19,7 +19,9 @@
           "apply": null,
           "contract": 21,
           "amount": null,
-          "revenue": 1355715
+          "revenue": 1355715,
+          "pointCost": null,
+          "sendCost": 8623238
         }
       ]
     }

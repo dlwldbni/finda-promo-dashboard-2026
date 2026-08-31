@@ -197,6 +197,25 @@
 
   footer { text-align:center; color:var(--text-3); font-size:12px; margin-top:30px; }
 
+  /* 마케팅 비용 띠 (메인 상단) */
+  .cost-band { margin-top:14px; background:var(--card); border:1px solid var(--border); border-radius:14px; box-shadow:var(--shadow-sm); padding:15px 18px; display:flex; gap:22px; align-items:center; flex-wrap:wrap; }
+  .cost-band .cb-left { min-width:220px; flex:0 0 auto; }
+  .cb-head { font-size:12.5px; font-weight:700; color:var(--text-2); display:flex; align-items:center; gap:8px; }
+  .cb-period { font-size:11px; color:var(--text-3); font-weight:500; font-variant-numeric:tabular-nums; }
+  .cb-total { font-size:26px; font-weight:800; letter-spacing:-0.5px; color:var(--text); font-variant-numeric:tabular-nums; margin-top:2px; }
+  .cb-split { font-size:12px; color:var(--text-2); font-weight:600; margin-top:3px; display:flex; align-items:center; gap:4px; }
+  .cb-dot { width:8px; height:8px; border-radius:2px; display:inline-block; }
+  .cb-dot.pt { background:#2F6FE0; } .cb-dot.sd { background:#94a3b8; margin-left:10px; }
+  .cb-bar { display:flex; height:7px; border-radius:99px; overflow:hidden; background:var(--grey-bg); margin-top:9px; }
+  .cb-bar-pt { background:#2F6FE0; } .cb-bar-sd { background:#94a3b8; }
+  .cb-projs { display:flex; gap:8px; flex-wrap:wrap; flex:1; }
+  .cb-chip { font-size:12px; color:var(--text-2); background:var(--grey-bg); border:1px solid var(--border); padding:5px 11px; border-radius:99px; font-weight:600; white-space:nowrap; }
+  .cb-chip b { color:var(--text); font-weight:800; font-variant-numeric:tabular-nums; }
+  .cb-empty { font-size:13px; color:var(--text-3); font-weight:600; padding:6px 2px; }
+  /* 프로젝트 카드 마케팅 비용 */
+  .pc-cost { margin-top:11px; padding-top:10px; border-top:1px dashed var(--border); display:flex; justify-content:space-between; align-items:center; gap:8px; }
+  .pc-cost-l { font-size:11px; font-weight:700; color:var(--text-3); white-space:nowrap; }
+  .pc-cost-v { font-size:12px; font-weight:700; color:var(--text); font-variant-numeric:tabular-nums; text-align:right; }
   @media (max-width: 900px){ .lines-grid{ grid-template-columns:1fr; } }
 
   /* 비밀번호 게이트 */
@@ -254,10 +273,10 @@
       <span class="rb-label">📅 기간</span>
       <button class="preset" data-preset="recent7">최근 7일</button>
       <button class="preset" data-preset="recent30">최근 30일</button>
-      <button class="preset" data-preset="q1">1분기</button>
-      <button class="preset" data-preset="q2">2분기</button>
+      <button class="preset" data-preset="thisMonth">이번달</button>
       <button class="preset" data-preset="h1">상반기</button>
-      <button class="preset active" data-preset="all">전체</button>
+      <button class="preset" data-preset="h2">하반기</button>
+      <button class="preset" data-preset="all">전체</button>
       <span class="sep"></span>
       <input type="date" id="d-start" min="2026-01-01" max="2026-08-04">
       <span style="opacity:.7">~</span>
@@ -271,6 +290,7 @@
 
   <h2 class="sec">3개 사업 축 기여 현황 <span class="hint">· 카드 클릭 시 상세로 이동</span></h2>
   <div class="lines-grid" id="lines-grid"></div>
+  <div class="cost-band" id="cost-band"></div>
 
   <div class="detail-tabs" id="detail-tabs"></div>
 
@@ -426,7 +446,7 @@ async function loadProjects(){
   const allDates = PROJECTS.flatMap(p => p.daily.map(d => d.date)).filter(Boolean);
   if (allDates.length) {
     TODAY = allDates.reduce((a, b) => (a > b ? a : b));
-    document.querySelectorAll('#d-start, #d-end').forEach(el => { el.max = TODAY; });
+    document.querySelectorAll('#d-start, #d-end').forEach(el => { el.max = '2026-12-31'; });   // 이번달 통(말일)까지 선택 가능하게
     if (state.preset === 'all') state.end = TODAY;   // 기본 진입(전체)일 때만 끝을 최신일로
   }
 }
@@ -437,7 +457,7 @@ function denomTotal(lineKey){ const mo = denomMonth(lineKey); const m = EXTERNAL
 // =====================================================================
 // 상태 & 집계
 // =====================================================================
-const state = { line:'loan', start:'2026-01-01', end: TODAY, preset:'all',
+const state = { line:'loan', start: TODAY.slice(0,7)+'-01', end: TODAY, preset:'thisMonth',
   basis: { loan:'inquiry', asset:'contributedMau', app:'contributedActive' }, owner:'ALL' };
 
 function inRange(daily){ return daily.filter(d => d.date >= state.start && d.date <= state.end); }
@@ -512,6 +532,7 @@ function fmtWon(n){
   if (n>=1e4) return '₩'+comma(Math.round(n/1e4))+'만';
   return '₩'+comma(n);
 }
+function fmtWonFull(n){ return '₩'+comma(Math.round(n||0)); }   // 풀 금액 (억/만 축약 안 함)
 function fmtVal(v, fmt){ return fmt==='won'?fmtWon(v): fmtInt(v); }
 // sparse 지표(약정금액·매출 등)는 값이 없거나 0이면 '—' (집계 안 된 프로젝트 구분)
 function fmtCell(mt, v){ if(mt.sparse && !v) return '—'; return fmtVal(v, mt.fmt); }
@@ -523,9 +544,9 @@ function cssVar(name){ return getComputedStyle(document.documentElement).getProp
 const PRESETS = {
   recent7:  ()=>({ start: addDays(TODAY,-6), end: TODAY }),
   recent30: ()=>({ start: addDays(TODAY,-29), end: TODAY }),
-  q1: ()=>({ start:'2026-01-01', end:'2026-03-31' }),
-  q2: ()=>({ start:'2026-04-01', end:'2026-06-30' }),
+  thisMonth:()=>{ const ym=TODAY.slice(0,7); const last=new Date(+ym.slice(0,4), +ym.slice(5,7), 0).getDate(); return { start: ym+'-01', end: ym+'-'+String(last).padStart(2,'0') }; },   // 데이터 최신일이 아닌 '이번달 통(1일~말일)'
   h1: ()=>({ start:'2026-01-01', end:'2026-06-30' }),
+  h2: ()=>({ start:'2026-07-01', end: (TODAY > '2026-12-31' ? '2026-12-31' : TODAY) }),
   all: ()=>({ start:'2026-01-01', end: TODAY }),
 };
 function applyPreset(p){ const r=PRESETS[p](); state.start=r.start; state.end=r.end; state.preset=p; syncRangeUI(); renderAll(); }
@@ -727,6 +748,11 @@ function renderDetail(){
       if (rr.length) runsHtml = `<div class="pc-runs"><div class="pc-runs-title">월별 · 차수</div>${rr.map(x=>`<div class="pc-run"><span class="pc-run-label">${x.run.label}</span><span class="pc-run-val">${basisMt.label} ${fmtVal(x.agg[basis],basisMt.fmt)}</span></div>`).join('')}</div>`;
     }
     const period = p.runs.length>1 ? `${p.runs.length}개 회차` : `${p.start.slice(5)} ~ ${p.end.slice(5)}`;
+    // 마케팅 비용 (포인트/발송) — 있는 것만 표시
+    const pcost = pp.agg.pointCost||0, scost = pp.agg.sendCost||0;
+    const costHtml = (pcost||scost)
+      ? `<div class="pc-cost"><span class="pc-cost-l">💸 마케팅 비용</span><span class="pc-cost-v">${[pcost?`포인트 ${fmtWonFull(pcost)}`:'', scost?`발송 ${fmtWonFull(scost)}`:''].filter(Boolean).join(' · ')}</span></div>`
+      : '';
     return `<div class="proj-card" data-pid="${p.id}" style="--c:${cfg.color};--cbg:var(${cfg.cvar}-bg)">
       <div class="pc-head"><div class="pc-title">${p.emoji} ${p.name}</div>
         <span class="status-chip ${p.status}">${p.status==='live'?'진행중':'완료'}</span></div>
@@ -737,6 +763,7 @@ function renderDetail(){
         <div class="pc-share-bar"><div class="pc-share-fill" style="width:${(share*100).toFixed(1)}%;background:${cfg.color}"></div></div>
       </div>
       <div class="pc-metrics">${metrics}${cvrM}</div>
+      ${costHtml}
       ${runsHtml}
     </div>`;
   }).join('');
@@ -940,7 +967,29 @@ function closeProjModal(){
 }
 
 // =====================================================================
-function renderAll(){ renderLineCards(); renderDetailTabs(); renderDetail(); }
+// 메인 마케팅 비용 띠 — 담당자 구분 없이 전체 프로젝트, 선택 기간 기준
+function renderCostBand(){
+  const el = document.getElementById('cost-band'); if(!el) return;
+  let point=0, send=0; const byProj=[];
+  PROJECTS.forEach(p=>{
+    let pt=0, sd=0;
+    inRange(p.daily).forEach(d=>{ pt+=(d.m.pointCost||0); sd+=(d.m.sendCost||0); });
+    if(pt||sd){ point+=pt; send+=sd; byProj.push({name:p.name, emoji:p.emoji, cost:pt+sd}); }
+  });
+  const total = point+send;
+  if(total===0){ el.innerHTML = `<div class="cb-empty">💸 이 기간에 집행된 마케팅 비용이 없어요</div>`; return; }
+  byProj.sort((a,b)=>b.cost-a.cost);
+  const chips = byProj.map(b=>`<span class="cb-chip">${b.emoji} ${b.name} <b>${fmtWonFull(b.cost)}</b></span>`).join('');
+  el.innerHTML = `
+    <div class="cb-left">
+      <div class="cb-head">💸 마케팅 비용 <span class="cb-period">${state.start.slice(5)} ~ ${state.end.slice(5)}</span></div>
+      <div class="cb-total">${fmtWonFull(total)}</div>
+      <div class="cb-split"><span class="cb-dot pt"></span>포인트 ${fmtWonFull(point)}<span class="cb-dot sd"></span>발송 ${fmtWonFull(send)}</div>
+      <div class="cb-bar"><div class="cb-bar-pt" style="width:${(point/total*100).toFixed(1)}%"></div><div class="cb-bar-sd" style="width:${(send/total*100).toFixed(1)}%"></div></div>
+    </div>
+    <div class="cb-projs">${chips}</div>`;
+}
+function renderAll(){ renderLineCards(); renderCostBand(); renderDetailTabs(); renderDetail(); }
 
 // 이벤트: 프리셋
 document.querySelectorAll('#range-bar .preset').forEach(b=> b.addEventListener('click', ()=> applyPreset(b.dataset.preset)));
@@ -957,8 +1006,7 @@ syncRangeUI();
 (async function(){
   try { await loadProjects(); }
   catch(e){ console.error('데이터 로드 실패', e); }
-  syncRangeUI();   // TODAY 가 실제 최신 데이터 일자로 갱신된 뒤 기간 UI 재동기화
-  renderAll();
+  applyPreset('thisMonth');   // TODAY(최신 데이터 일자) 확정 후 기본 기간 = 이번달 로 세팅 + 렌더
 })();
 </script>
 </body>

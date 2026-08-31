@@ -19,7 +19,9 @@
           "apply": null,
           "contract": 504,
           "amount": null,
-          "revenue": null
+          "revenue": null,
+          "pointCost": null,
+          "sendCost": 3747000
         }
       ]
     },
@@ -40,7 +42,9 @@
           "otherLoan": 204,
           "contract": 13,
           "amount": null,
-          "revenue": null
+          "revenue": null,
+          "pointCost": 581458,
+          "sendCost": null
         },
         {
           "date": "2026-05-12",
@@ -53,7 +57,9 @@
           "otherLoan": 155,
           "contract": 32,
           "amount": null,
-          "revenue": null
+          "revenue": null,
+          "pointCost": 334492,
+          "sendCost": null
         },
         {
           "date": "2026-05-13",
@@ -66,7 +72,9 @@
           "otherLoan": 105,
           "contract": 47,
           "amount": null,
-          "revenue": null
+          "revenue": null,
+          "pointCost": 249134,
+          "sendCost": null
         },
         {
           "date": "2026-05-14",
@@ -79,7 +87,9 @@
           "otherLoan": 136,
           "contract": 43,
           "amount": null,
-          "revenue": null
+          "revenue": null,
+          "pointCost": 269932,
+          "sendCost": null
         },
         {
           "date": "2026-05-15",
@@ -92,7 +102,9 @@
           "otherLoan": 110,
           "contract": 61,
           "amount": null,
-          "revenue": null
+          "revenue": null,
+          "pointCost": 239023,
+          "sendCost": null
         },
         {
           "date": "2026-05-16",
@@ -105,7 +117,9 @@
           "otherLoan": 36,
           "contract": 5,
           "amount": null,
-          "revenue": null
+          "revenue": null,
+          "pointCost": 100929,
+          "sendCost": null
         },
         {
           "date": "2026-05-17",
@@ -118,7 +132,9 @@
           "otherLoan": 42,
           "contract": 5,
           "amount": null,
-          "revenue": null
+          "revenue": null,
+          "pointCost": 94913,
+          "sendCost": null
         },
         {
           "date": "2026-05-18",
@@ -131,7 +147,9 @@
           "otherLoan": 143,
           "contract": 82,
           "amount": null,
-          "revenue": null
+          "revenue": null,
+          "pointCost": 270307,
+          "sendCost": null
         },
         {
           "date": "2026-05-19",
@@ -144,7 +162,9 @@
           "otherLoan": 92,
           "contract": 55,
           "amount": null,
-          "revenue": null
+          "revenue": null,
+          "pointCost": 177566,
+          "sendCost": null
         },
         {
           "date": "2026-05-20",
@@ -157,7 +177,9 @@
           "otherLoan": 83,
           "contract": 48,
           "amount": null,
-          "revenue": null
+          "revenue": null,
+          "pointCost": 220705,
+          "sendCost": null
         },
         {
           "date": "2026-05-21",
@@ -170,7 +192,9 @@
           "otherLoan": 64,
           "contract": 52,
           "amount": null,
-          "revenue": null
+          "revenue": null,
+          "pointCost": 162027,
+          "sendCost": null
         },
         {
           "date": "2026-05-22",
@@ -183,7 +207,9 @@
           "otherLoan": 68,
           "contract": 42,
           "amount": null,
-          "revenue": null
+          "revenue": null,
+          "pointCost": 172121,
+          "sendCost": null
         },
         {
           "date": "2026-05-23",
@@ -196,7 +222,9 @@
           "otherLoan": 29,
           "contract": 6,
           "amount": null,
-          "revenue": null
+          "revenue": null,
+          "pointCost": 77569,
+          "sendCost": null
         },
         {
           "date": "2026-05-24",
@@ -209,7 +237,9 @@
           "otherLoan": 24,
           "contract": 8,
           "amount": null,
-          "revenue": null
+          "revenue": null,
+          "pointCost": 71986,
+          "sendCost": null
         },
         {
           "date": "2026-05-25",
@@ -222,7 +252,9 @@
           "otherLoan": 63,
           "contract": 12,
           "amount": null,
-          "revenue": null
+          "revenue": null,
+          "pointCost": 71986,
+          "sendCost": null
         },
         {
           "date": "2026-05-26",
@@ -235,7 +267,9 @@
           "otherLoan": 93,
           "contract": 105,
           "amount": null,
-          "revenue": null
+          "revenue": null,
+          "pointCost": 161704,
+          "sendCost": null
         },
         {
           "date": "2026-05-27",
@@ -248,7 +282,9 @@
           "otherLoan": 106,
           "contract": 72,
           "amount": null,
-          "revenue": null
+          "revenue": null,
+          "pointCost": 267656,
+          "sendCost": null
         },
         {
           "date": "2026-05-28",
@@ -261,7 +297,9 @@
           "otherLoan": 84,
           "contract": 63,
           "amount": null,
-          "revenue": null
+          "revenue": null,
+          "pointCost": 163428,
+          "sendCost": null
         },
         {
           "date": "2026-05-29",
@@ -274,7 +312,9 @@
           "otherLoan": 66,
           "contract": 76,
           "amount": null,
-          "revenue": null
+          "revenue": null,
+          "pointCost": 154837,
+          "sendCost": null
         }
       ]
     },
@@ -295,7 +335,9 @@
           "otherLoan": 37,
           "contract": 5,
           "amount": null,
-          "revenue": null
+          "revenue": null,
+          "pointCost": 139628,
+          "sendCost": null
         },
         {
           "date": "2026-07-02",
@@ -308,7 +350,9 @@
           "otherLoan": 67,
           "contract": 16,
           "amount": null,
-          "revenue": null
+          "revenue": null,
+          "pointCost": 237522,
+          "sendCost": null
         },
         {
           "date": "2026-07-03",
@@ -321,7 +365,9 @@
           "otherLoan": 70,
           "contract": 19,
           "amount": null,
-          "revenue": null
+          "revenue": null,
+          "pointCost": 108137,
+          "sendCost": null
         },
         {
           "date": "2026-07-04",
@@ -334,7 +380,9 @@
           "otherLoan": 20,
           "contract": 6,
           "amount": null,
-          "revenue": null
+          "revenue": null,
+          "pointCost": 51146,
+          "sendCost": null
         },
         {
           "date": "2026-07-05",
@@ -347,7 +395,9 @@
           "otherLoan": 31,
           "contract": 4,
           "amount": null,
-          "revenue": null
+          "revenue": null,
+          "pointCost": 146782,
+          "sendCost": null
         },
         {
           "date": "2026-07-06",
@@ -360,7 +410,9 @@
           "otherLoan": 105,
           "contract": 12,
           "amount": null,
-          "revenue": null
+          "revenue": null,
+          "pointCost": 123198,
+          "sendCost": null
         },
         {
           "date": "2026-07-07",
@@ -373,7 +425,9 @@
           "otherLoan": 104,
           "contract": 14,
           "amount": null,
-          "revenue": null
+          "revenue": null,
+          "pointCost": 109542,
+          "sendCost": null
         },
         {
           "date": "2026-07-08",
@@ -386,7 +440,9 @@
           "otherLoan": 99,
           "contract": 19,
           "amount": null,
-          "revenue": null
+          "revenue": null,
+          "pointCost": 188855,
+          "sendCost": null
         },
         {
           "date": "2026-07-09",
@@ -399,7 +455,9 @@
           "otherLoan": 81,
           "contract": 20,
           "amount": null,
-          "revenue": null
+          "revenue": null,
+          "pointCost": 212809,
+          "sendCost": null
         },
         {
           "date": "2026-07-10",
@@ -412,7 +470,9 @@
           "otherLoan": 80,
           "contract": 20,
           "amount": null,
-          "revenue": null
+          "revenue": null,
+          "pointCost": 195622,
+          "sendCost": null
         },
         {
           "date": "2026-07-11",
@@ -425,7 +485,9 @@
           "otherLoan": 37,
           "contract": 2,
           "amount": null,
-          "revenue": null
+          "revenue": null,
+          "pointCost": 49459,
+          "sendCost": null
         },
         {
           "date": "2026-07-12",
@@ -438,7 +500,9 @@
           "otherLoan": 40,
           "contract": 6,
           "amount": null,
-          "revenue": null
+          "revenue": null,
+          "pointCost": 45677,
+          "sendCost": null
         },
         {
           "date": "2026-07-13",
@@ -451,7 +515,9 @@
           "otherLoan": 150,
           "contract": 29,
           "amount": null,
-          "revenue": null
+          "revenue": null,
+          "pointCost": 256635,
+          "sendCost": null
         },
         {
           "date": "2026-07-14",
@@ -464,7 +530,9 @@
           "otherLoan": 148,
           "contract": 34,
           "amount": null,
-          "revenue": null
+          "revenue": null,
+          "pointCost": 222977,
+          "sendCost": null
         },
         {
           "date": "2026-07-15",
@@ -477,7 +545,9 @@
           "otherLoan": 127,
           "contract": 24,
           "amount": null,
-          "revenue": null
+          "revenue": null,
+          "pointCost": 113067,
+          "sendCost": null
         }
       ]
     },
@@ -499,7 +569,9 @@
           "otherLoan": 181,
           "contract": 15,
           "amount": null,
-          "revenue": null
+          "revenue": null,
+          "pointCost": 392380,
+          "sendCost": null
         },
         {
           "date": "2026-08-04",
@@ -513,7 +585,9 @@
           "otherLoan": 131,
           "contract": 19,
           "amount": null,
-          "revenue": null
+          "revenue": null,
+          "pointCost": 262548,
+          "sendCost": null
         },
         {
           "date": "2026-08-05",
@@ -527,7 +601,9 @@
           "otherLoan": 104,
           "contract": 26,
           "amount": null,
-          "revenue": null
+          "revenue": null,
+          "pointCost": 201298,
+          "sendCost": null
         },
         {
           "date": "2026-08-06",
@@ -541,7 +617,9 @@
           "otherLoan": 83,
           "contract": 23,
           "amount": null,
-          "revenue": null
+          "revenue": null,
+          "pointCost": 171219,
+          "sendCost": null
         },
         {
           "date": "2026-08-07",
@@ -555,7 +633,9 @@
           "otherLoan": 90,
           "contract": 27,
           "amount": null,
-          "revenue": null
+          "revenue": null,
+          "pointCost": 163758,
+          "sendCost": null
         },
         {
           "date": "2026-08-08",
@@ -569,7 +649,9 @@
           "otherLoan": 26,
           "contract": 5,
           "amount": null,
-          "revenue": null
+          "revenue": null,
+          "pointCost": 77975,
+          "sendCost": null
         },
         {
           "date": "2026-08-09",
@@ -583,7 +665,9 @@
           "otherLoan": 36,
           "contract": 11,
           "amount": null,
-          "revenue": null
+          "revenue": null,
+          "pointCost": 69307,
+          "sendCost": null
         },
         {
           "date": "2026-08-10",
@@ -597,7 +681,9 @@
           "otherLoan": 163,
           "contract": 37,
           "amount": null,
-          "revenue": null
+          "revenue": null,
+          "pointCost": 284068,
+          "sendCost": null
         },
         {
           "date": "2026-08-11",
@@ -611,7 +697,9 @@
           "otherLoan": 58,
           "contract": 42,
           "amount": null,
-          "revenue": null
+          "revenue": null,
+          "pointCost": 96254,
+          "sendCost": null
         },
         {
           "date": "2026-08-12",
@@ -625,7 +713,9 @@
           "otherLoan": 19,
           "contract": 33,
           "amount": null,
-          "revenue": null
+          "revenue": null,
+          "pointCost": 55800,
+          "sendCost": null
         },
         {
           "date": "2026-08-13",
@@ -639,7 +729,9 @@
           "otherLoan": 24,
           "contract": 29,
           "amount": null,
-          "revenue": null
+          "revenue": null,
+          "pointCost": 44849,
+          "sendCost": null
         },
         {
           "date": "2026-08-14",
@@ -653,7 +745,9 @@
           "otherLoan": 17,
           "contract": 18,
           "amount": null,
-          "revenue": null
+          "revenue": null,
+          "pointCost": 55803,
+          "sendCost": null
         }
       ],
       "pointTab": {

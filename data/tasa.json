@@ -19,7 +19,9 @@
           "apply": 6,
           "contract": 0,
           "amount": 0,
-          "revenue": 0
+          "revenue": 0,
+          "pointCost": 0,
+          "sendCost": 49793
         },
         {
           "date": "2026-05-29",
@@ -28,7 +30,9 @@
           "apply": 38,
           "contract": 5,
           "amount": 32700000,
-          "revenue": 450162
+          "revenue": 450162,
+          "pointCost": 32700,
+          "sendCost": 429548
         },
         {
           "date": "2026-06-01",
@@ -37,7 +41,9 @@
           "apply": 44,
           "contract": 13,
           "amount": 90900000,
-          "revenue": 580343
+          "revenue": 580343,
+          "pointCost": 70600,
+          "sendCost": 898988
         },
         {
           "date": "2026-06-02",
@@ -46,7 +52,9 @@
           "apply": 46,
           "contract": 18,
           "amount": 289000000,
-          "revenue": 2746780
+          "revenue": 2746780,
+          "pointCost": 232000,
+          "sendCost": 579690
         },
         {
           "date": "2026-06-04",
@@ -55,7 +63,9 @@
           "apply": 42,
           "contract": 16,
           "amount": 130980000,
-          "revenue": 1311450
+          "revenue": 1311450,
+          "pointCost": 106980,
+          "sendCost": 714443
         },
         {
           "date": "2026-06-05",
@@ -64,7 +74,9 @@
           "apply": 37,
           "contract": 18,
           "amount": 255300000,
-          "revenue": 3399345
+          "revenue": 3399345,
+          "pointCost": 200300,
+          "sendCost": 477450
         },
         {
           "date": "2026-06-08",
@@ -73,7 +85,9 @@
           "apply": 46,
           "contract": 21,
           "amount": 259100000,
-          "revenue": 2689424
+          "revenue": 2689424,
+          "pointCost": 217700,
+          "sendCost": 788175
         },
         {
           "date": "2026-06-09",
@@ -82,7 +96,9 @@
           "apply": 37,
           "contract": 10,
           "amount": 68500000,
-          "revenue": 830189
+          "revenue": 830189,
+          "pointCost": 68500,
+          "sendCost": 495495
         },
         {
           "date": "2026-06-10",
@@ -91,7 +107,9 @@
           "apply": 51,
           "contract": 16,
           "amount": 151300000,
-          "revenue": 1749527
+          "revenue": 1749527,
+          "pointCost": 147800,
+          "sendCost": 487890
         }
       ]
     },
@@ -108,7 +126,9 @@
           "apply": 5,
           "contract": 1,
           "amount": 2000000,
-          "revenue": 34400
+          "revenue": 34400,
+          "pointCost": 2000,
+          "sendCost": 0
         },
         {
           "date": "2026-06-16",
@@ -117,7 +137,9 @@
           "apply": 8,
           "contract": 2,
           "amount": 20000000,
-          "revenue": 239800
+          "revenue": 239800,
+          "pointCost": 20000,
+          "sendCost": 0
         },
         {
           "date": "2026-06-17",
@@ -126,7 +148,9 @@
           "apply": 3,
           "contract": 1,
           "amount": 3000000,
-          "revenue": 37500
+          "revenue": 37500,
+          "pointCost": 3000,
+          "sendCost": 0
         },
         {
           "date": "2026-06-18",
@@ -135,7 +159,9 @@
           "apply": 6,
           "contract": 2,
           "amount": 7300000,
-          "revenue": 59150
+          "revenue": 59150,
+          "pointCost": 7300,
+          "sendCost": 0
         },
         {
           "date": "2026-06-19",
@@ -144,7 +170,9 @@
           "apply": 3,
           "contract": 2,
           "amount": 37000000,
-          "revenue": 606300
+          "revenue": 606300,
+          "pointCost": 37000,
+          "sendCost": 0
         },
         {
           "date": "2026-06-22",
@@ -153,7 +181,9 @@
           "apply": 6,
           "contract": 1,
           "amount": 3000000,
-          "revenue": 37500
+          "revenue": 37500,
+          "pointCost": 3000,
+          "sendCost": 0
         }
       ]
     },
@@ -170,7 +200,9 @@
           "apply": 56,
           "contract": 11,
           "amount": 126080000,
-          "revenue": 980775
+          "revenue": 980775,
+          "pointCost": 97980,
+          "sendCost": 886275
         },
         {
           "date": "2026-07-14",
@@ -179,7 +211,9 @@
           "apply": 51,
           "contract": 12,
           "amount": 84100000,
-          "revenue": 825137
+          "revenue": 825137,
+          "pointCost": 43300,
+          "sendCost": 502875
         },
         {
           "date": "2026-07-15",
@@ -188,7 +222,9 @@
           "apply": 49,
           "contract": 12,
           "amount": 140100000,
-          "revenue": 1704176
+          "revenue": 1704176,
+          "pointCost": 91200,
+          "sendCost": 445748
         },
         {
           "date": "2026-07-16",
@@ -197,7 +233,9 @@
           "apply": 34,
           "contract": 8,
           "amount": 30600000,
-          "revenue": 904140
+          "revenue": 904140,
+          "pointCost": 45800,
+          "sendCost": 376380
         },
         {
           "date": "2026-07-17",
@@ -206,7 +244,9 @@
           "apply": 27,
           "contract": 5,
           "amount": 47500000,
-          "revenue": 1704176
+          "revenue": 1704176,
+          "pointCost": 37500,
+          "sendCost": 203648
         },
         {
           "date": "2026-07-20",
@@ -215,7 +255,9 @@
           "apply": 42,
           "contract": 14,
           "amount": 149000000,
-          "revenue": 1103610
+          "revenue": 1103610,
+          "pointCost": 66400,
+          "sendCost": 732555
         },
         {
           "date": "2026-07-21",
@@ -224,7 +266,9 @@
           "apply": 49,
           "contract": 13,
           "amount": 181200000,
-          "revenue": 1911362
+          "revenue": 1911362,
+          "pointCost": 142200,
+          "sendCost": 492885
         },
         {
           "date": "2026-07-22",
@@ -233,7 +277,9 @@
           "apply": 31,
           "contract": 8,
           "amount": 156800000,
-          "revenue": 1901250
+          "revenue": 1901250,
+          "pointCost": 117800,
+          "sendCost": 478845
         },
         {
           "date": "2026-07-23",
@@ -242,7 +288,9 @@
           "apply": 43,
           "contract": 11,
           "amount": 83000000,
-          "revenue": 893783
+          "revenue": 893783,
+          "pointCost": 63500,
+          "sendCost": 402840
         },
         {
           "date": "2026-07-24",
@@ -251,7 +299,9 @@
           "apply": 33,
           "contract": 5,
           "amount": 51200000,
-          "revenue": 521232
+          "revenue": 521232,
+          "pointCost": 48200,
+          "sendCost": 358695
         },
         {
           "date": "2026-07-27",
@@ -260,7 +310,9 @@
           "apply": 52,
           "contract": 23,
           "amount": 234700000,
-          "revenue": 3069782
+          "revenue": 3069782,
+          "pointCost": 154800,
+          "sendCost": 769970
         },
         {
           "date": "2026-07-28",
@@ -269,7 +321,9 @@
           "apply": 46,
           "contract": 15,
           "amount": 305200000,
-          "revenue": 4071930
+          "revenue": 4071930,
+          "pointCost": 114000,
+          "sendCost": 464558
         },
         {
           "date": "2026-07-29",
@@ -278,7 +332,9 @@
           "apply": 63,
           "contract": 18,
           "amount": 180900000,
-          "revenue": 2233285
+          "revenue": 2233285,
+          "pointCost": 136900,
+          "sendCost": 453353
         },
         {
           "date": "2026-07-30",
@@ -287,7 +343,9 @@
           "apply": 37,
           "contract": 11,
           "amount": 156900000,
-          "revenue": 2177650
+          "revenue": 2177650,
+          "pointCost": 115500,
+          "sendCost": 392648
         },
         {
           "date": "2026-07-31",
@@ -296,7 +354,9 @@
           "apply": 40,
           "contract": 22,
           "amount": 246400000,
-          "revenue": 2925750
+          "revenue": 2925750,
+          "pointCost": 151100,
+          "sendCost": 444938
         },
         {
           "date": "2026-08-03",
@@ -305,7 +365,9 @@
           "apply": 35,
           "contract": 13,
           "amount": 155400000,
-          "revenue": 1946136
+          "revenue": 1946136,
+          "pointCost": 147600,
+          "sendCost": 797715
         },
         {
           "date": "2026-08-04",
@@ -314,7 +376,9 @@
           "apply": 25,
           "contract": 6,
           "amount": 68000000,
-          "revenue": 466330
+          "revenue": 466330,
+          "pointCost": 11000,
+          "sendCost": 405383
         },
         {
           "date": "2026-08-05",
@@ -323,7 +387,9 @@
           "apply": 48,
           "contract": 12,
           "amount": 112940000,
-          "revenue": 1631986
+          "revenue": 1631986,
+          "pointCost": 55540,
+          "sendCost": 391028
         },
         {
           "date": "2026-08-06",
@@ -332,7 +398,9 @@
           "apply": 37,
           "contract": 16,
           "amount": 130200000,
-          "revenue": 1605002
+          "revenue": 1605002,
+          "pointCost": 114200,
+          "sendCost": 420998
         },
         {
           "date": "2026-08-07",
@@ -341,7 +409,9 @@
           "apply": 36,
           "contract": 12,
           "amount": 106900000,
-          "revenue": 1667347
+          "revenue": 1667347,
+          "pointCost": 65900,
+          "sendCost": 398858
         },
         {
           "date": "2026-08-10",
@@ -350,7 +420,9 @@
           "apply": 48,
           "contract": 20,
           "amount": 177500000,
-          "revenue": 1786717
+          "revenue": 1786717,
+          "pointCost": 97700,
+          "sendCost": 711428
         },
         {
           "date": "2026-08-11",
@@ -359,7 +431,9 @@
           "apply": 24,
           "contract": 20,
           "amount": 324820000,
-          "revenue": 3947777
+          "revenue": 3947777,
+          "pointCost": 263060,
+          "sendCost": 423180
         },
         {
           "date": "2026-08-12",
@@ -368,7 +442,9 @@
           "apply": 34,
           "contract": 20,
           "amount": 242370000,
-          "revenue": 2453080
+          "revenue": 2453080,
+          "pointCost": 102670,
+          "sendCost": 391613
         },
         {
           "date": "2026-08-13",
@@ -377,7 +453,9 @@
           "apply": 28,
           "contract": 10,
           "amount": 120500000,
-          "revenue": 1526060
+          "revenue": 1526060,
+          "pointCost": 108500,
+          "sendCost": 397733
         },
         {
           "date": "2026-08-14",
@@ -386,7 +464,9 @@
           "apply": 39,
           "contract": 13,
           "amount": 144200000,
-          "revenue": 1601475
+          "revenue": 1601475,
+          "pointCost": 107200,
+          "sendCost": 388643
         },
         {
           "date": "2026-08-18",
@@ -395,7 +475,9 @@
           "apply": 30,
           "contract": 19,
           "amount": 122400000,
-          "revenue": 1435010
+          "revenue": 1435010,
+          "pointCost": 94000,
+          "sendCost": 764370
         }
       ]
     }
