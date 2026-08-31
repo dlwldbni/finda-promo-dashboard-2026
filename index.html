@@ -180,7 +180,8 @@
   .m-reset { background:#fff; border:1px solid var(--border); padding:5px 11px; border-radius:7px; font-size:12px; font-weight:600; color:var(--text-2); cursor:pointer; font-family:inherit; }
   .m-reset:hover { border-color:#c7cdd6; color:var(--text); }
   .m-days { margin-left:auto; font-weight:600; color:var(--text-3); font-variant-numeric:tabular-nums; }
-  /* 빈 상태 */
+  .modal-period-note { font-size:11.5px; color:var(--text-3); margin-top:6px; line-height:1.6; padding:0 2px; }
+ /* 빈 상태 */
   .lc-empty { padding:26px 6px 10px; text-align:center; color:var(--text-3); font-size:13px; font-weight:600; line-height:1.7; }
   .lc-empty span { font-size:11.5px; color:var(--text-3); opacity:.8; font-weight:500; }
   .empty-line { text-align:center; padding:40px 20px; }
@@ -437,7 +438,7 @@ function toInternal(p){
   if (!metricKeys) { const ks = new Set(); daily.forEach(r => Object.keys(r.m).forEach(k => { if (typeof r.m[k] === 'number') ks.add(k); })); metricKeys = [...ks]; }
   const first = runs.length ? runs[0].start : null;
   const last  = daily.length ? daily.reduce((a,d)=> d.date>a ? d.date : a, daily[0].date) : null;
-  return { id:p.id, line:p.line, emoji:p.emoji||'📁', name:p.name, owner:p.owner||'—', status:p.status||'done', metricKeys, runs, daily, start:first, end:last };
+  return { id:p.id, line:p.line, emoji:p.emoji||'📁', name:p.name, owner:p.owner||'—', status:p.status||'done', metricKeys, runs, daily, start:first, end:last, periodNote:p.periodNote||null };
 }
 async function loadProjects(){
   const base = 'data/';
@@ -769,7 +770,7 @@ function renderDetail(){
       const rr = p.runs.map(run => ({ run, ...aggDaily(inRange(run.daily), cfg) })).filter(x=>x.hasData);
       if (rr.length) runsHtml = `<div class="pc-runs"><div class="pc-runs-title">월별 · 차수</div>${rr.map(x=>`<div class="pc-run"><span class="pc-run-label">${x.run.label}</span><span class="pc-run-val">${basisMt.label} ${fmtVal(x.agg[basis],basisMt.fmt)}</span></div>`).join('')}</div>`;
     }
-    const period = p.runs.length>1 ? `${p.runs.length}개 회차` : `${p.start.slice(5)} ~ ${p.end.slice(5)}`;
+    const period = p.runs.length>1 ? `${p.runs.length}개 회차` : `${p.start.slice(5)} ~ ${p.runs[0].end.slice(5)}`;
     // 마케팅 비용 (포인트/발송/리워드) — 있는 것만 표시
     const pcost = pp.agg.pointCost||0, scost = pp.agg.sendCost||0, gcost = pp.agg.giftCost||0;
     const costHtml = (pcost||scost||gcost)
@@ -940,7 +941,8 @@ function renderModalContent(){
       <input type="date" id="m-end" value="${modalState.end}" min="${modalState.start}" max="${span.e}">
       <button class="m-reset">${p.runs.length>1 && modalState.run!=='ALL' ? '이 회차 전체' : '전체 기간'}</button>
       <span class="m-days">${daysBetween(modalState.start,modalState.end)+1}일</span>
-    </div>`;
+    </div>
+    ${p.periodNote ? `<div class="modal-period-note">ℹ️ ${p.periodNote}</div>` : ''}`;
 
   // 표 컬럼 = 핵심지표와 동일 (세부 지표·CVR 포함)
   const dcolsSpec = detailColumns(cfg, p.metricKeys);
