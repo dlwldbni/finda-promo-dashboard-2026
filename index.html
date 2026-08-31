@@ -332,11 +332,21 @@ const LINES = {
   asset:  { key:'asset',  emoji:'💳', name:'자산 서비스 (마이데이터)', color:'var(--asset)', cvar:'--asset',
             headline:{key:'contributedMau', label:'기여 MAU', fmt:'int'},
             metrics:[
-              {key:'contributedMau', label:'기여 MAU', fmt:'int', agg:'sum'},
+              {key:'introView',      label:'인트로 조회', fmt:'int', agg:'sum'},
+              {key:'contributedMau', label:'프로모션 참여', fmt:'int', agg:'sum'},
               {key:'connectDone',    label:'연동 완료', fmt:'int', agg:'sum'},
               {key:'retention',      label:'재방문(리텐션)', fmt:'int', agg:'avg'},
             ],
-            mauDenom:{ file:'_asset_mau.json', numeratorKey:'contributedMau', headlineNoun:'전체 마이데이터 MAU', subLabel:'팀 기여 MAU' },   // 기여도 분모 = 전체 마이데이터 당월 MAU (data/_asset_mau.json)
+            heroKeys:['introView','contributedMau','connectDone'],
+            funnel:['introView','contributedMau','connectDone'],
+            cvrs:[
+              {num:'contributedMau', den:'introView',      label:'인트로→참여 CVR'},
+              {num:'connectDone',    den:'contributedMau', label:'참여→연동 CVR'},
+            ],
+            mauDenom:{ file:'_asset_mau.json', numeratorKey:'contributedMau', headlineNoun:'전체 마이데이터 MAU', subLabel:'팀 기여 MAU' },
+            mauSubs:[{key:'connectDone', label:'연동 완료'}, {key:'contributedMau', label:'프로모션 참여'}],
+            trendKey:'contributedMau',  trendLabel:'참여율 추이',
+            trendKey2:'connectDone',    trendLabel2:'마데연동율 추이',
             cvr:null,
             subs:['connectDone'] },
   // 핵심 지표(기여도) = 해당 월 유저 리텐션(최근 30일간 2일 이상 방문, Mixpanel 코호트 6145029) 중
@@ -554,7 +564,9 @@ function renderLineCards(){
     let subs, cvrHtml = '';
     if (isMau) {
       const contrib = total[cfg.mauDenom.numeratorKey] || 0; const pct = denom ? contrib / denom * 100 : 0;
-      subs = `<div class="lc-sub"><div class="v">${fmtInt(contrib)}</div><div class="l">${cfg.mauDenom.subLabel}</div></div>`;
+      subs = cfg.mauSubs
+        ? cfg.mauSubs.map(s=> `<div class="lc-sub"><div class="v">${fmtInt(total[s.key]||0)}</div><div class="l">${s.label}</div></div>`).join('')
+        : `<div class="lc-sub"><div class="v">${fmtInt(contrib)}</div><div class="l">${cfg.mauDenom.subLabel}</div></div>`;
       cvrHtml = `<div class="lc-cvr">전체 대비 ${pct.toFixed(1)}%</div>`;
     } else {
       subs = cfg.subs.map(sk=>{ const mt=cfg.metrics.find(m=>m.key===sk); return `<div class="lc-sub"><div class="v">${fmtCell(mt, total[sk])}</div><div class="l">${mt.label}</div></div>`; }).join('');
@@ -800,6 +812,7 @@ function renderTrend(k){
 // 프로젝트 상세 모달
 // =====================================================================
 let modalChart = null;
+let modalChart2 = null;
 let modalState = { pid:null, run:'ALL', start:null, end:null };  // 모달 자체 기간/회차 (전역 필터와 독립)
 
 function modalSpan(p){ return modalState.run==='ALL' ? {s:p.start, e:p.end} : {s:p.runs[+modalState.run].start, e:p.runs[+modalState.run].end}; }
@@ -914,6 +927,7 @@ function renderModalContent(){
     ${cfg.kpiNote ? `<div class="kpi-note" style="font-size:11.5px;color:var(--text-3);margin:-4px 0 10px">${cfg.kpiNote}</div>` : ''}
     <div class="modal-section-title">📈 ${cfg.trendLabel || cfg.headline.label} 추이</div>
     <div class="chart-wrap" style="height:200px"><canvas id="modal-canvas"></canvas></div>
+    ${cfg.trendKey2 ? `<div class="modal-section-title">📈 ${cfg.trendLabel2||''} 추이</div><div class="chart-wrap" style="height:200px"><canvas id="modal-canvas2"></canvas></div>` : ''}
     ${runTable}${dtable}
     ${ptNote}`;
 
@@ -932,11 +946,21 @@ function renderModalContent(){
     options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}, tooltip:{callbacks:{label:c=>`${cfg.trendLabel || cfg.headline.label}: ${comma(c.parsed.y)}`}}},
       scales:{ x:{ ticks:{font:{size:9}, maxRotation:0, autoSkip:true, maxTicksLimit:12}, grid:{display:false} }, y:{ beginAtZero:true, ticks:{font:{size:9}} } } }
   });
+  if (modalChart2) { modalChart2.destroy(); modalChart2 = null; }
+  if (cfg.trendKey2) {
+    modalChart2 = new Chart(document.getElementById('modal-canvas2'), {
+      type:'bar',
+      data:{ labels:rows.map(r=>r.date.slice(5)), datasets:[{ data:rows.map(r=>r.m[cfg.trendKey2]||0), backgroundColor:color, borderRadius:3 }]},
+      options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}, tooltip:{callbacks:{label:c=>`${cfg.trendLabel2}: ${comma(c.parsed.y)}`}}},
+        scales:{ x:{ ticks:{font:{size:9}, maxRotation:0, autoSkip:true, maxTicksLimit:12}, grid:{display:false} }, y:{ beginAtZero:true, ticks:{font:{size:9}} } } }
+    });
+  }
 }
 function closeProjModal(){
   const back = document.getElementById('proj-modal');
   if(back) back.classList.add('hidden');
   if(modalChart){ modalChart.destroy(); modalChart=null; }
+  if(modalChart2){ modalChart2.destroy(); modalChart2=null; }
 }
 
 // =====================================================================
