@@ -22,139 +22,23 @@
       "contributedMauUnique": 13272,
       "connectDoneUnique": 20043,
       "daily": [
-        {
-          "date": "2026-08-11",
-          "introView": 2456,
-          "contributedMau": 1405,
-          "connectDone": 1519,
-          "pointCost": 0,
-          "sendCost": 0
-        },
-        {
-          "date": "2026-08-12",
-          "introView": 3397,
-          "contributedMau": 1854,
-          "connectDone": 1623,
-          "pointCost": 306320,
-          "sendCost": 0
-        },
-        {
-          "date": "2026-08-13",
-          "introView": 2392,
-          "contributedMau": 1556,
-          "connectDone": 1331,
-          "pointCost": 404500,
-          "sendCost": 0
-        },
-        {
-          "date": "2026-08-14",
-          "introView": 2520,
-          "contributedMau": 1570,
-          "connectDone": 1222,
-          "pointCost": 326470,
-          "sendCost": 0
-        },
-        {
-          "date": "2026-08-15",
-          "introView": 2449,
-          "contributedMau": 1491,
-          "connectDone": 1107,
-          "pointCost": 0,
-          "sendCost": 0
-        },
-        {
-          "date": "2026-08-16",
-          "introView": 1472,
-          "contributedMau": 1118,
-          "connectDone": 621,
-          "pointCost": 0,
-          "sendCost": 0
-        },
-        {
-          "date": "2026-08-17",
-          "introView": 2000,
-          "contributedMau": 1418,
-          "connectDone": 886,
-          "pointCost": 0,
-          "sendCost": 0
-        },
-        {
-          "date": "2026-08-18",
-          "introView": 5070,
-          "contributedMau": 3321,
-          "connectDone": 2039,
-          "pointCost": 266080,
-          "sendCost": 33335190
-        },
-        {
-          "date": "2026-08-19",
-          "introView": 3393,
-          "contributedMau": 2379,
-          "connectDone": 1918,
-          "pointCost": 299500,
-          "sendCost": 0
-        },
-        {
-          "date": "2026-08-20",
-          "introView": 3120,
-          "contributedMau": 2291,
-          "connectDone": 1488,
-          "pointCost": 439860,
-          "sendCost": 0
-        },
-        {
-          "date": "2026-08-21",
-          "introView": 2386,
-          "contributedMau": 2027,
-          "connectDone": 1290,
-          "pointCost": 421280,
-          "sendCost": 0
-        },
-        {
-          "date": "2026-08-22",
-          "introView": 1866,
-          "contributedMau": 1383,
-          "connectDone": 639,
-          "pointCost": 0,
-          "sendCost": 0
-        },
-        {
-          "date": "2026-08-23",
-          "introView": 1437,
-          "contributedMau": 1205,
-          "connectDone": 681,
-          "pointCost": 0,
-          "sendCost": 0
-        },
-        {
-          "date": "2026-08-24",
-          "introView": 3376,
-          "contributedMau": 2405,
-          "connectDone": 1626,
-          "pointCost": 267280,
-          "sendCost": 0
-        },
-        {
-          "date": "2026-08-25",
-          "introView": 2515,
-          "contributedMau": 2136,
-          "connectDone": 1487,
-          "pointCost": 450670,
-          "sendCost": 0
-        },
-        {
-          "date": "2026-08-26",
-          "introView": 2739,
-          "contributedMau": 2083,
-          "connectDone": 1417,
-          "pointCost": 374820,
-          "sendCost": 0
-        },
-        {
-          "date": "2026-08-27",
-          "pointCost": 451630,
-          "sendCost": 0
-        }
+        {"date":"2026-08-11","introView":2456,"contributedMau":1405,"connectDone":1519,"pointCost":0,"sendCost":0},
+        {"date":"2026-08-12","introView":3397,"contributedMau":1854,"connectDone":1623,"pointCost":306320,"sendCost":0},
+        {"date":"2026-08-13","introView":2392,"contributedMau":1556,"connectDone":1331,"pointCost":404500,"sendCost":0},
+        {"date":"2026-08-14","introView":2520,"contributedMau":1570,"connectDone":1222,"pointCost":326470,"sendCost":0},
+        {"date":"2026-08-15","introView":2449,"contributedMau":1491,"connectDone":1107,"pointCost":0,"sendCost":0},
+        {"date":"2026-08-16","introView":1472,"contributedMau":1118,"connectDone":621,"pointCost":0,"sendCost":0},
+        {"date":"2026-08-17","introView":2000,"contributedMau":1418,"connectDone":886,"pointCost":0,"sendCost":0},
+        {"date":"2026-08-18","introView":5070,"contributedMau":3321,"connectDone":2039,"pointCost":266080,"sendCost":33335190},
+        {"date":"2026-08-19","introView":3393,"contributedMau":2379,"connectDone":1918,"pointCost":299500,"sendCost":0},
+        {"date":"2026-08-20","introView":3120,"contributedMau":2291,"connectDone":1488,"pointCost":439860,"sendCost":0},
+        {"date":"2026-08-21","introView":2386,"contributedMau":2027,"connectDone":1290,"pointCost":421280,"sendCost":0},
+        {"date":"2026-08-22","introView":1866,"contributedMau":1383,"connectDone":639,"pointCost":0,"sendCost":0},
+        {"date":"2026-08-23","introView":1437,"contributedMau":1205,"connectDone":681,"pointCost":0,"sendCost":0},
+        {"date":"2026-08-24","introView":3376,"contributedMau":2405,"connectDone":1626,"pointCost":267280,"sendCost":0},
+        {"date":"2026-08-25","introView":2515,"contributedMau":2136,"connectDone":1487,"pointCost":450670,"sendCost":0},
+        {"date":"2026-08-26","introView":2739,"contributedMau":2083,"connectDone":1417,"pointCost":374820,"sendCost":0},
+        {"date":"2026-08-27","pointCost":451630,"sendCost":0}
       ]
     }
   ]
