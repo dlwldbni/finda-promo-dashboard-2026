@@ -5,6 +5,7 @@
   "name": "코스피 예측 프로모션",
   "owner": "은영",
   "status": "done",
+  "periodNote": "프로모션 운영은 8/11~26이지만, 포인트 지급 마감일(8/27)까지 비용을 합산하기 위해 8/11~27로 필터링되어 있음",
   "metricKeys": [
     "introView",
     "contributedMau",
