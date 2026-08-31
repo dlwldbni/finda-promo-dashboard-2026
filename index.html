@@ -599,7 +599,7 @@ function renderLineCards(){
       subs = cfg.mauSubs
         ? cfg.mauSubs.map(s=> `<div class="lc-sub"><div class="v">${fmtInt(total[s.key]||0)}</div><div class="l">${s.label}</div></div>`).join('')
         : `<div class="lc-sub"><div class="v">${fmtInt(contrib)}</div><div class="l">${cfg.mauDenom.subLabel}</div></div>`;
-      cvrHtml = `<div class="lc-cvr">전체 대비 ${pct.toFixed(1)}%</div>`;
+      cvrHtml = `<div class="lc-cvr">전체 MAU 대비 ${pct.toFixed(1)}%</div>`;
     } else {
       subs = cfg.subs.map(sk=>{ const mt=cfg.metrics.find(m=>m.key===sk); return `<div class="lc-sub"><div class="v">${fmtCell(mt, total[sk])}</div><div class="l">${mt.label}</div></div>`; }).join('');
       if (cfg.cvr){ const cv = total[cfg.cvr.den] ? total[cfg.cvr.num]/total[cfg.cvr.den] : 0; cvrHtml = `<div class="lc-cvr">${cfg.cvr.label} ${(cv*100).toFixed(1)}%</div>`; }
