@@ -352,10 +352,12 @@ const LINES = {
   asset:  { key:'asset',  emoji:'💳', name:'자산 서비스 (마이데이터)', color:'var(--asset)', cvar:'--asset',
             headline:{key:'contributedMau', label:'기여 MAU', fmt:'int'},
             metrics:[
-              {key:'introView',      label:'인트로 조회', fmt:'int', agg:'sum'},
-              {key:'contributedMau', label:'프로모션 참여', fmt:'int', agg:'sum'},
-              {key:'connectDone',    label:'연동 완료', fmt:'int', agg:'sum'},
+              {key:'introView',      label:'인트로 조회', fmt:'int', agg:'sum', uniqueKey:'introViewUnique'},
+              {key:'contributedMau', label:'프로모션 참여', fmt:'int', agg:'sum', uniqueKey:'contributedMauUnique'},
+              {key:'connectDone',    label:'연동 완료', fmt:'int', agg:'sum', uniqueKey:'connectDoneUnique'},
               {key:'retention',      label:'재방문(리텐션)', fmt:'int', agg:'avg'},
+              {key:'pointCost',      label:'포인트 비용', fmt:'won', agg:'sum'},
+              {key:'sendCost',       label:'발송 비용', fmt:'won', agg:'sum'},
             ],
             heroKeys:['introView','contributedMau','connectDone'],
             funnel:['introView','contributedMau','connectDone'],
@@ -426,11 +428,9 @@ function toInternal(p){
     runsSrc = [{ label: '월별', start: s, end: e, granularity: 'monthly', daily: rows }];
   }
   runsSrc = runsSrc || [];
-  const runs = runsSrc.map(r => ({
-    label: r.label, start: r.start, end: r.end, granularity: r.granularity,
-    daily: (r.daily||[]).map(d => ({ date: d.date, m: metricObj(d) })),
-    pointTab: r.pointTab || null,   // 포인트탭 진입 한도조회(8월 run 전용) 보존
-  }));
+  const runs = runsSrc.map(r => Object.assign({}, r, {
+  daily: (r.daily||[]).map(d => ({ date: d.date, m: metricObj(d) })),
+}));
   const daily = runs.flatMap(r => r.daily);
   // metricKeys 미지정 시 자동 도출 (값 있는 숫자 키) — 팀원 JSON 이 metricKeys 안 넣어도 됨
   let metricKeys = p.metricKeys;
@@ -487,7 +487,15 @@ function aggDaily(rows, cfg){
 function aggregateLine(lineKey){
   const cfg = LINES[lineKey];
   const projs = PROJECTS.filter(p => p.line === lineKey);
-  const perProject = projs.map(p => ({ proj:p, ...aggDaily(projInRange(p), cfg) }));
+  const perProject = projs.map(p => {
+  const base = aggDaily(projInRange(p), cfg);
+  cfg.metrics.forEach(mt => {
+    if (!mt.uniqueKey) return;
+    const fullRun = p.runs.find(r => r.start === state.start && r.end === state.end);
+    if (fullRun && typeof fullRun[mt.uniqueKey] === 'number') base.agg[mt.key] = fullRun[mt.uniqueKey];
+  });
+  return { proj:p, ...base };
+});
   // 축 합계
   const total = {};
   cfg.metrics.forEach(mt => {
@@ -858,7 +866,13 @@ function renderModalContent(){
   const cfg = LINES[p.line];
   const span = modalSpan(p);
   const rows = modalDailyRows(p);
-  const tot = aggDaily(rows, cfg);
+const tot = aggDaily(rows, cfg);
+cfg.metrics.forEach(mt => {
+  if (!mt.uniqueKey) return;
+  const candidateRuns = modalState.run==='ALL' ? p.runs : [p.runs[+modalState.run]];
+  const fullRun = candidateRuns.find(r => r.start === modalState.start && r.end === modalState.end);
+  if (fullRun && typeof fullRun[mt.uniqueKey] === 'number') tot.agg[mt.key] = fullRun[mt.uniqueKey];
+});
   // 이 프로젝트가 실제 추적하는 지표만 (표 컬럼용)
   const pmets = cfg.metrics.filter(mt=> (p.metricKeys||[]).includes(mt.key));
   // 포인트탭 진입점(슬롯+그리드) 퍼널 — 8월 회차 탭에서만, 각 퍼널 지표에서 포인트탭 진입분을 빼서 '포인트탭 외 유입' 표시
