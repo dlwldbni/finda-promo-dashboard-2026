@@ -491,8 +491,10 @@ function aggregateLine(lineKey){
   const base = aggDaily(projInRange(p), cfg);
   cfg.metrics.forEach(mt => {
     if (!mt.uniqueKey) return;
-    const fullRun = p.runs.find(r => r.start === state.start && r.end === state.end);
-    if (fullRun && typeof fullRun[mt.uniqueKey] === 'number') base.agg[mt.key] = fullRun[mt.uniqueKey];
+    const overlapping = p.runs.filter(r => r.start <= state.end && r.end >= state.start);
+    if (overlapping.length && overlapping.every(r => state.start <= r.start && state.end >= r.end && typeof r[mt.uniqueKey] === 'number')) {
+      base.agg[mt.key] = overlapping.reduce((s,r)=> s + r[mt.uniqueKey], 0);
+    }
   });
   return { proj:p, ...base };
 });
@@ -870,8 +872,10 @@ const tot = aggDaily(rows, cfg);
 cfg.metrics.forEach(mt => {
   if (!mt.uniqueKey) return;
   const candidateRuns = modalState.run==='ALL' ? p.runs : [p.runs[+modalState.run]];
-  const fullRun = candidateRuns.find(r => r.start === modalState.start && r.end === modalState.end);
-  if (fullRun && typeof fullRun[mt.uniqueKey] === 'number') tot.agg[mt.key] = fullRun[mt.uniqueKey];
+  const overlapping = candidateRuns.filter(r => r.start <= modalState.end && r.end >= modalState.start);
+  if (overlapping.length && overlapping.every(r => modalState.start <= r.start && modalState.end >= r.end && typeof r[mt.uniqueKey] === 'number')) {
+    tot.agg[mt.key] = overlapping.reduce((s,r)=> s + r[mt.uniqueKey], 0);
+  }
 });
   // 이 프로젝트가 실제 추적하는 지표만 (표 컬럼용)
   const pmets = cfg.metrics.filter(mt=> (p.metricKeys||[]).includes(mt.key));
