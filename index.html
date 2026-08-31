@@ -436,7 +436,7 @@ function toInternal(p){
   let metricKeys = p.metricKeys;
   if (!metricKeys) { const ks = new Set(); daily.forEach(r => Object.keys(r.m).forEach(k => { if (typeof r.m[k] === 'number') ks.add(k); })); metricKeys = [...ks]; }
   const first = runs.length ? runs[0].start : null;
-  const last  = runs.length ? runs[runs.length-1].end : null;
+  const last  = daily.length ? daily.reduce((a,d)=> d.date>a ? d.date : a, daily[0].date) : null;
   return { id:p.id, line:p.line, emoji:p.emoji||'📁', name:p.name, owner:p.owner||'—', status:p.status||'done', metricKeys, runs, daily, start:first, end:last };
 }
 async function loadProjects(){
@@ -487,29 +487,9 @@ function aggDaily(rows, cfg){
 function aggregateLine(lineKey){
   const cfg = LINES[lineKey];
   const projs = PROJECTS.filter(p => p.line === lineKey);
-  const perProject = projs.map(p => {
-  const base = aggDaily(projInRange(p), cfg);
-  cfg.metrics.forEach(mt => {
-    if (!mt.uniqueKey) return;
-    const overlapping = p.runs.filter(r => r.start <= state.end && r.end >= state.start);
-    if (overlapping.length && overlapping.every(r => state.start <= r.start && state.end >= r.end && typeof r[mt.uniqueKey] === 'number')) {
-      base.agg[mt.key] = overlapping.reduce((s,r)=> s + r[mt.uniqueKey], 0);
-    }
-  });
-  return { proj:p, ...base };
-});
-  // 축 합계
-  const total = {};
-  cfg.metrics.forEach(mt => {
-    if (mt.agg === 'avg') {
-      // avg 지표는 프로젝트 평균들의 (활성일 가중) 평균
-      let wsum=0, w=0; perProject.forEach(pp=>{ if(pp.hasData){ wsum += pp.agg[mt.key]*pp.activeDays; w += pp.activeDays; }});
-      total[mt.key] = w? wsum/w : 0;
-    } else {
-      total[mt.key] = perProject.reduce((s,pp)=>s+pp.agg[mt.key],0);
-    }
-  });
-  // 축 CVR: 분자·분모를 '둘 다 추적하는 프로젝트'만 합산해 계산 (지표 없는 프로젝트가 비율 왜곡 안 하도록)
+  const perProject = projs.map(p => ({ proj:p, ...aggDaily(projInRange(p), cfg) }));
+  // 축 CVR: 유니크 오버라이드 적용 '전' 원본 합계 기준으로 계산
+  // (유니크 총계끼리 나누면 순차 퍼널 관계가 깨져서 100% 넘는 등 말이 안 되는 비율이 나옴)
   const cvrs = (cfg.cvrs||[]).map(c => {
     let num=0, den=0;
     perProject.forEach(pp => {
@@ -517,6 +497,27 @@ function aggregateLine(lineKey){
       if (mk.includes(c.num) && mk.includes(c.den)) { num += pp.agg[c.num]||0; den += pp.agg[c.den]||0; }
     });
     return { ...c, value: den ? num/den : null };
+  });
+  // 유니크 오버라이드는 화면 표시용 합계(perProject.agg / total)에만 적용 — CVR 계산 이후에 덮어씀
+  perProject.forEach(pp => {
+    const p = pp.proj;
+    cfg.metrics.forEach(mt => {
+      if (!mt.uniqueKey) return;
+      const overlapping = p.runs.filter(r => r.start <= state.end && r.end >= state.start);
+      if (overlapping.length && overlapping.every(r => state.start <= r.start && state.end >= r.end && typeof r[mt.uniqueKey] === 'number')) {
+        pp.agg[mt.key] = overlapping.reduce((s,r)=> s + r[mt.uniqueKey], 0);
+      }
+    });
+  });
+  // 축 합계
+  const total = {};
+  cfg.metrics.forEach(mt => {
+    if (mt.agg === 'avg') {
+      let wsum=0, w=0; perProject.forEach(pp=>{ if(pp.hasData){ wsum += pp.agg[mt.key]*pp.activeDays; w += pp.activeDays; }});
+      total[mt.key] = w? wsum/w : 0;
+    } else {
+      total[mt.key] = perProject.reduce((s,pp)=>s+pp.agg[mt.key],0);
+    }
   });
   return { cfg, perProject, total, cvrs };
 }
@@ -658,22 +659,21 @@ function subText(mt, agg){
   return parts.join(' · ');
 }
 // 퍼널 순서 KPI 아이템 (지표 → CVR → 지표 …). 프로젝트가 추적하는 것만.
-function funnelItems(cfg, agg, metricKeys){
+function funnelItems(cfg, agg, metricKeys, cvrAgg){
+  cvrAgg = cvrAgg || agg;
   const has = k => (metricKeys||[]).includes(k);
   const funnel = cfg.funnel || cfg.heroKeys || cfg.metrics.map(m=>m.key);
   const items = [];
   funnel.forEach((key, i) => {
     if(has(key)){ const mt=cfg.metrics.find(m=>m.key===key); items.push({type:'metric', mt, value:agg[key]});
-      // 퍼널 밖이지만 특정 단계 바로 뒤에 붙이도록 지정된 지표(after) — 예: 실제 포인트 지급 수 → 한도조회 뒤
       cfg.metrics.forEach(m2=>{ if(m2.after===key && !funnel.includes(m2.key) && has(m2.key)) items.push({type:'metric', mt:m2, value:agg[m2.key]}); });
     }
     if(i < funnel.length-1){
       const nextKey = funnel[i+1];
       const c = (cfg.cvrs||[]).find(x=> x.den===key && x.num===nextKey);
-      if(c && has(key) && has(nextKey)) items.push({type:'cvr', label:c.label, value: agg[key]? agg[nextKey]/agg[key] : null});
+      if(c && has(key) && has(nextKey)) items.push({type:'cvr', label:c.label, value: cvrAgg[key]? cvrAgg[nextKey]/cvrAgg[key] : null});
     }
   });
-  // 퍼널 밖 지표(약정금액·매출 등, after 미지정)는 뒤에
   cfg.metrics.forEach(mt=>{ if(!funnel.includes(mt.key) && !mt.after && has(mt.key)) items.push({type:'metric', mt, value:agg[mt.key]}); });
   return items;
 }
@@ -868,15 +868,17 @@ function renderModalContent(){
   const cfg = LINES[p.line];
   const span = modalSpan(p);
   const rows = modalDailyRows(p);
-const tot = aggDaily(rows, cfg);
-cfg.metrics.forEach(mt => {
-  if (!mt.uniqueKey) return;
-  const candidateRuns = modalState.run==='ALL' ? p.runs : [p.runs[+modalState.run]];
-  const overlapping = candidateRuns.filter(r => r.start <= modalState.end && r.end >= modalState.start);
-  if (overlapping.length && overlapping.every(r => modalState.start <= r.start && modalState.end >= r.end && typeof r[mt.uniqueKey] === 'number')) {
-    tot.agg[mt.key] = overlapping.reduce((s,r)=> s + r[mt.uniqueKey], 0);
-  }
-});
+  const tot = aggDaily(rows, cfg);
+  const cvrAgg = Object.assign({}, tot.agg);   // CVR 계산은 유니크 오버라이드 전 원본 합계 기준
+  cfg.metrics.forEach(mt => {
+    if (!mt.uniqueKey) return;
+    const candidateRuns = modalState.run==='ALL' ? p.runs : [p.runs[+modalState.run]];
+    const overlapping = candidateRuns.filter(r => r.start <= modalState.end && r.end >= modalState.start);
+    if (overlapping.length && overlapping.every(r => modalState.start <= r.start && modalState.end >= r.end && typeof r[mt.uniqueKey] === 'number')) {
+      tot.agg[mt.key] = overlapping.reduce((s,r)=> s + r[mt.uniqueKey], 0);
+    }
+  });
+
   // 이 프로젝트가 실제 추적하는 지표만 (표 컬럼용)
   const pmets = cfg.metrics.filter(mt=> (p.metricKeys||[]).includes(mt.key));
   // 포인트탭 진입점(슬롯+그리드) 퍼널 — 8월 회차 탭에서만, 각 퍼널 지표에서 포인트탭 진입분을 빼서 '포인트탭 외 유입' 표시
@@ -920,7 +922,7 @@ cfg.metrics.forEach(mt => {
     }
   }
   // 상세 지표 = 퍼널 순서 (인트로조회 → CVR → 한도조회(가승인/올거절) → CVR → 신청(신용대출/우수대부) → CVR → 약정 …)
-  const kpis = renderKpiItems(funnelItems(cfg, tot.agg, p.metricKeys), cfg, tot.agg, ptExtraSub);
+  const kpis = renderKpiItems(funnelItems(cfg, tot.agg, p.metricKeys, cvrAgg), cfg, tot.agg, ptExtraSub);
   const cvrKpi = '';
 
   // 회차(월별) 탭
