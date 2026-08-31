@@ -107,7 +107,9 @@
           "terms": 70,
           "result_view": 229,
           "result_click": 42,
-          "contributedActive": 1355
+          "contributedActive": 1355,
+          "pointCost": 77920,
+          "giftCost": 390000
         }
       ]
     }

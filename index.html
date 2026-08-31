@@ -205,9 +205,9 @@
   .cb-total { font-size:26px; font-weight:800; letter-spacing:-0.5px; color:var(--text); font-variant-numeric:tabular-nums; margin-top:2px; }
   .cb-split { font-size:12px; color:var(--text-2); font-weight:600; margin-top:3px; display:flex; align-items:center; gap:4px; }
   .cb-dot { width:8px; height:8px; border-radius:2px; display:inline-block; }
-  .cb-dot.pt { background:#2F6FE0; } .cb-dot.sd { background:#94a3b8; margin-left:10px; }
+  .cb-dot.pt { background:#2F6FE0; } .cb-dot.sd { background:#94a3b8; margin-left:10px; } .cb-dot.gf { background:#F59E0B; margin-left:10px; }
   .cb-bar { display:flex; height:7px; border-radius:99px; overflow:hidden; background:var(--grey-bg); margin-top:9px; }
-  .cb-bar-pt { background:#2F6FE0; } .cb-bar-sd { background:#94a3b8; }
+  .cb-bar-pt { background:#2F6FE0; } .cb-bar-sd { background:#94a3b8; } .cb-bar-gf { background:#F59E0B; }
   .cb-projs { display:flex; gap:8px; flex-wrap:wrap; flex:1; }
   .cb-chip { font-size:12px; color:var(--text-2); background:var(--grey-bg); border:1px solid var(--border); padding:5px 11px; border-radius:99px; font-weight:600; white-space:nowrap; }
   .cb-chip b { color:var(--text); font-weight:800; font-variant-numeric:tabular-nums; }
@@ -768,10 +768,10 @@ function renderDetail(){
       if (rr.length) runsHtml = `<div class="pc-runs"><div class="pc-runs-title">월별 · 차수</div>${rr.map(x=>`<div class="pc-run"><span class="pc-run-label">${x.run.label}</span><span class="pc-run-val">${basisMt.label} ${fmtVal(x.agg[basis],basisMt.fmt)}</span></div>`).join('')}</div>`;
     }
     const period = p.runs.length>1 ? `${p.runs.length}개 회차` : `${p.start.slice(5)} ~ ${p.end.slice(5)}`;
-    // 마케팅 비용 (포인트/발송) — 있는 것만 표시
-    const pcost = pp.agg.pointCost||0, scost = pp.agg.sendCost||0;
-    const costHtml = (pcost||scost)
-      ? `<div class="pc-cost"><span class="pc-cost-l">💸 마케팅 비용</span><span class="pc-cost-v">${[pcost?`포인트 ${fmtWonFull(pcost)}`:'', scost?`발송 ${fmtWonFull(scost)}`:''].filter(Boolean).join(' · ')}</span></div>`
+    // 마케팅 비용 (포인트/발송/리워드) — 있는 것만 표시
+    const pcost = pp.agg.pointCost||0, scost = pp.agg.sendCost||0, gcost = pp.agg.giftCost||0;
+    const costHtml = (pcost||scost||gcost)
+      ? `<div class="pc-cost"><span class="pc-cost-l">💸 마케팅 비용</span><span class="pc-cost-v">${[pcost?`포인트 ${fmtWonFull(pcost)}`:'', scost?`발송 ${fmtWonFull(scost)}`:'', gcost?`리워드 ${fmtWonFull(gcost)}`:''].filter(Boolean).join(' · ')}</span></div>`
       : '';
     return `<div class="proj-card" data-pid="${p.id}" style="--c:${cfg.color};--cbg:var(${cfg.cvar}-bg)">
       <div class="pc-head"><div class="pc-title">${p.emoji} ${p.name}</div>
@@ -1008,13 +1008,13 @@ function closeProjModal(){
 // 메인 마케팅 비용 띠 — 담당자 구분 없이 전체 프로젝트, 선택 기간 기준
 function renderCostBand(){
   const el = document.getElementById('cost-band'); if(!el) return;
-  let point=0, send=0; const byProj=[];
+  let point=0, send=0, gift=0; const byProj=[];
   PROJECTS.forEach(p=>{
-    let pt=0, sd=0;
-    inRange(p.daily).forEach(d=>{ pt+=(d.m.pointCost||0); sd+=(d.m.sendCost||0); });
-    if(pt||sd){ point+=pt; send+=sd; byProj.push({name:p.name, emoji:p.emoji, cost:pt+sd}); }
+    let pt=0, sd=0, gf=0;
+    inRange(p.daily).forEach(d=>{ pt+=(d.m.pointCost||0); sd+=(d.m.sendCost||0); gf+=(d.m.giftCost||0); });
+    if(pt||sd||gf){ point+=pt; send+=sd; gift+=gf; byProj.push({name:p.name, emoji:p.emoji, cost:pt+sd+gf}); }
   });
-  const total = point+send;
+  const total = point+send+gift;
   if(total===0){ el.innerHTML = `<div class="cb-empty">💸 이 기간에 집행된 마케팅 비용이 없어요</div>`; return; }
   byProj.sort((a,b)=>b.cost-a.cost);
   const chips = byProj.map(b=>`<span class="cb-chip">${b.emoji} ${b.name} <b>${fmtWonFull(b.cost)}</b></span>`).join('');
@@ -1022,8 +1022,8 @@ function renderCostBand(){
     <div class="cb-left">
       <div class="cb-head">💸 마케팅 비용 <span class="cb-period">${state.start.slice(5)} ~ ${state.end.slice(5)}</span></div>
       <div class="cb-total">${fmtWonFull(total)}</div>
-      <div class="cb-split"><span class="cb-dot pt"></span>포인트 ${fmtWonFull(point)}<span class="cb-dot sd"></span>발송 ${fmtWonFull(send)}</div>
-      <div class="cb-bar"><div class="cb-bar-pt" style="width:${(point/total*100).toFixed(1)}%"></div><div class="cb-bar-sd" style="width:${(send/total*100).toFixed(1)}%"></div></div>
+      <div class="cb-split"><span class="cb-dot pt"></span>포인트 ${fmtWonFull(point)}<span class="cb-dot sd"></span>발송 ${fmtWonFull(send)}${gift?`<span class="cb-dot gf"></span>리워드 ${fmtWonFull(gift)}`:''}</div>
+      <div class="cb-bar"><div class="cb-bar-pt" style="width:${(point/total*100).toFixed(1)}%"></div><div class="cb-bar-sd" style="width:${(send/total*100).toFixed(1)}%"></div><div class="cb-bar-gf" style="width:${(gift/total*100).toFixed(1)}%"></div></div>
     </div>
     <div class="cb-projs">${chips}</div>`;
 }

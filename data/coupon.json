@@ -136,7 +136,9 @@
           "apply": 15,
           "contract": 2,
           "revenue": 218340,
-          "amount": null
+          "amount": null,
+          "pointCost": 1780000,
+          "sendCost": 818213
         }
       ]
     },
@@ -270,7 +272,9 @@
           "apply": 28,
           "contract": 9,
           "revenue": 410460,
-          "amount": null
+          "amount": null,
+          "pointCost": 880000,
+          "sendCost": 0
         }
       ]
     },
@@ -369,6 +373,44 @@
           "contract": 2,
           "revenue": 73200,
           "amount": null
+        },
+        {
+          "date": "2026-08-20",
+          "inquiry": 40,
+          "approve": 37,
+          "apply": 18,
+          "contract": 3,
+          "revenue": 69000,
+          "amount": null
+        },
+        {
+          "date": "2026-08-21",
+          "inquiry": 35,
+          "approve": 34,
+          "apply": 8,
+          "contract": 3,
+          "revenue": null,
+          "amount": null
+        },
+        {
+          "date": "2026-08-22",
+          "inquiry": 17,
+          "approve": 14,
+          "apply": 7,
+          "contract": 0,
+          "revenue": null,
+          "amount": null
+        },
+        {
+          "date": "2026-08-23",
+          "inquiry": 10,
+          "approve": 6,
+          "apply": 1,
+          "contract": 0,
+          "revenue": null,
+          "amount": null,
+          "pointCost": 480000,
+          "sendCost": 0
         }
       ]
     }
