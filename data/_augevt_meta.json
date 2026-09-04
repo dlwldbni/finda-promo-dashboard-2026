@@ -1,11 +1,11 @@
 {
-  "_comment": "포인트탭 진입점(홈슬롯+퀵그리드, CH2608_VIEW_LOAN_LIMIT) 4-step 퍼널 단계별 — 8월 캠페인 종료(8/14) 누적. 전체 퍼널에서 빼면 '포인트탭 외 유입'.",
-  "pointTabIntroView": 5378,
-  "pointTabInquiry": 1300,
-  "pointTabApprove": 717,
-  "pointTabReject": 583,
-  "pointTabApply": 119,
+  "_comment": "포인트탭 진입점(홈슬롯+퀵그리드, CH2608_VIEW_LOAN_LIMIT) 4-step 퍼널 단계별 — 8월 캠페인 종료(8/15) 누적. 전체 퍼널에서 빼면 '포인트탭 외 유입'.",
+  "pointTabIntroView": 5494,
+  "pointTabInquiry": 1311,
+  "pointTabApprove": 722,
+  "pointTabReject": 589,
+  "pointTabApply": 120,
   "pointTabCreditLoan": 88,
-  "pointTabOtherLoan": 31,
-  "asOf": "2026-08-14"
+  "pointTabOtherLoan": 32,
+  "asOf": "2026-08-15"
 }
