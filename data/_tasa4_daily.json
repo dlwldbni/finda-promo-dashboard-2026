@@ -1,1 +1,54 @@
-[]
+[
+  {
+    "date": "2026-09-07",
+    "group": "4차-A",
+    "send": null,
+    "appOpen": null,
+    "limitCheck": null,
+    "applyCount": null,
+    "contract": null,
+    "contractAmount": null,
+    "pointCost": null,
+    "sendCost": null,
+    "revenue": null
+  },
+  {
+    "date": "2026-09-07",
+    "group": "4차-B",
+    "send": null,
+    "appOpen": null,
+    "limitCheck": null,
+    "applyCount": null,
+    "contract": null,
+    "contractAmount": null,
+    "pointCost": null,
+    "sendCost": null,
+    "revenue": null
+  },
+  {
+    "date": "2026-09-08",
+    "group": "4차-A",
+    "send": null,
+    "appOpen": null,
+    "limitCheck": null,
+    "applyCount": null,
+    "contract": null,
+    "contractAmount": null,
+    "pointCost": null,
+    "sendCost": null,
+    "revenue": null
+  },
+  {
+    "date": "2026-09-08",
+    "group": "4차-B",
+    "send": null,
+    "appOpen": null,
+    "limitCheck": null,
+    "applyCount": null,
+    "contract": null,
+    "contractAmount": null,
+    "pointCost": null,
+    "sendCost": null,
+    "revenue": null
+  }
+]

@@ -480,6 +480,72 @@
           "sendCost": 764370
         }
       ]
+    },
+    {
+      "label": "4차 Ⓐ 프로모션",
+      "start": "2026-09-07",
+      "end": "2026-09-08",
+      "granularity": "daily",
+      "daily": [
+        {
+          "date": "2026-09-07",
+          "introView": null,
+          "inquiry": null,
+          "apply": null,
+          "contract": null,
+          "amount": null,
+          "revenue": null,
+          "pointCost": null,
+          "sendCost": null,
+          "send": null
+        },
+        {
+          "date": "2026-09-08",
+          "introView": null,
+          "inquiry": null,
+          "apply": null,
+          "contract": null,
+          "amount": null,
+          "revenue": null,
+          "pointCost": null,
+          "sendCost": null,
+          "send": null
+        }
+      ],
+      "ab": "A"
+    },
+    {
+      "label": "4차 Ⓑ 비프로모션",
+      "start": "2026-09-07",
+      "end": "2026-09-08",
+      "granularity": "daily",
+      "daily": [
+        {
+          "date": "2026-09-07",
+          "introView": null,
+          "inquiry": null,
+          "apply": null,
+          "contract": null,
+          "amount": null,
+          "revenue": null,
+          "pointCost": null,
+          "sendCost": null,
+          "send": null
+        },
+        {
+          "date": "2026-09-08",
+          "introView": null,
+          "inquiry": null,
+          "apply": null,
+          "contract": null,
+          "amount": null,
+          "revenue": null,
+          "pointCost": null,
+          "sendCost": null,
+          "send": null
+        }
+      ],
+      "ab": "B"
     }
   ],
   "metricKeys": [
