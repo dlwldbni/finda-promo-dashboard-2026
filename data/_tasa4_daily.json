@@ -2,28 +2,28 @@
   {
     "date": "2026-09-07",
     "group": "4차-A",
-    "send": null,
-    "appOpen": null,
-    "limitCheck": null,
-    "applyCount": null,
-    "contract": null,
-    "contractAmount": null,
-    "pointCost": null,
-    "sendCost": null,
-    "revenue": null
+    "send": 6242,
+    "appOpen": 92,
+    "limitCheck": 47,
+    "applyCount": 11,
+    "contract": 4,
+    "contractAmount": 22700000,
+    "sendCost": 140445,
+    "revenue": 165096,
+    "pointCost": 67900
   },
   {
     "date": "2026-09-07",
     "group": "4차-B",
-    "send": null,
-    "appOpen": null,
-    "limitCheck": null,
-    "applyCount": null,
-    "contract": null,
-    "contractAmount": null,
-    "pointCost": null,
-    "sendCost": null,
-    "revenue": null
+    "send": 6271,
+    "appOpen": 513,
+    "limitCheck": 242,
+    "applyCount": 55,
+    "contract": 5,
+    "contractAmount": 20000000,
+    "sendCost": 141098,
+    "revenue": 188800,
+    "pointCost": null
   },
   {
     "date": "2026-09-08",
@@ -34,9 +34,9 @@
     "applyCount": null,
     "contract": null,
     "contractAmount": null,
-    "pointCost": null,
     "sendCost": null,
-    "revenue": null
+    "revenue": null,
+    "pointCost": null
   },
   {
     "date": "2026-09-08",
@@ -47,8 +47,8 @@
     "applyCount": null,
     "contract": null,
     "contractAmount": null,
-    "pointCost": null,
     "sendCost": null,
-    "revenue": null
+    "revenue": null,
+    "pointCost": null
   }
 ]

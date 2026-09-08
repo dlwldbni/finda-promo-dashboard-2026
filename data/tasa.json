@@ -490,14 +490,14 @@
         {
           "date": "2026-09-07",
           "introView": null,
-          "inquiry": null,
-          "apply": null,
-          "contract": null,
-          "amount": null,
-          "revenue": null,
-          "pointCost": null,
-          "sendCost": null,
-          "send": null
+          "inquiry": 47,
+          "apply": 11,
+          "contract": 4,
+          "amount": 22700000,
+          "revenue": 165096,
+          "pointCost": 67900,
+          "sendCost": 140445,
+          "send": 6242
         },
         {
           "date": "2026-09-08",
@@ -523,14 +523,14 @@
         {
           "date": "2026-09-07",
           "introView": null,
-          "inquiry": null,
-          "apply": null,
-          "contract": null,
-          "amount": null,
-          "revenue": null,
+          "inquiry": 242,
+          "apply": 55,
+          "contract": 5,
+          "amount": 20000000,
+          "revenue": 188800,
           "pointCost": null,
-          "sendCost": null,
-          "send": null
+          "sendCost": 141098,
+          "send": 6271
         },
         {
           "date": "2026-09-08",
