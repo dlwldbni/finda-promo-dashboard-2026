@@ -484,7 +484,7 @@
     {
       "label": "4차 Ⓐ 프로모션",
       "start": "2026-09-07",
-      "end": "2026-09-08",
+      "end": "2026-09-09",
       "granularity": "daily",
       "daily": [
         {
@@ -502,14 +502,26 @@
         {
           "date": "2026-09-08",
           "introView": null,
-          "inquiry": null,
-          "apply": null,
+          "inquiry": 86,
+          "apply": 24,
           "contract": null,
           "amount": null,
           "revenue": null,
           "pointCost": null,
-          "sendCost": null,
-          "send": null
+          "sendCost": 220793,
+          "send": 9813
+        },
+        {
+          "date": "2026-09-09",
+          "introView": null,
+          "inquiry": 73,
+          "apply": 15,
+          "contract": null,
+          "amount": null,
+          "revenue": null,
+          "pointCost": null,
+          "sendCost": 219623,
+          "send": 9100
         }
       ],
       "ab": "A"
@@ -517,7 +529,7 @@
     {
       "label": "4차 Ⓑ 비프로모션",
       "start": "2026-09-07",
-      "end": "2026-09-08",
+      "end": "2026-09-09",
       "granularity": "daily",
       "daily": [
         {
@@ -535,14 +547,26 @@
         {
           "date": "2026-09-08",
           "introView": null,
-          "inquiry": null,
-          "apply": null,
+          "inquiry": 333,
+          "apply": 75,
           "contract": null,
           "amount": null,
           "revenue": null,
           "pointCost": null,
-          "sendCost": null,
-          "send": null
+          "sendCost": 204750,
+          "send": 9761
+        },
+        {
+          "date": "2026-09-09",
+          "introView": null,
+          "inquiry": 269,
+          "apply": 50,
+          "contract": null,
+          "amount": null,
+          "revenue": null,
+          "pointCost": null,
+          "sendCost": 201465,
+          "send": 8954
         }
       ],
       "ab": "B"
