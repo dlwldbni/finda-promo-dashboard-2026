@@ -164,6 +164,10 @@
   .ab-b { display:flex; align-items:center; gap:6px; }
   .ab-f { height:9px; border-radius:3px; display:block; min-width:2px; }
   .ab-b b { font-size:10px; color:var(--text-2); font-weight:700; font-variant-numeric:tabular-nums; }
+  .ab-tags { display:inline-flex; gap:4px; }
+  .ab-tag { background:var(--grey-bg); border:1px solid var(--border); padding:3px 9px; border-radius:99px; font-size:10.5px; font-weight:700; color:var(--text-2); cursor:pointer; font-family:inherit; transition:.12s; }
+  .ab-tag:hover { border-color:#c7cdd6; }
+  .ab-tag.active { background:var(--c); color:#fff; border-color:transparent; }
   /* 담당자 필터 탭 */
   .owner-tabs { display:flex; gap:6px; margin:2px 0 16px; flex-wrap:wrap; }
   .owner-tab { background:#fff; border:1px solid var(--border); padding:6px 13px; border-radius:99px; font-size:12.5px; font-weight:600; color:var(--text-2); cursor:pointer; font-family:inherit; transition:.15s; display:inline-flex; align-items:center; gap:6px; }
@@ -490,7 +494,7 @@ function denomTotal(lineKey){ const mo = denomMonth(lineKey); const m = EXTERNAL
 // 상태 & 집계
 // =====================================================================
 const state = { line:'loan', start: TODAY.slice(0,7)+'-01', end: TODAY, preset:'thisMonth',
-  basis: { loan:'inquiry', asset:'contributedMau', app:'contributedActive' }, owner:'ALL' };
+  basis: { loan:'inquiry', asset:'contributedMau', app:'contributedActive' }, owner:'ALL', abView:'both' };
 
 function inRange(daily){ return daily.filter(d => d.date >= state.start && d.date <= state.end); }
 function projInRange(proj){ return inRange(proj.daily); }
@@ -788,10 +792,11 @@ function renderDetail(){
     // 월별/차수 breakdown (run 2개 이상 & 선택 기간에 데이터 있는 run 만)
     let runsHtml = '';
     if (p.runs.length > 1) {
-      const rr = p.runs.map(run => ({ run, ...aggDaily(inRange(run.daily), cfg) })).filter(x=>x.hasData);
+      const rr = p.runs.map(run => ({ run, ...aggDaily(inRange(run.daily), cfg) })).filter(x=>x.hasData && !x.run.ab);
       if (rr.length) runsHtml = `<div class="pc-runs"><div class="pc-runs-title">월별 · 차수</div>${rr.map(x=>`<div class="pc-run"><span class="pc-run-label">${x.run.label}</span><span class="pc-run-val">${basisMt.label} ${fmtVal(x.agg[basis],basisMt.fmt)}</span></div>`).join('')}</div>`;
     }
-    const period = p.runs.length>1 ? `${p.runs.length}개 회차` : `${p.start.slice(5)} ~ ${p.runs[0].end.slice(5)}`;
+    const visRuns = p.runs.filter(r=>!r.ab);
+    const period = visRuns.length>1 ? `${visRuns.length}개 회차${p.runs.some(r=>r.ab)?' + 4차 A/B':''}` : `${p.start.slice(5)} ~ ${(visRuns[0]||p.runs[0]).end.slice(5)}`;
     // 마케팅 비용 (포인트/발송/리워드) — 있는 것만 표시
     const pcost = pp.agg.pointCost||0, scost = pp.agg.sendCost||0, gcost = pp.agg.giftCost||0;
     const costHtml = (pcost||scost||gcost)
@@ -806,25 +811,43 @@ function renderDetail(){
         const aAgg = aR.agg, bAgg = bR.agg;
         const gv = (a,key)=> a[key]||0;
         const cvrOf = a => gv(a,'inquiry') ? gv(a,'contract')/gv(a,'inquiry') : null;
+        const acvrOf = a => gv(a,'apply') ? gv(a,'contract')/gv(a,'apply') : null;
         const roasOf = a => { const c=gv(a,'pointCost')+gv(a,'sendCost'); return c ? gv(a,'revenue')/c : null; };
         const pct = v => v==null?'—':(v*100).toFixed(1)+'%';
-        const aCvr=cvrOf(aAgg), bCvr=cvrOf(bAgg);
-        const lift = (aCvr!=null && bCvr!=null) ? (aCvr-bCvr)*100 : null;
-        const cDelta = gv(aAgg,'contract')-gv(bAgg,'contract');
-        const bars = [['한도조회','inquiry'],['신청','apply'],['약정','contract']].map(([lbl,key])=>{
-          const av=gv(aAgg,key), bv=gv(bAgg,key), mx=Math.max(av,bv,1);
-          return `<div class="ab-row"><span class="ab-rl">${lbl}</span><span class="ab-bg">`
-            + `<span class="ab-b"><i class="ab-f fa" style="width:${(av/mx*100).toFixed(0)}%"></i><b>${comma(av)}</b></span>`
-            + `<span class="ab-b"><i class="ab-f fb" style="width:${(bv/mx*100).toFixed(0)}%"></i><b>${comma(bv)}</b></span>`
-            + `</span></div>`;
-        }).join('');
+        const mrows = [['한도조회','inquiry'],['신청','apply'],['약정','contract']];
+        const view = state.abView || 'both';
+        const tg = (v,lbl)=>`<button class="ab-tag ${view===v?'active':''}" data-abview="${v}">${lbl}</button>`;
+        const tags = `<span class="ab-tags">${tg('both','함께')}${tg('A','Ⓐ 프로모션')}${tg('B','Ⓑ 비프로모션')}</span>`;
+        let kpis, bars;
+        if (view==='both') {
+          const aCvr=cvrOf(aAgg), bCvr=cvrOf(bAgg);
+          const lift = (aCvr!=null && bCvr!=null) ? (aCvr-bCvr)*100 : null;
+          const cDelta = gv(aAgg,'contract')-gv(bAgg,'contract');
+          kpis = `<div class="abk hero" style="--c:${cfg.color};--cbg:var(${cfg.cvar}-bg)"><div class="abk-l">프로모션 효과 · 조회→약정</div><div class="abk-v">${lift==null?'—':(lift>=0?'+':'')+lift.toFixed(1)+'%p'}</div><div class="abk-s">Ⓐ ${pct(aCvr)} vs Ⓑ ${pct(bCvr)}</div></div>`
+            + `<div class="abk"><div class="abk-l">약정자 수</div><div class="abk-v">${comma(gv(aAgg,'contract'))}<span> vs </span>${comma(gv(bAgg,'contract'))}</div><div class="abk-s">${cDelta>=0?'Ⓐ':'Ⓑ'} 우세 ${comma(Math.abs(cDelta))}명</div></div>`
+            + `<div class="abk"><div class="abk-l">ROAS</div><div class="abk-v">${pct(roasOf(aAgg))}<span> vs </span>${pct(roasOf(bAgg))}</div><div class="abk-s">비용 반영</div></div>`;
+          bars = mrows.map(([lbl,key])=>{
+            const av=gv(aAgg,key), bv=gv(bAgg,key), mx=Math.max(av,bv,1);
+            return `<div class="ab-row"><span class="ab-rl">${lbl}</span><span class="ab-bg">`
+              + `<span class="ab-b"><i class="ab-f fa" style="width:${(av/mx*100).toFixed(0)}%"></i><b>${comma(av)}</b></span>`
+              + `<span class="ab-b"><i class="ab-f fb" style="width:${(bv/mx*100).toFixed(0)}%"></i><b>${comma(bv)}</b></span>`
+              + `</span></div>`;
+          }).join('');
+        } else {
+          const one = view==='A'?aAgg:bAgg, cls = view==='A'?'fa':'fb', nm = view==='A'?'Ⓐ 프로모션':'Ⓑ 비프로모션';
+          kpis = `<div class="abk hero" style="--c:${cfg.color};--cbg:var(${cfg.cvar}-bg)"><div class="abk-l">조회→약정 CVR · ${nm}</div><div class="abk-v">${pct(cvrOf(one))}</div><div class="abk-s">신청→약정 ${pct(acvrOf(one))}</div></div>`
+            + `<div class="abk"><div class="abk-l">약정자 수</div><div class="abk-v">${comma(gv(one,'contract'))}</div><div class="abk-s">한도조회 ${comma(gv(one,'inquiry'))}</div></div>`
+            + `<div class="abk"><div class="abk-l">ROAS</div><div class="abk-v">${pct(roasOf(one))}</div><div class="abk-s">매출 ${fmtWonFull(gv(one,'revenue'))}</div></div>`;
+          bars = mrows.map(([lbl,key])=>{
+            const v=gv(one,key), mx=Math.max(gv(aAgg,key),gv(bAgg,key),1);
+            return `<div class="ab-row"><span class="ab-rl">${lbl}</span><span class="ab-bg">`
+              + `<span class="ab-b"><i class="ab-f ${cls}" style="width:${(v/mx*100).toFixed(0)}%"></i><b>${comma(v)}</b></span>`
+              + `</span></div>`;
+          }).join('');
+        }
         abHtml = `<div class="pc-ab">`
-          + `<div class="pc-ab-head"><span>🧪 4차 A/B 실험</span><span class="ab-leg"><span class="ab-sw fa"></span>A 프로모션<span class="ab-sw fb"></span>B 비프로모션</span></div>`
-          + `<div class="pc-ab-kpis">`
-          + `<div class="abk hero" style="--c:${cfg.color};--cbg:var(${cfg.cvar}-bg)"><div class="abk-l">프로모션 효과 · 조회→약정</div><div class="abk-v">${lift==null?'—':(lift>=0?'+':'')+lift.toFixed(1)+'%p'}</div><div class="abk-s">A ${pct(aCvr)} vs B ${pct(bCvr)}</div></div>`
-          + `<div class="abk"><div class="abk-l">약정자 수</div><div class="abk-v">${comma(gv(aAgg,'contract'))}<span> vs </span>${comma(gv(bAgg,'contract'))}</div><div class="abk-s">${cDelta>=0?'A':'B'} 우세 ${comma(Math.abs(cDelta))}명</div></div>`
-          + `<div class="abk"><div class="abk-l">ROAS</div><div class="abk-v">${pct(roasOf(aAgg))}<span> vs </span>${pct(roasOf(bAgg))}</div><div class="abk-s">비용 반영</div></div>`
-          + `</div><div class="pc-ab-bars">${bars}</div></div>`;
+          + `<div class="pc-ab-head"><span>🧪 4차 A/B 실험</span>${tags}</div>`
+          + `<div class="pc-ab-kpis">${kpis}</div><div class="pc-ab-bars">${bars}</div></div>`;
       }
     }
     return `<div class="proj-card" data-pid="${p.id}" style="--c:${cfg.color};--cbg:var(${cfg.cvar}-bg)">
@@ -871,6 +894,8 @@ function renderDetail(){
   document.querySelectorAll('#detail-area .basis-btn').forEach(b=> b.addEventListener('click', ()=>{ state.basis[state.line]=b.dataset.basis; renderDetail(); }));
   // 담당자 필터 탭
   document.querySelectorAll('#detail-area .owner-tab').forEach(b=> b.addEventListener('click', ()=>{ state.owner=b.dataset.owner; renderDetail(); }));
+  // 4차 A/B 토글 태그
+  document.querySelectorAll('#detail-area .ab-tag').forEach(b=> b.addEventListener('click', (e)=>{ e.stopPropagation(); state.abView=b.dataset.abview; renderDetail(); }));
   // 카드 클릭 → 상세 모달
   document.querySelectorAll('#detail-area .proj-card').forEach(c=> c.addEventListener('click', ()=> openProjModal(c.dataset.pid)));
   renderTrend(k);
@@ -983,7 +1008,7 @@ function renderModalContent(){
   if(p.runs.length>1){
     runTabs = `<div class="modal-runtabs">
       <button class="rt ${modalState.run==='ALL'?'active':''}" data-run="ALL" style="--c:${cfg.color}">전체</button>
-      ${p.runs.map((r,i)=>`<button class="rt ${String(modalState.run)===String(i)?'active':''}" data-run="${i}" style="--c:${cfg.color}">${r.label}</button>`).join('')}
+      ${p.runs.map((r,i)=>({r,i})).filter(x=>!x.r.ab).map(({r,i})=>`<button class="rt ${String(modalState.run)===String(i)?'active':''}" data-run="${i}" style="--c:${cfg.color}">${r.label}</button>`).join('')}
     </div>`;
   }
   // 기간 선택 (모달 자체)
@@ -1002,7 +1027,7 @@ function renderModalContent(){
   // 회차별 표 (전체 볼 때만)
   let runTable='';
   if(p.runs.length>1 && modalState.run==='ALL'){
-    const rr = p.runs.map(run=>({run, ...aggDaily(run.daily.filter(d=>d.date>=modalState.start && d.date<=modalState.end), cfg)})).filter(x=>x.hasData);
+    const rr = p.runs.map(run=>({run, ...aggDaily(run.daily.filter(d=>d.date>=modalState.start && d.date<=modalState.end), cfg)})).filter(x=>x.hasData && !x.run.ab);
     if(rr.length){
       const body = rr.map(x=>`<tr><td style="font-weight:700">${x.run.label}</td>${dcolsSpec.map(c=>`<td class="num">${colValue(c, x.agg)}</td>`).join('')}</tr>`).join('');
       runTable = `<div class="modal-section-title">회차별 성과</div><div class="dlog-wrap"><table class="dlog"><thead><tr><th>회차</th>${colHead}</tr></thead><tbody>${body}</tbody></table></div>`;
