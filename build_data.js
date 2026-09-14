@@ -75,6 +75,7 @@ function p6Runs(P) {
       date: d.date, introView: null, inquiry: nn(d.limitCheck), apply: nn(d.applyCount),
       contract: nn(d.contract), amount: nn(d.contractAmount), revenue: nn(d.revenue),
       pointCost: nn(d.pointCost), sendCost: nn(d.sendCost),  // 타사 = 포인트+발송 둘 다
+      send: nn(d.send), appOpen: nn(d.appOpen),  // 타사 시트 지표 (발송/오픈)
     }));
     const label = r.group + (r.status === '진행중' ? ' · 상시' : '');
     const end = r.end || (rows.length ? rows[rows.length - 1].date : r.start);
@@ -141,12 +142,12 @@ function tasa4Runs() {
     date: d.date, introView: null,
     inquiry: nn(d.limitCheck), apply: nn(d.applyCount),
     contract: nn(d.contract), amount: nn(d.contractAmount), revenue: nn(d.revenue),
-    pointCost: nn(d.pointCost), sendCost: nn(d.sendCost), send: nn(d.send),
+    pointCost: nn(d.pointCost), sendCost: nn(d.sendCost), send: nn(d.send), appOpen: nn(d.appOpen),
   }));
   const abA = mk('4차-A'), abB = mk('4차-B');
   if (!abA.length && !abB.length) return [];
   // 날짜별 A+B 합산 → combined daily (모달 일별표·라인 집계용)
-  const keys = ['introView', 'inquiry', 'apply', 'contract', 'amount', 'revenue', 'pointCost', 'sendCost', 'send'];
+  const keys = ['introView', 'inquiry', 'apply', 'contract', 'amount', 'revenue', 'pointCost', 'sendCost', 'send', 'appOpen'];
   const byDate = {};
   [...abA, ...abB].forEach(d => {
     const t = byDate[d.date] || (byDate[d.date] = { date: d.date });

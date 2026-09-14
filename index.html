@@ -149,7 +149,7 @@
   .ab-leg { font-weight:600; color:var(--text-2); display:flex; align-items:center; gap:4px; }
   .ab-sw { width:9px; height:9px; border-radius:2px; display:inline-block; margin:0 3px 0 7px; }
   .ab-sw.fa, .ab-f.fa { background:#2A78D6; }
-  .ab-sw.fb, .ab-f.fb { background:#8A8A8A; }
+  .ab-sw.fb, .ab-f.fb { background:#EB6834; }
   .pc-ab-kpis { display:grid; grid-template-columns:repeat(3,1fr); gap:7px; margin-bottom:11px; }
   .abk { background:var(--grey-bg); border-radius:9px; padding:8px 9px; }
   .abk.hero { background:var(--cbg); }
@@ -767,9 +767,26 @@ function detailColumns(cfg, metricKeys){
   return cols;
 }
 function colValue(col, obj){
+  if(col.kind==='roas'){ const c=(obj.pointCost||0)+(obj.sendCost||0); const r=obj.revenue; return (c && r!=null) ? ((r/c)*100).toFixed(0)+'%' : '—'; }
   if(col.kind==='cvr'){ const num=obj[col.num], den=obj[col.den]; return (den && num!=null) ? ((num/den)*100).toFixed(1)+'%' : '—'; }
   const v = obj[col.key]; return v==null ? '—' : fmtVal(v, col.fmt||'int');
 }
+// 타사한도조회 프로모션 전용 일자별 로그 컬럼 = 시트 표기 지표 그대로 (대고객과 상이)
+const TASA_COLS = [
+  {label:'발송', fmt:'int', kind:'val', key:'send'},
+  {label:'오픈', fmt:'int', kind:'val', key:'appOpen'},
+  {label:'발송→오픈', kind:'cvr', num:'appOpen', den:'send'},
+  {label:'오픈→조회', kind:'cvr', num:'inquiry', den:'appOpen'},
+  {label:'한도조회', fmt:'int', kind:'val', key:'inquiry'},
+  {label:'신청', fmt:'int', kind:'val', key:'apply'},
+  {label:'약정', fmt:'int', kind:'val', key:'contract'},
+  {label:'조회→약정', kind:'cvr', num:'contract', den:'inquiry'},
+  {label:'약정금액', fmt:'won', kind:'val', key:'amount'},
+  {label:'포인트비용', fmt:'won', kind:'val', key:'pointCost'},
+  {label:'발송비용', fmt:'won', kind:'val', key:'sendCost'},
+  {label:'매출', fmt:'won', kind:'val', key:'revenue'},
+  {label:'ROAS', kind:'roas'},
+];
 function renderKpiItems(items, cfg, agg, extraSub){
   return items.map(it=>{
     if(it.type==='cvr'){
@@ -1033,7 +1050,7 @@ function renderModalContent(){
     ${p.periodNote ? `<div class="modal-period-note">ℹ️ ${p.periodNote}</div>` : ''}`;
 
   // 표 컬럼 = 핵심지표와 동일 (세부 지표·CVR 포함)
-  const dcolsSpec = detailColumns(cfg, p.metricKeys);
+  const dcolsSpec = (p.id==='tasa') ? TASA_COLS : detailColumns(cfg, p.metricKeys);
   const colHead = dcolsSpec.map(c=>`<th class="num">${c.label}</th>`).join('');
   // 회차별 표 (전체 볼 때만)
   let runTable='';
@@ -1102,12 +1119,12 @@ function renderModalContent(){
       type:'bar',
       data:{ labels, datasets:[
         { label:'Ⓐ 프로모션', data:labels.map(x=>aBy[x]||0), backgroundColor:'#2A78D6', borderRadius:3 },
-        { label:'Ⓑ 비프로모션', data:labels.map(x=>bBy[x]||0), backgroundColor:'#8A8A8A', borderRadius:3 } ]},
+        { label:'Ⓑ 비프로모션', data:labels.map(x=>bBy[x]||0), backgroundColor:'#EB6834', borderRadius:3 } ]},
       options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:true, position:'bottom', labels:{boxWidth:10, font:{size:10}, padding:8}}, tooltip:{callbacks:{label:c=>`${c.dataset.label}: ${comma(c.parsed.y)}`}}},
         scales:{ x:xopt, y:{ beginAtZero:true, ticks:{font:{size:9}} } } }
     });
   } else {
-    const barColor = (mAb && modalState.abView==='A') ? '#2A78D6' : (mAb && modalState.abView==='B') ? '#8A8A8A' : color;
+    const barColor = (mAb && modalState.abView==='A') ? '#2A78D6' : (mAb && modalState.abView==='B') ? '#EB6834' : color;
     modalChart = new Chart(document.getElementById('modal-canvas'), {
       type:'bar',
       data:{ labels:rows.map(r=>r.date.slice(5)), datasets:[{ data:rows.map(r=>r.m[tk]||0), backgroundColor:barColor, borderRadius:3 }]},
