@@ -21,7 +21,9 @@
           "amount": 0,
           "revenue": 0,
           "pointCost": 0,
-          "sendCost": 49793
+          "sendCost": 49793,
+          "send": 2213,
+          "appOpen": 32
         },
         {
           "date": "2026-05-29",
@@ -32,7 +34,9 @@
           "amount": 32700000,
           "revenue": 450162,
           "pointCost": 32700,
-          "sendCost": 429548
+          "sendCost": 429548,
+          "send": 19091,
+          "appOpen": 267
         },
         {
           "date": "2026-06-01",
@@ -43,7 +47,9 @@
           "amount": 90900000,
           "revenue": 580343,
           "pointCost": 70600,
-          "sendCost": 898988
+          "sendCost": 898988,
+          "send": 39955,
+          "appOpen": 344
         },
         {
           "date": "2026-06-02",
@@ -54,7 +60,9 @@
           "amount": 289000000,
           "revenue": 2746780,
           "pointCost": 232000,
-          "sendCost": 579690
+          "sendCost": 579690,
+          "send": 25764,
+          "appOpen": 344
         },
         {
           "date": "2026-06-04",
@@ -65,7 +73,9 @@
           "amount": 130980000,
           "revenue": 1311450,
           "pointCost": 106980,
-          "sendCost": 714443
+          "sendCost": 714443,
+          "send": 31753,
+          "appOpen": 292
         },
         {
           "date": "2026-06-05",
@@ -76,7 +86,9 @@
           "amount": 255300000,
           "revenue": 3399345,
           "pointCost": 200300,
-          "sendCost": 477450
+          "sendCost": 477450,
+          "send": 21220,
+          "appOpen": 300
         },
         {
           "date": "2026-06-08",
@@ -87,7 +99,9 @@
           "amount": 259100000,
           "revenue": 2689424,
           "pointCost": 217700,
-          "sendCost": 788175
+          "sendCost": 788175,
+          "send": 35030,
+          "appOpen": 330
         },
         {
           "date": "2026-06-09",
@@ -98,7 +112,9 @@
           "amount": 68500000,
           "revenue": 830189,
           "pointCost": 68500,
-          "sendCost": 495495
+          "sendCost": 495495,
+          "send": 22022,
+          "appOpen": 289
         },
         {
           "date": "2026-06-10",
@@ -109,7 +125,9 @@
           "amount": 151300000,
           "revenue": 1749527,
           "pointCost": 147800,
-          "sendCost": 487890
+          "sendCost": 487890,
+          "send": 21684,
+          "appOpen": 377
         }
       ]
     },
@@ -128,7 +146,9 @@
           "amount": 2000000,
           "revenue": 34400,
           "pointCost": 2000,
-          "sendCost": 0
+          "sendCost": 0,
+          "send": 7542,
+          "appOpen": 59
         },
         {
           "date": "2026-06-16",
@@ -139,7 +159,9 @@
           "amount": 20000000,
           "revenue": 239800,
           "pointCost": 20000,
-          "sendCost": 0
+          "sendCost": 0,
+          "send": 13353,
+          "appOpen": 87
         },
         {
           "date": "2026-06-17",
@@ -150,7 +172,9 @@
           "amount": 3000000,
           "revenue": 37500,
           "pointCost": 3000,
-          "sendCost": 0
+          "sendCost": 0,
+          "send": 11021,
+          "appOpen": 72
         },
         {
           "date": "2026-06-18",
@@ -161,7 +185,9 @@
           "amount": 7300000,
           "revenue": 59150,
           "pointCost": 7300,
-          "sendCost": 0
+          "sendCost": 0,
+          "send": 10886,
+          "appOpen": 61
         },
         {
           "date": "2026-06-19",
@@ -172,7 +198,9 @@
           "amount": 37000000,
           "revenue": 606300,
           "pointCost": 37000,
-          "sendCost": 0
+          "sendCost": 0,
+          "send": 10152,
+          "appOpen": 60
         },
         {
           "date": "2026-06-22",
@@ -183,7 +211,9 @@
           "amount": 3000000,
           "revenue": 37500,
           "pointCost": 3000,
-          "sendCost": 0
+          "sendCost": 0,
+          "send": 21415,
+          "appOpen": 121
         }
       ]
     },
@@ -202,7 +232,9 @@
           "amount": 126080000,
           "revenue": 980775,
           "pointCost": 97980,
-          "sendCost": 886275
+          "sendCost": 886275,
+          "send": 39390,
+          "appOpen": 436
         },
         {
           "date": "2026-07-14",
@@ -213,7 +245,9 @@
           "amount": 84100000,
           "revenue": 825137,
           "pointCost": 43300,
-          "sendCost": 502875
+          "sendCost": 502875,
+          "send": 22350,
+          "appOpen": 332
         },
         {
           "date": "2026-07-15",
@@ -224,7 +258,9 @@
           "amount": 140100000,
           "revenue": 1704176,
           "pointCost": 91200,
-          "sendCost": 445748
+          "sendCost": 445748,
+          "send": 19811,
+          "appOpen": 304
         },
         {
           "date": "2026-07-16",
@@ -235,7 +271,9 @@
           "amount": 30600000,
           "revenue": 904140,
           "pointCost": 45800,
-          "sendCost": 376380
+          "sendCost": 376380,
+          "send": 16728,
+          "appOpen": 256
         },
         {
           "date": "2026-07-17",
@@ -246,7 +284,9 @@
           "amount": 47500000,
           "revenue": 1704176,
           "pointCost": 37500,
-          "sendCost": 203648
+          "sendCost": 203648,
+          "send": 9051,
+          "appOpen": 143
         },
         {
           "date": "2026-07-20",
@@ -257,7 +297,9 @@
           "amount": 149000000,
           "revenue": 1103610,
           "pointCost": 66400,
-          "sendCost": 732555
+          "sendCost": 732555,
+          "send": 32558,
+          "appOpen": 329
         },
         {
           "date": "2026-07-21",
@@ -268,7 +310,9 @@
           "amount": 181200000,
           "revenue": 1911362,
           "pointCost": 142200,
-          "sendCost": 492885
+          "sendCost": 492885,
+          "send": 21906,
+          "appOpen": 310
         },
         {
           "date": "2026-07-22",
@@ -279,7 +323,9 @@
           "amount": 156800000,
           "revenue": 1901250,
           "pointCost": 117800,
-          "sendCost": 478845
+          "sendCost": 478845,
+          "send": 21282,
+          "appOpen": 294
         },
         {
           "date": "2026-07-23",
@@ -290,7 +336,9 @@
           "amount": 83000000,
           "revenue": 893783,
           "pointCost": 63500,
-          "sendCost": 402840
+          "sendCost": 402840,
+          "send": 17904,
+          "appOpen": 242
         },
         {
           "date": "2026-07-24",
@@ -301,7 +349,9 @@
           "amount": 51200000,
           "revenue": 521232,
           "pointCost": 48200,
-          "sendCost": 358695
+          "sendCost": 358695,
+          "send": 15942,
+          "appOpen": 258
         },
         {
           "date": "2026-07-27",
@@ -312,7 +362,9 @@
           "amount": 234700000,
           "revenue": 3069782,
           "pointCost": 154800,
-          "sendCost": 769970
+          "sendCost": 769970,
+          "send": 34132,
+          "appOpen": 355
         },
         {
           "date": "2026-07-28",
@@ -323,7 +375,9 @@
           "amount": 305200000,
           "revenue": 4071930,
           "pointCost": 114000,
-          "sendCost": 464558
+          "sendCost": 464558,
+          "send": 20647,
+          "appOpen": 321
         },
         {
           "date": "2026-07-29",
@@ -334,7 +388,9 @@
           "amount": 180900000,
           "revenue": 2233285,
           "pointCost": 136900,
-          "sendCost": 453353
+          "sendCost": 453353,
+          "send": 20149,
+          "appOpen": 315
         },
         {
           "date": "2026-07-30",
@@ -345,7 +401,9 @@
           "amount": 156900000,
           "revenue": 2177650,
           "pointCost": 115500,
-          "sendCost": 392648
+          "sendCost": 392648,
+          "send": 17451,
+          "appOpen": 301
         },
         {
           "date": "2026-07-31",
@@ -356,7 +414,9 @@
           "amount": 246400000,
           "revenue": 2925750,
           "pointCost": 151100,
-          "sendCost": 444938
+          "sendCost": 444938,
+          "send": 19775,
+          "appOpen": 278
         },
         {
           "date": "2026-08-03",
@@ -367,7 +427,9 @@
           "amount": 155400000,
           "revenue": 1946136,
           "pointCost": 147600,
-          "sendCost": 797715
+          "sendCost": 797715,
+          "send": 35454,
+          "appOpen": 310
         },
         {
           "date": "2026-08-04",
@@ -378,7 +440,9 @@
           "amount": 68000000,
           "revenue": 466330,
           "pointCost": 11000,
-          "sendCost": 405383
+          "sendCost": 405383,
+          "send": 18017,
+          "appOpen": 222
         },
         {
           "date": "2026-08-05",
@@ -389,7 +453,9 @@
           "amount": 112940000,
           "revenue": 1631986,
           "pointCost": 55540,
-          "sendCost": 391028
+          "sendCost": 391028,
+          "send": 17379,
+          "appOpen": 255
         },
         {
           "date": "2026-08-06",
@@ -400,7 +466,9 @@
           "amount": 130200000,
           "revenue": 1605002,
           "pointCost": 114200,
-          "sendCost": 420998
+          "sendCost": 420998,
+          "send": 18711,
+          "appOpen": 202
         },
         {
           "date": "2026-08-07",
@@ -411,7 +479,9 @@
           "amount": 106900000,
           "revenue": 1667347,
           "pointCost": 65900,
-          "sendCost": 398858
+          "sendCost": 398858,
+          "send": 17727,
+          "appOpen": 227
         },
         {
           "date": "2026-08-10",
@@ -422,7 +492,9 @@
           "amount": 177500000,
           "revenue": 1786717,
           "pointCost": 97700,
-          "sendCost": 711428
+          "sendCost": 711428,
+          "send": 31619,
+          "appOpen": 293
         },
         {
           "date": "2026-08-11",
@@ -433,7 +505,9 @@
           "amount": 324820000,
           "revenue": 3947777,
           "pointCost": 263060,
-          "sendCost": 423180
+          "sendCost": 423180,
+          "send": 18808,
+          "appOpen": 199
         },
         {
           "date": "2026-08-12",
@@ -444,7 +518,9 @@
           "amount": 242370000,
           "revenue": 2453080,
           "pointCost": 102670,
-          "sendCost": 391613
+          "sendCost": 391613,
+          "send": 17405,
+          "appOpen": 209
         },
         {
           "date": "2026-08-13",
@@ -455,7 +531,9 @@
           "amount": 120500000,
           "revenue": 1526060,
           "pointCost": 108500,
-          "sendCost": 397733
+          "sendCost": 397733,
+          "send": 17677,
+          "appOpen": 210
         },
         {
           "date": "2026-08-14",
@@ -466,7 +544,9 @@
           "amount": 144200000,
           "revenue": 1601475,
           "pointCost": 107200,
-          "sendCost": 388643
+          "sendCost": 388643,
+          "send": 17273,
+          "appOpen": 237
         },
         {
           "date": "2026-08-18",
@@ -477,16 +557,81 @@
           "amount": 122400000,
           "revenue": 1435010,
           "pointCost": 94000,
-          "sendCost": 764370
+          "sendCost": 764370,
+          "send": 33972,
+          "appOpen": 216
         }
       ]
     },
     {
-      "label": "4차 Ⓐ 프로모션",
+      "label": "4차 A/B",
       "start": "2026-09-07",
       "end": "2026-09-11",
       "granularity": "daily",
       "daily": [
+        {
+          "date": "2026-09-07",
+          "inquiry": 289,
+          "apply": 66,
+          "contract": 9,
+          "amount": 42700000,
+          "revenue": 353896,
+          "pointCost": 17700,
+          "sendCost": 2815425,
+          "send": 12513,
+          "appOpen": 605
+        },
+        {
+          "date": "2026-09-08",
+          "inquiry": 419,
+          "apply": 99,
+          "contract": 20,
+          "amount": 177100000,
+          "revenue": 2117710,
+          "pointCost": 95500,
+          "sendCost": 4404150,
+          "send": 19574,
+          "appOpen": 809
+        },
+        {
+          "date": "2026-09-09",
+          "inquiry": 342,
+          "apply": 65,
+          "contract": 18,
+          "amount": 145300000,
+          "revenue": 1369105,
+          "pointCost": 8900,
+          "sendCost": 4062150,
+          "send": 18054,
+          "appOpen": 732
+        },
+        {
+          "date": "2026-09-10",
+          "inquiry": 328,
+          "apply": 73,
+          "contract": 16,
+          "amount": 146400000,
+          "revenue": 1893720,
+          "pointCost": 16000,
+          "sendCost": 3651458,
+          "send": 17092,
+          "appOpen": 625
+        },
+        {
+          "date": "2026-09-11",
+          "inquiry": 339,
+          "apply": 80,
+          "contract": 23,
+          "amount": 196000000,
+          "revenue": 1496400,
+          "pointCost": 62500,
+          "sendCost": 9128295,
+          "send": 17646,
+          "appOpen": 682
+        }
+      ],
+      "ab": true,
+      "abA": [
         {
           "date": "2026-09-07",
           "introView": null,
@@ -497,7 +642,8 @@
           "revenue": 165096,
           "pointCost": 17700,
           "sendCost": 1404450,
-          "send": 6242
+          "send": 6242,
+          "appOpen": 92
         },
         {
           "date": "2026-09-08",
@@ -509,7 +655,8 @@
           "revenue": 1112300,
           "pointCost": 95500,
           "sendCost": 2207925,
-          "send": 9813
+          "send": 9813,
+          "appOpen": 160
         },
         {
           "date": "2026-09-09",
@@ -521,7 +668,8 @@
           "revenue": 79740,
           "pointCost": 8900,
           "sendCost": 2047500,
-          "send": 9100
+          "send": 9100,
+          "appOpen": 142
         },
         {
           "date": "2026-09-10",
@@ -533,7 +681,8 @@
           "revenue": 634630,
           "pointCost": 16000,
           "sendCost": 1748183,
-          "send": 8633
+          "send": 8633,
+          "appOpen": 115
         },
         {
           "date": "2026-09-11",
@@ -545,17 +694,11 @@
           "revenue": 647220,
           "pointCost": 62500,
           "sendCost": 4187295,
-          "send": 8862
+          "send": 8862,
+          "appOpen": 116
         }
       ],
-      "ab": "A"
-    },
-    {
-      "label": "4차 Ⓑ 비프로모션",
-      "start": "2026-09-07",
-      "end": "2026-09-11",
-      "granularity": "daily",
-      "daily": [
+      "abB": [
         {
           "date": "2026-09-07",
           "introView": null,
@@ -566,7 +709,8 @@
           "revenue": 188800,
           "pointCost": 0,
           "sendCost": 1410975,
-          "send": 6271
+          "send": 6271,
+          "appOpen": 513
         },
         {
           "date": "2026-09-08",
@@ -578,7 +722,8 @@
           "revenue": 1005410,
           "pointCost": 0,
           "sendCost": 2196225,
-          "send": 9761
+          "send": 9761,
+          "appOpen": 649
         },
         {
           "date": "2026-09-09",
@@ -590,7 +735,8 @@
           "revenue": 1289365,
           "pointCost": 0,
           "sendCost": 2014650,
-          "send": 8954
+          "send": 8954,
+          "appOpen": 590
         },
         {
           "date": "2026-09-10",
@@ -602,7 +748,8 @@
           "revenue": 1259090,
           "pointCost": 0,
           "sendCost": 1903275,
-          "send": 8459
+          "send": 8459,
+          "appOpen": 510
         },
         {
           "date": "2026-09-11",
@@ -614,10 +761,10 @@
           "revenue": 849180,
           "pointCost": 0,
           "sendCost": 4941000,
-          "send": 8784
+          "send": 8784,
+          "appOpen": 566
         }
-      ],
-      "ab": "B"
+      ]
     }
   ],
   "metricKeys": [
