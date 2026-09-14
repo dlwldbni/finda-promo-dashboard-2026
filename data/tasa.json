@@ -484,7 +484,7 @@
     {
       "label": "4차 Ⓐ 프로모션",
       "start": "2026-09-07",
-      "end": "2026-09-09",
+      "end": "2026-09-11",
       "granularity": "daily",
       "daily": [
         {
@@ -495,8 +495,8 @@
           "contract": 4,
           "amount": 22700000,
           "revenue": 165096,
-          "pointCost": 67900,
-          "sendCost": 140445,
+          "pointCost": 17700,
+          "sendCost": 1404450,
           "send": 6242
         },
         {
@@ -504,11 +504,11 @@
           "introView": null,
           "inquiry": 86,
           "apply": 24,
-          "contract": null,
-          "amount": null,
-          "revenue": null,
-          "pointCost": null,
-          "sendCost": 220793,
+          "contract": 7,
+          "amount": 98500000,
+          "revenue": 1112300,
+          "pointCost": 95500,
+          "sendCost": 2207925,
           "send": 9813
         },
         {
@@ -516,12 +516,36 @@
           "introView": null,
           "inquiry": 73,
           "apply": 15,
-          "contract": null,
-          "amount": null,
-          "revenue": null,
-          "pointCost": null,
-          "sendCost": 219623,
+          "contract": 4,
+          "amount": 11900000,
+          "revenue": 79740,
+          "pointCost": 8900,
+          "sendCost": 2047500,
           "send": 9100
+        },
+        {
+          "date": "2026-09-10",
+          "introView": null,
+          "inquiry": 61,
+          "apply": 20,
+          "contract": 3,
+          "amount": 39800000,
+          "revenue": 634630,
+          "pointCost": 16000,
+          "sendCost": 1748183,
+          "send": 8633
+        },
+        {
+          "date": "2026-09-11",
+          "introView": null,
+          "inquiry": 63,
+          "apply": 13,
+          "contract": 6,
+          "amount": 65800000,
+          "revenue": 647220,
+          "pointCost": 62500,
+          "sendCost": 4187295,
+          "send": 8862
         }
       ],
       "ab": "A"
@@ -529,7 +553,7 @@
     {
       "label": "4차 Ⓑ 비프로모션",
       "start": "2026-09-07",
-      "end": "2026-09-09",
+      "end": "2026-09-11",
       "granularity": "daily",
       "daily": [
         {
@@ -540,8 +564,8 @@
           "contract": 5,
           "amount": 20000000,
           "revenue": 188800,
-          "pointCost": null,
-          "sendCost": 141098,
+          "pointCost": 0,
+          "sendCost": 1410975,
           "send": 6271
         },
         {
@@ -549,11 +573,11 @@
           "introView": null,
           "inquiry": 333,
           "apply": 75,
-          "contract": null,
-          "amount": null,
-          "revenue": null,
-          "pointCost": null,
-          "sendCost": 204750,
+          "contract": 13,
+          "amount": 78600000,
+          "revenue": 1005410,
+          "pointCost": 0,
+          "sendCost": 2196225,
           "send": 9761
         },
         {
@@ -561,12 +585,36 @@
           "introView": null,
           "inquiry": 269,
           "apply": 50,
-          "contract": null,
-          "amount": null,
-          "revenue": null,
-          "pointCost": null,
-          "sendCost": 201465,
+          "contract": 14,
+          "amount": 133400000,
+          "revenue": 1289365,
+          "pointCost": 0,
+          "sendCost": 2014650,
           "send": 8954
+        },
+        {
+          "date": "2026-09-10",
+          "introView": null,
+          "inquiry": 267,
+          "apply": 53,
+          "contract": 13,
+          "amount": 106600000,
+          "revenue": 1259090,
+          "pointCost": 0,
+          "sendCost": 1903275,
+          "send": 8459
+        },
+        {
+          "date": "2026-09-11",
+          "introView": null,
+          "inquiry": 276,
+          "apply": 67,
+          "contract": 17,
+          "amount": 130200000,
+          "revenue": 849180,
+          "pointCost": 0,
+          "sendCost": 4941000,
+          "send": 8784
         }
       ],
       "ab": "B"
