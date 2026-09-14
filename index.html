@@ -588,6 +588,46 @@ function fmtVal(v, fmt){ return fmt==='won'?fmtWon(v): fmtInt(v); }
 function fmtCell(mt, v){ if(mt.sparse && !v) return '—'; return fmtVal(v, mt.fmt); }
 function cssVar(name){ return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
 
+// ---- 4차 A/B 비교 공용 헬퍼 (카드·모달 공용) ----
+// abRun = 병합된 '4차 A/B' run (abA/abB 보유). 기간(rs~re)으로 A/B 각각 집계.
+function abGroupAggs(abRun, cfg, rs, re){
+  const inR = arr => (arr||[]).filter(d=> d.date>=rs && d.date<=re);
+  const aR = aggDaily(inR(abRun.abA), cfg), bR = aggDaily(inR(abRun.abB), cfg);
+  return { aAgg:aR.agg, bAgg:bR.agg, hasData: aR.hasData || bR.hasData };
+}
+function abTagsHtml(view, attr){
+  const tg=(v,lbl)=>`<button class="ab-tag ${view===v?'active':''}" ${attr}="${v}">${lbl}</button>`;
+  return `<span class="ab-tags">${tg('both','전체')}${tg('A','Ⓐ 프로모션')}${tg('B','Ⓑ 비프로모션')}</span>`;
+}
+// view: 'both'(A vs B 비교) | 'A' | 'B'. KPI + 막대(색 다르게) 반환.
+function abInnerHtml(aAgg, bAgg, view, cfg){
+  const gv=(a,k)=>a[k]||0;
+  const cvrOf=a=>gv(a,'inquiry')?gv(a,'contract')/gv(a,'inquiry'):null;
+  const acvrOf=a=>gv(a,'apply')?gv(a,'contract')/gv(a,'apply'):null;
+  const roasOf=a=>{const c=gv(a,'pointCost')+gv(a,'sendCost');return c?gv(a,'revenue')/c:null;};
+  const pct=v=>v==null?'—':(v*100).toFixed(1)+'%';
+  const mrows=[['한도조회','inquiry'],['신청','apply'],['약정','contract']];
+  let kpis,bars;
+  if(view==='A'||view==='B'){
+    const one=view==='A'?aAgg:bAgg, cls=view==='A'?'fa':'fb', nm=view==='A'?'Ⓐ 프로모션':'Ⓑ 비프로모션';
+    kpis=`<div class="abk hero" style="--c:${cfg.color};--cbg:var(${cfg.cvar}-bg)"><div class="abk-l">조회→약정 CVR · ${nm}</div><div class="abk-v">${pct(cvrOf(one))}</div><div class="abk-s">신청→약정 ${pct(acvrOf(one))}</div></div>`
+      +`<div class="abk"><div class="abk-l">약정자 수</div><div class="abk-v">${comma(gv(one,'contract'))}</div><div class="abk-s">한도조회 ${comma(gv(one,'inquiry'))}</div></div>`
+      +`<div class="abk"><div class="abk-l">ROAS</div><div class="abk-v">${pct(roasOf(one))}</div><div class="abk-s">매출 ${fmtWonFull(gv(one,'revenue'))}</div></div>`;
+    bars=mrows.map(([lbl,key])=>{const v=gv(one,key),mx=Math.max(gv(aAgg,key),gv(bAgg,key),1);
+      return `<div class="ab-row"><span class="ab-rl">${lbl}</span><span class="ab-bg"><span class="ab-b"><i class="ab-f ${cls}" style="width:${(v/mx*100).toFixed(0)}%"></i><b>${comma(v)}</b></span></span></div>`;}).join('');
+  } else {
+    const aCvr=cvrOf(aAgg),bCvr=cvrOf(bAgg);
+    const lift=(aCvr!=null&&bCvr!=null)?(aCvr-bCvr)*100:null;
+    const cDelta=gv(aAgg,'contract')-gv(bAgg,'contract');
+    kpis=`<div class="abk hero" style="--c:${cfg.color};--cbg:var(${cfg.cvar}-bg)"><div class="abk-l">프로모션 효과 · 조회→약정</div><div class="abk-v">${lift==null?'—':(lift>=0?'+':'')+lift.toFixed(1)+'%p'}</div><div class="abk-s">Ⓐ ${pct(aCvr)} vs Ⓑ ${pct(bCvr)}</div></div>`
+      +`<div class="abk"><div class="abk-l">약정자 수</div><div class="abk-v">${comma(gv(aAgg,'contract'))}<span> vs </span>${comma(gv(bAgg,'contract'))}</div><div class="abk-s">${cDelta>=0?'Ⓐ':'Ⓑ'} 우세 ${comma(Math.abs(cDelta))}명</div></div>`
+      +`<div class="abk"><div class="abk-l">ROAS</div><div class="abk-v">${pct(roasOf(aAgg))}<span> vs </span>${pct(roasOf(bAgg))}</div><div class="abk-s">비용 반영</div></div>`;
+    bars=mrows.map(([lbl,key])=>{const av=gv(aAgg,key),bv=gv(bAgg,key),mx=Math.max(av,bv,1);
+      return `<div class="ab-row"><span class="ab-rl">${lbl}</span><span class="ab-bg"><span class="ab-b"><i class="ab-f fa" style="width:${(av/mx*100).toFixed(0)}%"></i><b>${comma(av)}</b></span><span class="ab-b"><i class="ab-f fb" style="width:${(bv/mx*100).toFixed(0)}%"></i><b>${comma(bv)}</b></span></span></div>`;}).join('');
+  }
+  return `<div class="pc-ab-kpis">${kpis}</div><div class="pc-ab-bars">${bars}</div>`;
+}
+
 // =====================================================================
 // 렌더: 기간 컨트롤
 // =====================================================================
@@ -808,48 +848,12 @@ function renderDetail(){
     const abRun = p.runs.find(r=>r.ab===true && r.abA);
     let abHtml = '';
     if (abRun) {
-      const aR = aggDaily(inRange(abRun.abA||[]), cfg), bR = aggDaily(inRange(abRun.abB||[]), cfg);
-      if (aR.hasData || bR.hasData) {
-        const aAgg = aR.agg, bAgg = bR.agg;
-        const gv = (a,key)=> a[key]||0;
-        const cvrOf = a => gv(a,'inquiry') ? gv(a,'contract')/gv(a,'inquiry') : null;
-        const acvrOf = a => gv(a,'apply') ? gv(a,'contract')/gv(a,'apply') : null;
-        const roasOf = a => { const c=gv(a,'pointCost')+gv(a,'sendCost'); return c ? gv(a,'revenue')/c : null; };
-        const pct = v => v==null?'—':(v*100).toFixed(1)+'%';
-        const mrows = [['한도조회','inquiry'],['신청','apply'],['약정','contract']];
+      const { aAgg, bAgg, hasData } = abGroupAggs(abRun, cfg, state.start, state.end);
+      if (hasData) {
         const view = state.abView || 'both';
-        const tg = (v,lbl)=>`<button class="ab-tag ${view===v?'active':''}" data-abview="${v}">${lbl}</button>`;
-        const tags = `<span class="ab-tags">${tg('both','함께')}${tg('A','Ⓐ 프로모션')}${tg('B','Ⓑ 비프로모션')}</span>`;
-        let kpis, bars;
-        if (view==='both') {
-          const aCvr=cvrOf(aAgg), bCvr=cvrOf(bAgg);
-          const lift = (aCvr!=null && bCvr!=null) ? (aCvr-bCvr)*100 : null;
-          const cDelta = gv(aAgg,'contract')-gv(bAgg,'contract');
-          kpis = `<div class="abk hero" style="--c:${cfg.color};--cbg:var(${cfg.cvar}-bg)"><div class="abk-l">프로모션 효과 · 조회→약정</div><div class="abk-v">${lift==null?'—':(lift>=0?'+':'')+lift.toFixed(1)+'%p'}</div><div class="abk-s">Ⓐ ${pct(aCvr)} vs Ⓑ ${pct(bCvr)}</div></div>`
-            + `<div class="abk"><div class="abk-l">약정자 수</div><div class="abk-v">${comma(gv(aAgg,'contract'))}<span> vs </span>${comma(gv(bAgg,'contract'))}</div><div class="abk-s">${cDelta>=0?'Ⓐ':'Ⓑ'} 우세 ${comma(Math.abs(cDelta))}명</div></div>`
-            + `<div class="abk"><div class="abk-l">ROAS</div><div class="abk-v">${pct(roasOf(aAgg))}<span> vs </span>${pct(roasOf(bAgg))}</div><div class="abk-s">비용 반영</div></div>`;
-          bars = mrows.map(([lbl,key])=>{
-            const av=gv(aAgg,key), bv=gv(bAgg,key), mx=Math.max(av,bv,1);
-            return `<div class="ab-row"><span class="ab-rl">${lbl}</span><span class="ab-bg">`
-              + `<span class="ab-b"><i class="ab-f fa" style="width:${(av/mx*100).toFixed(0)}%"></i><b>${comma(av)}</b></span>`
-              + `<span class="ab-b"><i class="ab-f fb" style="width:${(bv/mx*100).toFixed(0)}%"></i><b>${comma(bv)}</b></span>`
-              + `</span></div>`;
-          }).join('');
-        } else {
-          const one = view==='A'?aAgg:bAgg, cls = view==='A'?'fa':'fb', nm = view==='A'?'Ⓐ 프로모션':'Ⓑ 비프로모션';
-          kpis = `<div class="abk hero" style="--c:${cfg.color};--cbg:var(${cfg.cvar}-bg)"><div class="abk-l">조회→약정 CVR · ${nm}</div><div class="abk-v">${pct(cvrOf(one))}</div><div class="abk-s">신청→약정 ${pct(acvrOf(one))}</div></div>`
-            + `<div class="abk"><div class="abk-l">약정자 수</div><div class="abk-v">${comma(gv(one,'contract'))}</div><div class="abk-s">한도조회 ${comma(gv(one,'inquiry'))}</div></div>`
-            + `<div class="abk"><div class="abk-l">ROAS</div><div class="abk-v">${pct(roasOf(one))}</div><div class="abk-s">매출 ${fmtWonFull(gv(one,'revenue'))}</div></div>`;
-          bars = mrows.map(([lbl,key])=>{
-            const v=gv(one,key), mx=Math.max(gv(aAgg,key),gv(bAgg,key),1);
-            return `<div class="ab-row"><span class="ab-rl">${lbl}</span><span class="ab-bg">`
-              + `<span class="ab-b"><i class="ab-f ${cls}" style="width:${(v/mx*100).toFixed(0)}%"></i><b>${comma(v)}</b></span>`
-              + `</span></div>`;
-          }).join('');
-        }
         abHtml = `<div class="pc-ab">`
-          + `<div class="pc-ab-head"><span>🧪 4차 A/B 실험</span>${tags}</div>`
-          + `<div class="pc-ab-kpis">${kpis}</div><div class="pc-ab-bars">${bars}</div></div>`;
+          + `<div class="pc-ab-head"><span>🧪 4차 A/B 실험</span>${abTagsHtml(view,'data-abview')}</div>`
+          + abInnerHtml(aAgg, bAgg, view, cfg) + `</div>`;
       }
     }
     return `<div class="proj-card" data-pid="${p.id}" style="--c:${cfg.color};--cbg:var(${cfg.cvar}-bg)">
@@ -930,16 +934,21 @@ function renderTrend(k){
 // =====================================================================
 let modalChart = null;
 let modalChart2 = null;
-let modalState = { pid:null, run:'ALL', start:null, end:null };  // 모달 자체 기간/회차 (전역 필터와 독립)
+let modalState = { pid:null, run:'ALL', start:null, end:null, abView:'both' };  // 모달 자체 기간/회차 (전역 필터와 독립)
 
 function modalSpan(p){ return modalState.run==='ALL' ? {s:p.start, e:p.end} : {s:p.runs[+modalState.run].start, e:p.runs[+modalState.run].end}; }
+// 선택된 run 이 4차 A/B 병합 run 이면 반환(아니면 null). A/B 토글 대상.
+function modalAbRun(p){ const r = modalState.run==='ALL' ? null : p.runs[+modalState.run]; return (r && r.ab===true && r.abA) ? r : null; }
 function modalDailyRows(p){
-  const src = modalState.run==='ALL' ? p.daily : p.runs[+modalState.run].daily;
+  const ab = modalAbRun(p);
+  let src;
+  if (ab && (modalState.abView==='A' || modalState.abView==='B')) src = modalState.abView==='A' ? ab.abA : ab.abB;
+  else src = modalState.run==='ALL' ? p.daily : p.runs[+modalState.run].daily;
   return src.filter(d=> d.date>=modalState.start && d.date<=modalState.end).slice().sort((a,b)=> a.date<b.date?-1:1);
 }
 function openProjModal(pid){
   const p = PROJECTS.find(x=>x.id===pid); if(!p) return;
-  modalState = { pid, run:'ALL', start:p.start, end:p.end };   // 열 때는 프로젝트 전체 기간
+  modalState = { pid, run:'ALL', start:p.start, end:p.end, abView:'both' };   // 열 때는 프로젝트 전체 기간
   document.getElementById('proj-modal').classList.remove('hidden');
   renderModalContent();
 }
@@ -1047,9 +1056,22 @@ function renderModalContent(){
       <div class="modal-title">${p.emoji} ${p.name} <span class="status-chip ${p.status}">${p.status==='live'?'진행중':'완료'}</span></div>
       <div class="modal-sub"><span class="owner-chip">👤 ${p.owner}</span><span class="pc-period">${runLabel}</span><span style="color:${cfg.color};font-weight:700">${cfg.emoji} ${cfg.name}</span></div>
     </div><button class="modal-close" onclick="closeProjModal()">✕</button>`;
+  // 4차 A/B 비교 블록 — 선택 run 이 4차 A/B 일 때만. 전체/A/B 토글이 모달 전체 뷰(지표·표·그래프)를 필터.
+  let abModal='';
+  const mAb = modalAbRun(p);
+  if(mAb){
+    const abg = abGroupAggs(mAb, cfg, modalState.start, modalState.end);
+    if(abg.hasData){
+      abModal = `<div class="modal-section-title" style="margin-top:4px">🧪 A/B 비교 <span style="font-weight:500;color:var(--text-3);font-size:11.5px">· 전체=A+B · 태그로 개별</span></div>`
+        + `<div class="pc-ab" style="margin-top:0;border-top:none;padding-top:0">`
+        + `<div class="pc-ab-head"><span></span>${abTagsHtml(modalState.abView||'both','data-mabview')}</div>`
+        + abInnerHtml(abg.aAgg, abg.bAgg, modalState.abView||'both', cfg) + `</div>`;
+    }
+  }
   back.querySelector('.modal-body').innerHTML = `
     ${runTabs}
     ${periodCtl}
+    ${abModal}
     <div class="modal-section-title">핵심 지표 <span style="font-weight:500;color:var(--text-3);font-size:11.5px">· 선택 기간 합계</span></div>
     <div class="kpi-row">${kpis}${cvrKpi}</div>
     ${cfg.kpiNote ? `<div class="kpi-note" style="font-size:11.5px;color:var(--text-3);margin:-4px 0 10px">${cfg.kpiNote}</div>` : ''}
@@ -1061,6 +1083,7 @@ function renderModalContent(){
 
   // 핸들러 (innerHTML 재생성마다 새로 바인딩)
   back.querySelectorAll('.rt').forEach(b=> b.onclick = ()=>{ modalState.run=b.dataset.run; const sp=modalSpan(p); modalState.start=sp.s; modalState.end=sp.e; renderModalContent(); });
+  back.querySelectorAll('.ab-tag[data-mabview]').forEach(b=> b.onclick = ()=>{ modalState.abView=b.dataset.mabview; renderModalContent(); });
   const ms=back.querySelector('#m-start'), me=back.querySelector('#m-end');
   if(ms) ms.onchange = e=>{ modalState.start=e.target.value; if(modalState.end<modalState.start) modalState.end=modalState.start; renderModalContent(); };
   if(me) me.onchange = e=>{ modalState.end=e.target.value; if(modalState.end<modalState.start) modalState.start=modalState.end; renderModalContent(); };
@@ -1068,12 +1091,30 @@ function renderModalContent(){
 
   if(modalChart) modalChart.destroy();
   const color = cssVar(cfg.cvar);
-  modalChart = new Chart(document.getElementById('modal-canvas'), {
-    type:'bar',
-    data:{ labels:rows.map(r=>r.date.slice(5)), datasets:[{ data:rows.map(r=>r.m[cfg.trendKey || cfg.headline.key]||0), backgroundColor:color, borderRadius:3 }]},
-    options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}, tooltip:{callbacks:{label:c=>`${cfg.trendLabel || cfg.headline.label}: ${comma(c.parsed.y)}`}}},
-      scales:{ x:{ ticks:{font:{size:9}, maxRotation:0, autoSkip:true, maxTicksLimit:12}, grid:{display:false} }, y:{ beginAtZero:true, ticks:{font:{size:9}} } } }
-  });
+  const tk = cfg.trendKey || cfg.headline.key;
+  const xopt = { ticks:{font:{size:9}, maxRotation:0, autoSkip:true, maxTicksLimit:12}, grid:{display:false} };
+  if (mAb && (modalState.abView||'both')==='both') {
+    // 전체: A/B 2계열 (색 다르게)
+    const labels = rows.map(r=>r.date.slice(5)), aBy={}, bBy={};
+    mAb.abA.forEach(d=>{ if(d.date>=modalState.start&&d.date<=modalState.end) aBy[d.date.slice(5)]=(d.m[tk]||0); });
+    mAb.abB.forEach(d=>{ if(d.date>=modalState.start&&d.date<=modalState.end) bBy[d.date.slice(5)]=(d.m[tk]||0); });
+    modalChart = new Chart(document.getElementById('modal-canvas'), {
+      type:'bar',
+      data:{ labels, datasets:[
+        { label:'Ⓐ 프로모션', data:labels.map(x=>aBy[x]||0), backgroundColor:'#2A78D6', borderRadius:3 },
+        { label:'Ⓑ 비프로모션', data:labels.map(x=>bBy[x]||0), backgroundColor:'#8A8A8A', borderRadius:3 } ]},
+      options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:true, position:'bottom', labels:{boxWidth:10, font:{size:10}, padding:8}}, tooltip:{callbacks:{label:c=>`${c.dataset.label}: ${comma(c.parsed.y)}`}}},
+        scales:{ x:xopt, y:{ beginAtZero:true, ticks:{font:{size:9}} } } }
+    });
+  } else {
+    const barColor = (mAb && modalState.abView==='A') ? '#2A78D6' : (mAb && modalState.abView==='B') ? '#8A8A8A' : color;
+    modalChart = new Chart(document.getElementById('modal-canvas'), {
+      type:'bar',
+      data:{ labels:rows.map(r=>r.date.slice(5)), datasets:[{ data:rows.map(r=>r.m[tk]||0), backgroundColor:barColor, borderRadius:3 }]},
+      options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}, tooltip:{callbacks:{label:c=>`${cfg.trendLabel || cfg.headline.label}: ${comma(c.parsed.y)}`}}},
+        scales:{ x:xopt, y:{ beginAtZero:true, ticks:{font:{size:9}} } } }
+    });
+  }
   if (modalChart2) { modalChart2.destroy(); modalChart2 = null; }
   if (cfg.trendKey2) {
     modalChart2 = new Chart(document.getElementById('modal-canvas2'), {
