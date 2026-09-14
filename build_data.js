@@ -131,24 +131,30 @@ function couponRun() {
 }
 
 // 타사 4차 A/B 테스트 (9/7~) — data/_tasa4_daily.json (자동갱신이 이 파일만 갱신).
-//   A=프로모션(포인트 지급) / B=비프로모션(대조군). group='4차-A'/'4차-B'. 각 그룹을 별도 run 으로.
-//   데이터 없으면 run 생략(파일 비어있을 때 카드에 안 뜸). 시트 컬럼 매핑은 p6 과 동일.
+//   A=프로모션(포인트 지급) / B=비프로모션(대조군). group='4차-A'/'4차-B'.
+//   ⚠ 단일 run '4차 A/B' 로 병합(대시보드 탭 하나). daily=A+B 날짜별 합산(표준 뷰·라인 집계용),
+//   A/B 상세는 run.abA/abB 에 각각 담아 A/B 비교 블록·토글이 사용. 데이터 없으면 run 생략.
 function tasa4Runs() {
   let rows = [];
   try { rows = JSON.parse(fs.readFileSync(path.join(REPO, 'data', '_tasa4_daily.json'), 'utf8')); } catch (e) { rows = []; }
-  return ['4차-A', '4차-B'].map(g => {
-    const gr = rows.filter(d => d.group === g).sort((a, b) => (a.date < b.date ? -1 : 1));
-    const daily = gr.map(d => ({
-      date: d.date, introView: null,
-      inquiry: nn(d.limitCheck), apply: nn(d.applyCount),
-      contract: nn(d.contract), amount: nn(d.contractAmount), revenue: nn(d.revenue),
-      pointCost: nn(d.pointCost), sendCost: nn(d.sendCost), send: nn(d.send),
-    }));
-    const label = g === '4차-A' ? '4차 Ⓐ 프로모션' : '4차 Ⓑ 비프로모션';
-    const start = gr.length ? gr[0].date : '2026-09-07';
-    const end = gr.length ? gr[gr.length - 1].date : '2026-09-07';
-    return { label, start, end, granularity: 'daily', daily, ab: g === '4차-A' ? 'A' : 'B' };
-  }).filter(r => r.daily.length);
+  const mk = g => rows.filter(d => d.group === g).sort((a, b) => (a.date < b.date ? -1 : 1)).map(d => ({
+    date: d.date, introView: null,
+    inquiry: nn(d.limitCheck), apply: nn(d.applyCount),
+    contract: nn(d.contract), amount: nn(d.contractAmount), revenue: nn(d.revenue),
+    pointCost: nn(d.pointCost), sendCost: nn(d.sendCost), send: nn(d.send),
+  }));
+  const abA = mk('4차-A'), abB = mk('4차-B');
+  if (!abA.length && !abB.length) return [];
+  // 날짜별 A+B 합산 → combined daily (모달 일별표·라인 집계용)
+  const keys = ['introView', 'inquiry', 'apply', 'contract', 'amount', 'revenue', 'pointCost', 'sendCost', 'send'];
+  const byDate = {};
+  [...abA, ...abB].forEach(d => {
+    const t = byDate[d.date] || (byDate[d.date] = { date: d.date });
+    keys.forEach(k => { if (d[k] != null) t[k] = (t[k] || 0) + d[k]; });
+  });
+  const daily = Object.values(byDate).sort((a, b) => (a.date < b.date ? -1 : 1));
+  const dates = daily.map(d => d.date);
+  return [{ label: '4차 A/B', start: dates[0], end: dates[dates.length - 1], granularity: 'daily', daily, ab: true, abA, abB }];
 }
 
 // ---- v2 프로젝트 구성 (사용자 정의 그룹핑) ----

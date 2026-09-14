@@ -454,9 +454,12 @@ function toInternal(p){
     runsSrc = [{ label: '월별', start: s, end: e, granularity: 'monthly', daily: rows }];
   }
   runsSrc = runsSrc || [];
-  const runs = runsSrc.map(r => Object.assign({}, r, {
-  daily: (r.daily||[]).map(d => ({ date: d.date, m: metricObj(d) })),
-}));
+  const runs = runsSrc.map(r => {
+    const o = Object.assign({}, r, { daily: (r.daily||[]).map(d => ({ date: d.date, m: metricObj(d) })) });
+    if (Array.isArray(r.abA)) o.abA = r.abA.map(d => ({ date: d.date, m: metricObj(d) }));
+    if (Array.isArray(r.abB)) o.abB = r.abB.map(d => ({ date: d.date, m: metricObj(d) }));
+    return o;
+  });
   const daily = runs.flatMap(r => r.daily);
   // metricKeys 미지정 시 자동 도출 (값 있는 숫자 키) — 팀원 JSON 이 metricKeys 안 넣어도 됨
   let metricKeys = p.metricKeys;
@@ -792,21 +795,20 @@ function renderDetail(){
     // 월별/차수 breakdown (run 2개 이상 & 선택 기간에 데이터 있는 run 만)
     let runsHtml = '';
     if (p.runs.length > 1) {
-      const rr = p.runs.map(run => ({ run, ...aggDaily(inRange(run.daily), cfg) })).filter(x=>x.hasData && !x.run.ab);
+      const rr = p.runs.map(run => ({ run, ...aggDaily(inRange(run.daily), cfg) })).filter(x=>x.hasData);
       if (rr.length) runsHtml = `<div class="pc-runs"><div class="pc-runs-title">월별 · 차수</div>${rr.map(x=>`<div class="pc-run"><span class="pc-run-label">${x.run.label}</span><span class="pc-run-val">${basisMt.label} ${fmtVal(x.agg[basis],basisMt.fmt)}</span></div>`).join('')}</div>`;
     }
-    const visRuns = p.runs.filter(r=>!r.ab);
-    const period = visRuns.length>1 ? `${visRuns.length}개 회차${p.runs.some(r=>r.ab)?' + 4차 A/B':''}` : `${p.start.slice(5)} ~ ${(visRuns[0]||p.runs[0]).end.slice(5)}`;
+    const period = p.runs.length>1 ? `${p.runs.length}개 회차` : `${p.start.slice(5)} ~ ${p.runs[0].end.slice(5)}`;
     // 마케팅 비용 (포인트/발송/리워드) — 있는 것만 표시
     const pcost = pp.agg.pointCost||0, scost = pp.agg.sendCost||0, gcost = pp.agg.giftCost||0;
     const costHtml = (pcost||scost||gcost)
       ? `<div class="pc-cost"><span class="pc-cost-l">💸 마케팅 비용</span><span class="pc-cost-v">${[pcost?`포인트 ${fmtWonFull(pcost)}`:'', scost?`발송 ${fmtWonFull(scost)}`:'', gcost?`리워드 ${fmtWonFull(gcost)}`:''].filter(Boolean).join(' · ')}</span></div>`
       : '';
     // 4차 A/B 비교 블록 (run 에 ab='A'/'B' 있을 때만 — 타사 4차)
-    const abA = p.runs.find(r=>r.ab==='A'), abB = p.runs.find(r=>r.ab==='B');
+    const abRun = p.runs.find(r=>r.ab===true && r.abA);
     let abHtml = '';
-    if (abA && abB) {
-      const aR = aggDaily(inRange(abA.daily), cfg), bR = aggDaily(inRange(abB.daily), cfg);
+    if (abRun) {
+      const aR = aggDaily(inRange(abRun.abA||[]), cfg), bR = aggDaily(inRange(abRun.abB||[]), cfg);
       if (aR.hasData || bR.hasData) {
         const aAgg = aR.agg, bAgg = bR.agg;
         const gv = (a,key)=> a[key]||0;
@@ -1008,7 +1010,7 @@ function renderModalContent(){
   if(p.runs.length>1){
     runTabs = `<div class="modal-runtabs">
       <button class="rt ${modalState.run==='ALL'?'active':''}" data-run="ALL" style="--c:${cfg.color}">전체</button>
-      ${p.runs.map((r,i)=>({r,i})).filter(x=>!x.r.ab).map(({r,i})=>`<button class="rt ${String(modalState.run)===String(i)?'active':''}" data-run="${i}" style="--c:${cfg.color}">${r.label}</button>`).join('')}
+      ${p.runs.map((r,i)=>`<button class="rt ${String(modalState.run)===String(i)?'active':''}" data-run="${i}" style="--c:${cfg.color}">${r.label}</button>`).join('')}
     </div>`;
   }
   // 기간 선택 (모달 자체)
@@ -1027,7 +1029,7 @@ function renderModalContent(){
   // 회차별 표 (전체 볼 때만)
   let runTable='';
   if(p.runs.length>1 && modalState.run==='ALL'){
-    const rr = p.runs.map(run=>({run, ...aggDaily(run.daily.filter(d=>d.date>=modalState.start && d.date<=modalState.end), cfg)})).filter(x=>x.hasData && !x.run.ab);
+    const rr = p.runs.map(run=>({run, ...aggDaily(run.daily.filter(d=>d.date>=modalState.start && d.date<=modalState.end), cfg)})).filter(x=>x.hasData);
     if(rr.length){
       const body = rr.map(x=>`<tr><td style="font-weight:700">${x.run.label}</td>${dcolsSpec.map(c=>`<td class="num">${colValue(c, x.agg)}</td>`).join('')}</tr>`).join('');
       runTable = `<div class="modal-section-title">회차별 성과</div><div class="dlog-wrap"><table class="dlog"><thead><tr><th>회차</th>${colHead}</tr></thead><tbody>${body}</tbody></table></div>`;
