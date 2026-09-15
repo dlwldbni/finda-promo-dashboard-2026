@@ -1081,7 +1081,14 @@ function renderModalContent(){
     ${p.periodNote ? `<div class="modal-period-note">ℹ️ ${p.periodNote}</div>` : ''}`;
 
   // 표 컬럼 = 핵심지표와 동일 (세부 지표·CVR 포함)
-  const dcolsSpec = (p.id==='tasa') ? TASA_COLS : detailColumns(cfg, p.metricKeys);
+  // 일자별 로그 컬럼: 특정 회차 선택 시 그 회차가 실제 가진 지표만(탭마다 다름). 전체(ALL)일 때만 프로젝트 전체 union.
+  let dcolKeys = p.metricKeys;
+  if (selRun) {
+    const ks = new Set();
+    (selRun.daily||[]).forEach(d => { const m=d.m||{}; Object.keys(m).forEach(k=>{ if (m[k]!=null && typeof m[k]==='number') ks.add(k); }); });
+    dcolKeys = [...ks];
+  }
+  const dcolsSpec = (p.id==='tasa') ? TASA_COLS : detailColumns(cfg, dcolKeys);
   const colHead = dcolsSpec.map(c=>`<th class="num">${c.label}</th>`).join('');
   // 회차별 표 (전체 볼 때만)
   let runTable='';
