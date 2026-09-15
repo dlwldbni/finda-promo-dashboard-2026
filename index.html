@@ -373,7 +373,6 @@ const LINES = {
               {key:'introView', label:'인트로 조회', fmt:'int', agg:'sum'},
               {key:'introClick', label:'프로모션 참여', fmt:'int', agg:'sum', sparse:true, after:'introView'},   // 9월 sepevt: 인트로 CTA 클릭(PM_sepevt_intro_clickCTA)
               {key:'inquiry',   label:'한도조회 수', fmt:'int', agg:'sum', sub:[{key:'approve',label:'가승인'},{key:'reject',label:'올거절'}]},
-              {key:'paymentCount', label:'실제 포인트 지급 수', fmt:'int', agg:'sum', after:'inquiry'},   // 시트 지급건수(1인1회). 한도조회(Mixpanel)−지급 ≈ 재한도조회. 퍼널/CVR엔 미포함, 한도조회 카드 바로 뒤에 표시.
               {key:'ownReward', label:'본인 한도조회 리워드', fmt:'int', agg:'sum', sparse:true, after:'inquiry'},    // 9월 sepevt (시트). 랜덤포인트 아님.
               {key:'friendReward', label:'친구 한도조회 리워드', fmt:'int', agg:'sum', sparse:true, after:'inquiry'},  // 9월 sepevt (시트, 레퍼럴 본인 유도)
               {key:'apply',     label:'대출 신청 수', fmt:'int', agg:'sum', sub:[{key:'creditLoan',label:'신용대출'},{key:'otherLoan',label:'우수대부'}]},
@@ -598,7 +597,7 @@ function fmtWon(n){
   return '₩'+comma(n);
 }
 function fmtWonFull(n){ return '₩'+comma(Math.round(n||0)); }   // 풀 금액 (억/만 축약 안 함)
-function fmtVal(v, fmt){ return fmt==='won'?fmtWon(v): fmtInt(v); }
+function fmtVal(v, fmt){ return fmt==='won'?fmtWon(v): fmt==='wonFull'?fmtWonFull(v): fmtInt(v); }
 // sparse 지표(약정금액·매출 등)는 값이 없거나 0이면 '—' (집계 안 된 프로젝트 구분)
 function fmtCell(mt, v){ if(mt.sparse && !v) return '—'; return fmtVal(v, mt.fmt); }
 function cssVar(name){ return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
@@ -1044,7 +1043,23 @@ function renderModalContent(){
     }
   }
   // 상세 지표 = 퍼널 순서 (인트로조회 → CVR → 한도조회(가승인/올거절) → CVR → 신청(신용대출/우수대부) → CVR → 약정 …)
-  const kpis = renderKpiItems(funnelItems(cfg, tot.agg, p.metricKeys, cvrAgg), cfg, tot.agg, ptExtraSub);
+  let kpiItems = funnelItems(cfg, tot.agg, p.metricKeys, cvrAgg);
+  // 대고객(daegaek)은 핵심지표를 curated 세트로 고정: 프로모션참여 / 인트로→한도조회 CVR / 한도조회 / 한도조회→신청 CVR / 신청 / 신청→약정 CVR / 약정 / 마케팅비용
+  if (p.id === 'daegaek') {
+    const M = k => cfg.metrics.find(m=>m.key===k);
+    const cvrItem = (num,den,label)=>({type:'cvr', label, value: cvrAgg[den] ? cvrAgg[num]/cvrAgg[den] : null});
+    kpiItems = [
+      {type:'metric', mt:M('introClick'), value:tot.agg.introClick},
+      cvrItem('inquiry','introView','인트로→한도조회 CVR'),
+      {type:'metric', mt:M('inquiry'), value:tot.agg.inquiry},
+      cvrItem('apply','inquiry','한도조회→신청 CVR'),
+      {type:'metric', mt:M('apply'), value:tot.agg.apply},
+      cvrItem('contract','apply','신청→약정 CVR'),
+      {type:'metric', mt:M('contract'), value:tot.agg.contract},
+    ];
+    if (tot.agg.pointCost) kpiItems.push({type:'metric', mt:{key:'pointCost', label:'마케팅 비용 (지급 포인트)', fmt:'wonFull'}, value:tot.agg.pointCost});
+  }
+  const kpis = renderKpiItems(kpiItems, cfg, tot.agg, ptExtraSub);
   const cvrKpi = '';
 
   // 회차(월별) 탭
