@@ -1123,10 +1123,10 @@ function renderModalContent(){
     const cvr = rf.v ? (rf.s/rf.v*100).toFixed(1)+'%' : '—';
     const open = !!modalState.showReferral;
     refBlock = `<div class="ref-sec">`
-      + `<button class="ref-toggle ${open?'open':''}" id="ref-toggle" style="--c:${cfg.color}">🔗 레퍼럴 참여 <span class="ref-caret">${open?'▲':'▼'}</span><span class="ref-hint">공유 ${comma(rf.s)} · 친구 한도조회 ${comma(rf.f)}</span></button>`
+      + `<button class="ref-toggle ${open?'open':''}" id="ref-toggle" style="--c:${cfg.color}">🔗 레퍼럴 참여 <span class="ref-caret">${open?'▲':'▼'}</span><span class="ref-hint">공유 액션 ${comma(rf.s)} · 친구 한도조회 ${comma(rf.f)}</span></button>`
       + (open ? `<div class="ref-body">`
         + `<div class="ref-k"><div class="ref-l">레퍼럴 바텀시트 조회</div><div class="ref-v">${comma(rf.v)}</div></div>`
-        + `<div class="ref-k"><div class="ref-l">레퍼럴 공유 수 <span style="color:var(--text-3);font-weight:500">(CTA 클릭)</span></div><div class="ref-v" style="color:${cfg.color}">${comma(rf.s)}</div></div>`
+        + `<div class="ref-k"><div class="ref-l">레퍼럴 공유 액션 <span style="color:var(--text-3);font-weight:500">(CTA 클릭)</span></div><div class="ref-v" style="color:${cfg.color}">${comma(rf.s)}</div></div>`
         + `<div class="ref-k"><div class="ref-l">조회→공유 CVR</div><div class="ref-v">${cvr}</div></div>`
         + `<div class="ref-k"><div class="ref-l">친구 한도조회</div><div class="ref-v">${comma(rf.f)}</div></div>`
         + `</div>`
