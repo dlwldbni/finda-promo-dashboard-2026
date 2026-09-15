@@ -179,6 +179,7 @@
   .ref-k { background:var(--grey-bg); border-radius:9px; padding:10px 12px; }
   .ref-l { font-size:11px; color:var(--text-3); margin-bottom:4px; }
   .ref-v { font-size:19px; font-weight:800; color:var(--text); font-variant-numeric:tabular-nums; }
+  .ref-chart-title { font-size:11.5px; font-weight:700; color:var(--text-2); margin:13px 0 6px; }
   /* 담당자 필터 탭 */
   .owner-tabs { display:flex; gap:6px; margin:2px 0 16px; flex-wrap:wrap; }
   .owner-tab { background:#fff; border:1px solid var(--border); padding:6px 13px; border-radius:99px; font-size:12.5px; font-weight:600; color:var(--text-2); cursor:pointer; font-family:inherit; transition:.15s; display:inline-flex; align-items:center; gap:6px; }
@@ -370,6 +371,7 @@ const LINES = {
             headline:{key:'inquiry', label:'한도조회 수', fmt:'int'},
             metrics:[
               {key:'introView', label:'인트로 조회', fmt:'int', agg:'sum'},
+              {key:'introClick', label:'프로모션 참여', fmt:'int', agg:'sum', sparse:true, after:'introView'},   // 9월 sepevt: 인트로 CTA 클릭(PM_sepevt_intro_clickCTA)
               {key:'inquiry',   label:'한도조회 수', fmt:'int', agg:'sum', sub:[{key:'approve',label:'가승인'},{key:'reject',label:'올거절'}]},
               {key:'paymentCount', label:'실제 포인트 지급 수', fmt:'int', agg:'sum', after:'inquiry'},   // 시트 지급건수(1인1회). 한도조회(Mixpanel)−지급 ≈ 재한도조회. 퍼널/CVR엔 미포함, 한도조회 카드 바로 뒤에 표시.
               {key:'ownReward', label:'본인 한도조회 리워드', fmt:'int', agg:'sum', sparse:true, after:'inquiry'},    // 9월 sepevt (시트). 랜덤포인트 아님.
@@ -964,6 +966,7 @@ function renderTrend(k){
 // =====================================================================
 let modalChart = null;
 let modalChart2 = null;
+let refChart = null;
 let modalState = { pid:null, run:'ALL', start:null, end:null, abView:'both', showReferral:false };  // 모달 자체 기간/회차 (전역 필터와 독립)
 
 function modalSpan(p){ return modalState.run==='ALL' ? {s:p.start, e:p.end} : {s:p.runs[+modalState.run].start, e:p.runs[+modalState.run].end}; }
@@ -1111,7 +1114,8 @@ function renderModalContent(){
         + `<div class="ref-k"><div class="ref-l">레퍼럴 공유 수 <span style="color:var(--text-3);font-weight:500">(CTA 클릭)</span></div><div class="ref-v" style="color:${cfg.color}">${comma(rf.s)}</div></div>`
         + `<div class="ref-k"><div class="ref-l">조회→공유 CVR</div><div class="ref-v">${cvr}</div></div>`
         + `<div class="ref-k"><div class="ref-l">친구 한도조회</div><div class="ref-v">${comma(rf.f)}</div></div>`
-        + `</div>` : '')
+        + `</div>`
+        + `<div class="ref-chart-title">📈 조회→공유 CVR 추이 (일자별)</div><div class="chart-wrap" style="height:120px"><canvas id="ref-cvr-canvas"></canvas></div>` : '')
       + `</div>`;
   }
   back.querySelector('.modal-body').innerHTML = `
@@ -1172,12 +1176,26 @@ function renderModalContent(){
         scales:{ x:{ ticks:{font:{size:9}, maxRotation:0, autoSkip:true, maxTicksLimit:12}, grid:{display:false} }, y:{ beginAtZero:true, ticks:{font:{size:9}} } } }
     });
   }
+  // 레퍼럴 조회→공유 CVR 일자별 선그래프 (토글 펼쳤을 때)
+  if (refChart) { refChart.destroy(); refChart = null; }
+  const refCanvas = document.getElementById('ref-cvr-canvas');
+  if (refCanvas) {
+    const labels = rows.map(r=>r.date.slice(5));
+    const data = rows.map(r=> (r.m.rfrView>0) ? +(r.m.rfrShare/r.m.rfrView*100).toFixed(1) : null);
+    refChart = new Chart(refCanvas, {
+      type:'line',
+      data:{ labels, datasets:[{ data, borderColor:color, backgroundColor:color, borderWidth:2, pointRadius:3, pointBackgroundColor:color, tension:0.3, spanGaps:true }]},
+      options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}, tooltip:{callbacks:{label:c=>`조회→공유 CVR: ${c.parsed.y}%`}}},
+        scales:{ x:{ ticks:{font:{size:9}, maxRotation:0, autoSkip:true, maxTicksLimit:12}, grid:{display:false} }, y:{ beginAtZero:true, ticks:{font:{size:9}, callback:v=>v+'%'} } } }
+    });
+  }
 }
 function closeProjModal(){
   const back = document.getElementById('proj-modal');
   if(back) back.classList.add('hidden');
   if(modalChart){ modalChart.destroy(); modalChart=null; }
   if(modalChart2){ modalChart2.destroy(); modalChart2=null; }
+  if(refChart){ refChart.destroy(); refChart=null; }
 }
 
 // =====================================================================

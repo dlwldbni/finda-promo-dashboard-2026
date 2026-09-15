@@ -769,7 +769,8 @@
       "daily": [
         {
           "date": "2026-09-14",
-          "introView": null,
+          "introView": 3871,
+          "introClick": 2316,
           "inquiry": 1503,
           "approve": 666,
           "reject": 613,
@@ -792,6 +793,7 @@
   ],
   "metricKeys": [
     "introView",
+    "introClick",
     "inquiry",
     "paymentCount",
     "ownReward",

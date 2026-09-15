@@ -122,7 +122,7 @@ function sepRun() {
   let rows = [];
   try { rows = JSON.parse(fs.readFileSync(path.join(REPO, 'data', '_sepevt_daily.json'), 'utf8')); } catch (e) { rows = []; }
   const daily = rows.map(d => ({
-    date: d.date, introView: null,
+    date: d.date, introView: nn(d.introView), introClick: nn(d.introClick),
     inquiry: nn(d.inquiry),
     approve: nn(d.approve), reject: nn(d.reject),
     apply: (d.creditLoan != null || d.otherLoan != null) ? (d.creditLoan || 0) + (d.otherLoan || 0) : null,
@@ -198,7 +198,7 @@ const projects = [
 
 // ---- 프로젝트별 실제 추적 지표(metricKeys) 자동 도출 ----
 // (해당 프로젝트가 값을 하나라도 가진 지표만 → 프로젝트마다 지표 세트가 다름)
-const ALL_KEYS = ['introView', 'inquiry', 'paymentCount', 'ownReward', 'friendReward', 'apply', 'contract', 'amount', 'revenue'];
+const ALL_KEYS = ['introView', 'introClick', 'inquiry', 'paymentCount', 'ownReward', 'friendReward', 'apply', 'contract', 'amount', 'revenue'];
 projects.forEach(p => {
   const rows = p.runs.flatMap(r => r.daily);
   p.metricKeys = ALL_KEYS.filter(k => rows.some(d => d[k] != null));
