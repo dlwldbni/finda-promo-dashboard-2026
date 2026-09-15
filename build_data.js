@@ -114,6 +114,27 @@ function augustRun() {
     } : null };
 }
 
+// 9월 (sepevt) — data/_sepevt_daily.json (자동갱신 로봇이 이 파일만 갱신). 9/14~9/30.
+//   한도조회(inquiry)=PM_sepevt_reward_success unique(직접) / 가승인=LA_loanlist_view / 올거절=LD_intro_view
+//   신용대출신청=LA_loandetail_clickCTA / 우수대부신청=LD_loandetail_clickCTA (전부 promo_name=sepevt, 날짜별 unique)
+//   본인/친구 한도조회 리워드 수·지급총액·약정=시트. (랜덤포인트 아님 → 리워드 수 지표)
+function sepRun() {
+  let rows = [];
+  try { rows = JSON.parse(fs.readFileSync(path.join(REPO, 'data', '_sepevt_daily.json'), 'utf8')); } catch (e) { rows = []; }
+  const daily = rows.map(d => ({
+    date: d.date, introView: null,
+    inquiry: nn(d.inquiry),
+    approve: nn(d.approve), reject: nn(d.reject),
+    apply: (d.creditLoan != null || d.otherLoan != null) ? (d.creditLoan || 0) + (d.otherLoan || 0) : null,
+    creditLoan: nn(d.creditLoan), otherLoan: nn(d.otherLoan),
+    ownReward: nn(d.ownReward), friendReward: nn(d.friendReward),
+    contract: nn(d.contract), amount: null, revenue: null,
+    pointCost: nn(d.payTotal), sendCost: null,  // 지급 총액 = 포인트 비용
+  }));
+  const dates = rows.map(r => r.date);
+  return { label: '9월', start: dates[0] || '2026-09-14', end: dates[dates.length - 1] || '2026-09-14', granularity: 'daily', daily };
+}
+
 // 쿠폰함 프로모션 (민주) — data/_coupon_daily.json. 지표: 한도조회(가승인 세부)·신청·약정·매출 (인트로조회·올거절·신용대출/우수대부 미집계).
 function couponRun() {
   let rows = [];
@@ -161,7 +182,7 @@ function tasa4Runs() {
 // ---- v2 프로젝트 구성 (사용자 정의 그룹핑) ----
 const projects = [
   { id: 'daegaek', line: 'loan', emoji: '🎯', name: '대고객 한도조회 유도', owner: '지윤', status: 'live',
-    runs: [ totalRun(byId.P1, '1월 · 신년 행운카드'), dailyRunP5P7(byId.P5, '5월 · 가정의달'), dailyRunP5P7(byId.P7, '7월'), augustRun() ] },
+    runs: [ totalRun(byId.P1, '1월 · 신년 행운카드'), dailyRunP5P7(byId.P5, '5월 · 가정의달'), dailyRunP5P7(byId.P7, '7월'), augustRun(), sepRun() ] },
   { id: 'sebet', line: 'loan', emoji: '🧧', name: '세뱃돈 프로모션', owner: '지윤', status: 'done',
     runs: [ totalRun(byId.P2, '2월') ] },
   { id: 'tasa', line: 'loan', emoji: '🔥', name: '타사한도조회자 약정', owner: '지윤', status: 'live',
@@ -176,7 +197,7 @@ const projects = [
 
 // ---- 프로젝트별 실제 추적 지표(metricKeys) 자동 도출 ----
 // (해당 프로젝트가 값을 하나라도 가진 지표만 → 프로젝트마다 지표 세트가 다름)
-const ALL_KEYS = ['introView', 'inquiry', 'paymentCount', 'apply', 'contract', 'amount', 'revenue'];
+const ALL_KEYS = ['introView', 'inquiry', 'paymentCount', 'ownReward', 'friendReward', 'apply', 'contract', 'amount', 'revenue'];
 projects.forEach(p => {
   const rows = p.runs.flatMap(r => r.daily);
   p.metricKeys = ALL_KEYS.filter(k => rows.some(d => d[k] != null));

@@ -361,6 +361,8 @@ const LINES = {
               {key:'introView', label:'인트로 조회', fmt:'int', agg:'sum'},
               {key:'inquiry',   label:'한도조회 수', fmt:'int', agg:'sum', sub:[{key:'approve',label:'가승인'},{key:'reject',label:'올거절'}]},
               {key:'paymentCount', label:'실제 포인트 지급 수', fmt:'int', agg:'sum', after:'inquiry'},   // 시트 지급건수(1인1회). 한도조회(Mixpanel)−지급 ≈ 재한도조회. 퍼널/CVR엔 미포함, 한도조회 카드 바로 뒤에 표시.
+              {key:'ownReward', label:'본인 한도조회 리워드', fmt:'int', agg:'sum', sparse:true, after:'inquiry'},    // 9월 sepevt (시트). 랜덤포인트 아님.
+              {key:'friendReward', label:'친구 한도조회 리워드', fmt:'int', agg:'sum', sparse:true, after:'inquiry'},  // 9월 sepevt (시트, 레퍼럴 본인 유도)
               {key:'apply',     label:'대출 신청 수', fmt:'int', agg:'sum', sub:[{key:'creditLoan',label:'신용대출'},{key:'otherLoan',label:'우수대부'}]},
               {key:'contract',  label:'약정 수',     fmt:'int', agg:'sum'},
               {key:'amount',    label:'약정 금액',   fmt:'won', agg:'sum'},

@@ -760,12 +760,39 @@
         "otherLoan": 31,
         "asOf": "2026-08-14"
       }
+    },
+    {
+      "label": "9월",
+      "start": "2026-09-14",
+      "end": "2026-09-14",
+      "granularity": "daily",
+      "daily": [
+        {
+          "date": "2026-09-14",
+          "introView": null,
+          "inquiry": 1503,
+          "approve": 666,
+          "reject": 613,
+          "apply": 223,
+          "creditLoan": 152,
+          "otherLoan": 71,
+          "ownReward": 1613,
+          "friendReward": 0,
+          "contract": 0,
+          "amount": null,
+          "revenue": null,
+          "pointCost": 161300,
+          "sendCost": null
+        }
+      ]
     }
   ],
   "metricKeys": [
     "introView",
     "inquiry",
     "paymentCount",
+    "ownReward",
+    "friendReward",
     "apply",
     "contract"
   ]
