@@ -123,7 +123,8 @@ function sepRun() {
   try { rows = JSON.parse(fs.readFileSync(path.join(REPO, 'data', '_sepevt_daily.json'), 'utf8')); } catch (e) { rows = []; }
   const daily = rows.map(d => ({
     date: d.date, introView: nn(d.introView), introClick: nn(d.introClick),
-    inquiry: nn(d.inquiry),
+    // 한도조회 = 시트 기준(본인 한도조회 수 + 친구 한도조회 수). Mixpanel PM_sepevt_reward_success 아님.
+    inquiry: (d.ownReward != null || d.friendReward != null) ? ((d.ownReward || 0) + (d.friendReward || 0)) : null,
     approve: nn(d.approve), reject: nn(d.reject),
     apply: (d.creditLoan != null || d.otherLoan != null) ? (d.creditLoan || 0) + (d.otherLoan || 0) : null,
     creditLoan: nn(d.creditLoan), otherLoan: nn(d.otherLoan),
