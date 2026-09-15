@@ -778,13 +778,16 @@
           "otherLoan": 71,
           "ownReward": 1613,
           "friendReward": 0,
+          "rfrView": 1460,
+          "rfrShare": 199,
           "contract": 0,
           "amount": null,
           "revenue": null,
           "pointCost": 161300,
           "sendCost": null
         }
-      ]
+      ],
+      "referral": true
     }
   ],
   "metricKeys": [

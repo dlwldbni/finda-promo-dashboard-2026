@@ -168,6 +168,17 @@
   .ab-tag { background:var(--grey-bg); border:1px solid var(--border); padding:3px 9px; border-radius:99px; font-size:10.5px; font-weight:700; color:var(--text-2); cursor:pointer; font-family:inherit; transition:.12s; }
   .ab-tag:hover { border-color:#c7cdd6; }
   .ab-tag.active { background:var(--c); color:#fff; border-color:transparent; }
+  /* 레퍼럴 참여 토글 (9월 sepevt) */
+  .ref-sec { margin:6px 0 14px; }
+  .ref-toggle { display:flex; align-items:center; gap:8px; width:100%; background:var(--grey-bg); border:1px solid var(--border); border-radius:10px; padding:10px 13px; font-size:13px; font-weight:700; color:var(--text-2); cursor:pointer; font-family:inherit; transition:.12s; }
+  .ref-toggle:hover { border-color:#c7cdd6; }
+  .ref-toggle.open { border-color:var(--c); color:var(--c); }
+  .ref-caret { font-size:10px; }
+  .ref-hint { margin-left:auto; font-size:11.5px; font-weight:600; color:var(--text-3); }
+  .ref-body { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:9px; margin-top:9px; }
+  .ref-k { background:var(--grey-bg); border-radius:9px; padding:10px 12px; }
+  .ref-l { font-size:11px; color:var(--text-3); margin-bottom:4px; }
+  .ref-v { font-size:19px; font-weight:800; color:var(--text); font-variant-numeric:tabular-nums; }
   /* 담당자 필터 탭 */
   .owner-tabs { display:flex; gap:6px; margin:2px 0 16px; flex-wrap:wrap; }
   .owner-tab { background:#fff; border:1px solid var(--border); padding:6px 13px; border-radius:99px; font-size:12.5px; font-weight:600; color:var(--text-2); cursor:pointer; font-family:inherit; transition:.15s; display:inline-flex; align-items:center; gap:6px; }
@@ -953,7 +964,7 @@ function renderTrend(k){
 // =====================================================================
 let modalChart = null;
 let modalChart2 = null;
-let modalState = { pid:null, run:'ALL', start:null, end:null, abView:'both' };  // 모달 자체 기간/회차 (전역 필터와 독립)
+let modalState = { pid:null, run:'ALL', start:null, end:null, abView:'both', showReferral:false };  // 모달 자체 기간/회차 (전역 필터와 독립)
 
 function modalSpan(p){ return modalState.run==='ALL' ? {s:p.start, e:p.end} : {s:p.runs[+modalState.run].start, e:p.runs[+modalState.run].end}; }
 // 선택된 run 이 4차 A/B 병합 run 이면 반환(아니면 null). A/B 토글 대상.
@@ -967,7 +978,7 @@ function modalDailyRows(p){
 }
 function openProjModal(pid){
   const p = PROJECTS.find(x=>x.id===pid); if(!p) return;
-  modalState = { pid, run:'ALL', start:p.start, end:p.end, abView:'both' };   // 열 때는 프로젝트 전체 기간
+  modalState = { pid, run:'ALL', start:p.start, end:p.end, abView:'both', showReferral:false };   // 열 때는 프로젝트 전체 기간
   document.getElementById('proj-modal').classList.remove('hidden');
   renderModalContent();
 }
@@ -1087,10 +1098,27 @@ function renderModalContent(){
         + abInnerHtml(abg.aAgg, abg.bAgg, modalState.abView||'both', cfg) + `</div>`;
     }
   }
+  // 레퍼럴 성과 토글 — 선택 run 에 referral 플래그(9월 sepevt) 있을 때. 메인 지표 아님(별도 토글).
+  let refBlock='';
+  if(selRun && selRun.referral){
+    const rf = rows.reduce((s,r)=>{ s.v+=(r.m.rfrView||0); s.s+=(r.m.rfrShare||0); s.f+=(r.m.friendReward||0); return s; }, {v:0,s:0,f:0});
+    const cvr = rf.v ? (rf.s/rf.v*100).toFixed(1)+'%' : '—';
+    const open = !!modalState.showReferral;
+    refBlock = `<div class="ref-sec">`
+      + `<button class="ref-toggle ${open?'open':''}" id="ref-toggle" style="--c:${cfg.color}">🔗 레퍼럴 참여 <span class="ref-caret">${open?'▲':'▼'}</span><span class="ref-hint">공유 ${comma(rf.s)} · 친구 한도조회 ${comma(rf.f)}</span></button>`
+      + (open ? `<div class="ref-body">`
+        + `<div class="ref-k"><div class="ref-l">레퍼럴 바텀시트 조회</div><div class="ref-v">${comma(rf.v)}</div></div>`
+        + `<div class="ref-k"><div class="ref-l">레퍼럴 공유 수 <span style="color:var(--text-3);font-weight:500">(CTA 클릭)</span></div><div class="ref-v" style="color:${cfg.color}">${comma(rf.s)}</div></div>`
+        + `<div class="ref-k"><div class="ref-l">조회→공유 CVR</div><div class="ref-v">${cvr}</div></div>`
+        + `<div class="ref-k"><div class="ref-l">친구 한도조회</div><div class="ref-v">${comma(rf.f)}</div></div>`
+        + `</div>` : '')
+      + `</div>`;
+  }
   back.querySelector('.modal-body').innerHTML = `
     ${runTabs}
     ${periodCtl}
     ${abModal}
+    ${refBlock}
     <div class="modal-section-title">핵심 지표 <span style="font-weight:500;color:var(--text-3);font-size:11.5px">· 선택 기간 합계</span></div>
     <div class="kpi-row">${kpis}${cvrKpi}</div>
     ${cfg.kpiNote ? `<div class="kpi-note" style="font-size:11.5px;color:var(--text-3);margin:-4px 0 10px">${cfg.kpiNote}</div>` : ''}
@@ -1103,6 +1131,7 @@ function renderModalContent(){
   // 핸들러 (innerHTML 재생성마다 새로 바인딩)
   back.querySelectorAll('.rt').forEach(b=> b.onclick = ()=>{ modalState.run=b.dataset.run; const sp=modalSpan(p); modalState.start=sp.s; modalState.end=sp.e; renderModalContent(); });
   back.querySelectorAll('.ab-tag[data-mabview]').forEach(b=> b.onclick = ()=>{ modalState.abView=b.dataset.mabview; renderModalContent(); });
+  { const rt=back.querySelector('#ref-toggle'); if(rt) rt.onclick=()=>{ modalState.showReferral=!modalState.showReferral; renderModalContent(); }; }
   const ms=back.querySelector('#m-start'), me=back.querySelector('#m-end');
   if(ms) ms.onchange = e=>{ modalState.start=e.target.value; if(modalState.end<modalState.start) modalState.end=modalState.start; renderModalContent(); };
   if(me) me.onchange = e=>{ modalState.end=e.target.value; if(modalState.end<modalState.start) modalState.start=modalState.end; renderModalContent(); };

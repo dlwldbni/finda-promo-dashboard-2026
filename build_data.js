@@ -128,11 +128,12 @@ function sepRun() {
     apply: (d.creditLoan != null || d.otherLoan != null) ? (d.creditLoan || 0) + (d.otherLoan || 0) : null,
     creditLoan: nn(d.creditLoan), otherLoan: nn(d.otherLoan),
     ownReward: nn(d.ownReward), friendReward: nn(d.friendReward),
+    rfrView: nn(d.rfrView), rfrShare: nn(d.rfrShare),  // 레퍼럴(별도 토글): 바텀시트 조회 / 공유(clickCTA)
     contract: nn(d.contract), amount: null, revenue: null,
     pointCost: nn(d.payTotal), sendCost: null,  // 지급 총액 = 포인트 비용
   }));
   const dates = rows.map(r => r.date);
-  return { label: '9월', start: dates[0] || '2026-09-14', end: dates[dates.length - 1] || '2026-09-14', granularity: 'daily', daily };
+  return { label: '9월', start: dates[0] || '2026-09-14', end: dates[dates.length - 1] || '2026-09-14', granularity: 'daily', daily, referral: true };
 }
 
 // 쿠폰함 프로모션 (민주) — data/_coupon_daily.json. 지표: 한도조회(가승인 세부)·신청·약정·매출 (인트로조회·올거절·신용대출/우수대부 미집계).
