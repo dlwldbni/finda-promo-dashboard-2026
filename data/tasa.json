@@ -566,7 +566,7 @@
     {
       "label": "4차 A/B",
       "start": "2026-09-07",
-      "end": "2026-09-14",
+      "end": "2026-09-15",
       "granularity": "daily",
       "daily": [
         {
@@ -640,6 +640,9 @@
           "sendCost": 678353,
           "send": 30149,
           "appOpen": 696
+        },
+        {
+          "date": "2026-09-15"
         }
       ],
       "ab": true,
@@ -721,6 +724,19 @@
           "sendCost": 344205,
           "send": 15298,
           "appOpen": 110
+        },
+        {
+          "date": "2026-09-15",
+          "introView": null,
+          "inquiry": null,
+          "apply": null,
+          "contract": null,
+          "amount": null,
+          "revenue": null,
+          "pointCost": null,
+          "sendCost": null,
+          "send": null,
+          "appOpen": null
         }
       ],
       "abB": [
@@ -801,6 +817,19 @@
           "sendCost": 334148,
           "send": 14851,
           "appOpen": 586
+        },
+        {
+          "date": "2026-09-15",
+          "introView": null,
+          "inquiry": null,
+          "apply": null,
+          "contract": null,
+          "amount": null,
+          "revenue": null,
+          "pointCost": null,
+          "sendCost": null,
+          "send": null,
+          "appOpen": null
         }
       ]
     }

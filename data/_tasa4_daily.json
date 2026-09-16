@@ -154,5 +154,31 @@
     "sendCost": 334148,
     "revenue": 1472590,
     "pointCost": 0
+  },
+  {
+    "date": "2026-09-15",
+    "group": "4차-A",
+    "send": null,
+    "appOpen": null,
+    "limitCheck": null,
+    "applyCount": null,
+    "contract": null,
+    "contractAmount": null,
+    "sendCost": null,
+    "revenue": null,
+    "pointCost": null
+  },
+  {
+    "date": "2026-09-15",
+    "group": "4차-B",
+    "send": null,
+    "appOpen": null,
+    "limitCheck": null,
+    "applyCount": null,
+    "contract": null,
+    "contractAmount": null,
+    "sendCost": null,
+    "revenue": null,
+    "pointCost": null
   }
 ]
