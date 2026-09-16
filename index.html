@@ -1005,21 +1005,22 @@ function renderModalContent(){
   // 포인트탭 진입점(슬롯+그리드) 퍼널 — 8월 회차 탭에서만, 각 퍼널 지표에서 포인트탭 진입분을 빼서 '포인트탭 외 유입' 표시
   let ptExtraSub = null, ptNote = '';
   const selRun = modalState.run==='ALL' ? null : p.runs[+modalState.run];
-  if(selRun && selRun.pointTab){
-    const fullRange = modalState.start<=selRun.start && modalState.end>=selRun.end;
-    const pt = selRun.pointTab;
-    // 퍼널 지표별 (대시보드 키 → pointTab 키 → 라벨)
-    const PTMAP = [
-      { key:'introView', label:'인트로조회' },
-      { key:'inquiry',   label:'한도조회' },
-      { key:'apply',     label:'대출신청' },
-    ];
-    if(fullRange){
+  if(selRun && (selRun.pointTabDaily || selRun.pointTab)){
+    const inR = (selRun.daily||[]).filter(d=> d.date>=modalState.start && d.date<=modalState.end);
+    const dsum = k => inR.reduce((s,d)=> s+((d.m&&d.m[k])||0), 0);
+    // 9월: 일자별 포인트탭(선택 기간 합산, 날짜 범위 반영). 8월: 누적 1회(전체 기간 볼 때만).
+    const rangeAware = !!selRun.pointTabDaily;
+    const pt = rangeAware
+      ? { introView: dsum('ptIntroView'), inquiry: dsum('ptApprove')+dsum('ptReject'), apply: dsum('ptCreditLoan')+dsum('ptOtherLoan') }
+      : selRun.pointTab;
+    const show = rangeAware || (modalState.start<=selRun.start && modalState.end>=selRun.end);
+    if(show){
+      const PTMAP = [{ key:'introView', label:'인트로조회' },{ key:'inquiry', label:'한도조회' },{ key:'apply', label:'대출신청' }];
       ptExtraSub = {}; const noteRows = []; const ex = {};
       PTMAP.forEach(x=>{
         if(pt[x.key]==null) return;
-        // 한도조회 '전체'는 Mixpanel(가승인+올거절) 기준으로 — 9월은 표기 한도조회가 시트라 포인트탭(Mixpanel)과 소스 불일치 방지. 8월은 daily.inquiry=approve+reject라 값 동일.
-        const tot = selRun.daily.reduce((s,d)=> { const m=d.m||{}; return s + (x.key==='inquiry' ? ((m.approve||0)+(m.reject||0)) : (m[x.key]||0)); }, 0);
+        // 한도조회 '전체'는 Mixpanel(가승인+올거절) 기준 — 9월 표기 한도조회는 시트라 포인트탭(Mixpanel)과 소스 불일치 방지. 8월은 daily.inquiry=approve+reject라 값 동일.
+        const tot = inR.reduce((s,d)=> { const m=d.m||{}; return s + (x.key==='inquiry' ? ((m.approve||0)+(m.reject||0)) : (m[x.key]||0)); }, 0);
         const excl = tot - pt[x.key];
         if(excl<0) return;
         ex[x.key] = excl;
@@ -1027,18 +1028,18 @@ function renderModalContent(){
         noteRows.push(`<tr><td style="padding:2px 10px 2px 0">${x.label}</td><td class="num" style="padding:2px 10px">${comma(tot)}</td><td class="num" style="padding:2px 10px;color:var(--text-3)">−${comma(pt[x.key])}</td><td class="num" style="padding:2px 0;color:${cfg.color};font-weight:700">${comma(excl)}</td></tr>`);
       });
       const pctOf = (a,b)=> (b>0 && a!=null) ? (a/b*100).toFixed(1)+'%' : '—';
-      // 포인트탭 제외 기준 CVR 을 CVR 카드 보조지표로도 노출
       if(ex.introView!=null && ex.inquiry!=null) ptExtraSub['cvr:인트로→한도조회 CVR'] = `포인트탭 제외 ${pctOf(ex.inquiry, ex.introView)}`;
       if(ex.inquiry!=null && ex.apply!=null) ptExtraSub['cvr:한도조회→신청 CVR'] = `포인트탭 제외 ${pctOf(ex.apply, ex.inquiry)}`;
       if(noteRows.length){
         const cvrRows = [];
         if(ex.introView!=null && ex.inquiry!=null) cvrRows.push(`인트로→한도조회 <b style="color:${cfg.color}">${pctOf(ex.inquiry, ex.introView)}</b>`);
         if(ex.inquiry!=null && ex.apply!=null) cvrRows.push(`한도조회→신청 <b style="color:${cfg.color}">${pctOf(ex.apply, ex.inquiry)}</b>`);
+        const rangeLbl = rangeAware ? `${modalState.start.slice(5)}~${modalState.end.slice(5)}` : `${selRun.label} 누적`;
         ptNote = `<div style="margin:14px 0 2px;padding:11px 13px;border:1px dashed ${cfg.color};border-radius:9px;background:var(${cfg.cvar}-bg);font-size:12px;line-height:1.6">
-          <b style="color:${cfg.color}">📊 포인트탭 제외 · ${selRun.label} 누적</b>
+          <b style="color:${cfg.color}">📊 포인트탭 제외 · ${rangeLbl}</b>
           <table style="margin-top:6px;border-collapse:collapse"><thead><tr style="color:var(--text-3)"><th style="text-align:left;padding-right:10px;font-weight:600">단계</th><th style="text-align:right;padding:0 10px;font-weight:600">전체</th><th style="text-align:right;padding:0 10px;font-weight:600">포인트탭</th><th style="text-align:right;font-weight:600">제외</th></tr></thead><tbody>${noteRows.join('')}</tbody></table>
           ${cvrRows.length?`<div style="margin-top:7px;padding-top:6px;border-top:1px solid var(--border)"><span style="color:var(--text-3)">제외 기준 CVR ·</span> ${cvrRows.join(' &nbsp;·&nbsp; ')}</div>`:''}
-          <div style="margin-top:6px;color:var(--text-3)">포인트탭 진입점(홈슬롯+퀵그리드) 퍼널 기준${pt.asOf?` · 기준일 ${pt.asOf}`:''}. 한도조회 '전체'=가승인+올거절(Mixpanel) 기준. 약정은 시트(DB) 소스라 제외 미산출.</div>
+          <div style="margin-top:6px;color:var(--text-3)">포인트탭 진입점(홈슬롯+퀵그리드) 퍼널 기준. 한도조회 '전체'=가승인+올거절(Mixpanel) 기준. 약정은 시트(DB) 소스라 제외 미산출.</div>
         </div>`;
       }
     }
