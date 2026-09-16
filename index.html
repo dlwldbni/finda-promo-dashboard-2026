@@ -1018,7 +1018,8 @@ function renderModalContent(){
       ptExtraSub = {}; const noteRows = []; const ex = {};
       PTMAP.forEach(x=>{
         if(pt[x.key]==null) return;
-        const tot = selRun.daily.reduce((s,d)=> s+((d.m&&d.m[x.key])||0), 0);
+        // 한도조회 '전체'는 Mixpanel(가승인+올거절) 기준으로 — 9월은 표기 한도조회가 시트라 포인트탭(Mixpanel)과 소스 불일치 방지. 8월은 daily.inquiry=approve+reject라 값 동일.
+        const tot = selRun.daily.reduce((s,d)=> { const m=d.m||{}; return s + (x.key==='inquiry' ? ((m.approve||0)+(m.reject||0)) : (m[x.key]||0)); }, 0);
         const excl = tot - pt[x.key];
         if(excl<0) return;
         ex[x.key] = excl;
@@ -1037,7 +1038,7 @@ function renderModalContent(){
           <b style="color:${cfg.color}">📊 포인트탭 제외 · ${selRun.label} 누적</b>
           <table style="margin-top:6px;border-collapse:collapse"><thead><tr style="color:var(--text-3)"><th style="text-align:left;padding-right:10px;font-weight:600">단계</th><th style="text-align:right;padding:0 10px;font-weight:600">전체</th><th style="text-align:right;padding:0 10px;font-weight:600">포인트탭</th><th style="text-align:right;font-weight:600">제외</th></tr></thead><tbody>${noteRows.join('')}</tbody></table>
           ${cvrRows.length?`<div style="margin-top:7px;padding-top:6px;border-top:1px solid var(--border)"><span style="color:var(--text-3)">제외 기준 CVR ·</span> ${cvrRows.join(' &nbsp;·&nbsp; ')}</div>`:''}
-          <div style="margin-top:6px;color:var(--text-3)">포인트탭 진입점(홈슬롯+퀵그리드, CH2608_VIEW_LOAN_LIMIT) 퍼널 기준${pt.asOf?` · 기준일 ${pt.asOf}`:''}. 약정은 시트(DB) 소스라 제외 미산출.</div>
+          <div style="margin-top:6px;color:var(--text-3)">포인트탭 진입점(홈슬롯+퀵그리드) 퍼널 기준${pt.asOf?` · 기준일 ${pt.asOf}`:''}. 한도조회 '전체'=가승인+올거절(Mixpanel) 기준. 약정은 시트(DB) 소스라 제외 미산출.</div>
         </div>`;
       }
     }
@@ -1059,7 +1060,8 @@ function renderModalContent(){
     ];
     if (tot.agg.pointCost) kpiItems.push({type:'metric', mt:{key:'pointCost', label:'마케팅 비용 (지급 포인트)', fmt:'wonFull'}, value:tot.agg.pointCost});
   }
-  const kpis = renderKpiItems(kpiItems, cfg, tot.agg, ptExtraSub);
+  // 대고객은 포인트탭 제외를 인라인 서브로 안 붙이고 하단 표로만 (한도조회 시트/Mixpanel 소스 혼동 방지)
+  const kpis = renderKpiItems(kpiItems, cfg, tot.agg, (p.id==='daegaek' ? {} : ptExtraSub));
   const cvrKpi = '';
 
   // 회차(월별) 탭

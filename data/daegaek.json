@@ -788,7 +788,17 @@
           "sendCost": null
         }
       ],
-      "referral": true
+      "referral": true,
+      "pointTab": {
+        "introView": 3401,
+        "inquiry": 763,
+        "approve": 526,
+        "reject": 237,
+        "apply": 68,
+        "creditLoan": 50,
+        "otherLoan": 18,
+        "asOf": "2026-09-15"
+      }
     }
   ],
   "metricKeys": [

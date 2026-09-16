@@ -134,7 +134,16 @@ function sepRun() {
     pointCost: nn(d.payTotal), sendCost: null,  // 지급 총액 = 포인트 비용
   }));
   const dates = rows.map(r => r.date);
-  return { label: '9월', start: dates[0] || '2026-09-14', end: dates[dates.length - 1] || '2026-09-14', granularity: 'daily', daily, referral: true };
+  // 포인트탭 진입점(홈슬롯+퀵그리드) 퍼널 — 8월과 동일. 전체 퍼널에서 빼면 '포인트탭 외 유입'. 자동갱신이 재계산.
+  let pointTab = null;
+  try { pointTab = JSON.parse(fs.readFileSync(path.join(REPO, 'data', '_sepevt_meta.json'), 'utf8')); } catch (e) {}
+  return { label: '9월', start: dates[0] || '2026-09-14', end: dates[dates.length - 1] || '2026-09-14', granularity: 'daily', daily, referral: true,
+    pointTab: pointTab ? {
+      introView: nn(pointTab.pointTabIntroView),
+      inquiry: nn(pointTab.pointTabInquiry), approve: nn(pointTab.pointTabApprove), reject: nn(pointTab.pointTabReject),
+      apply: nn(pointTab.pointTabApply), creditLoan: nn(pointTab.pointTabCreditLoan), otherLoan: nn(pointTab.pointTabOtherLoan),
+      asOf: pointTab.asOf || null,
+    } : null };
 }
 
 // 쿠폰함 프로모션 (민주) — data/_coupon_daily.json. 지표: 한도조회(가승인 세부)·신청·약정·매출 (인트로조회·올거절·신용대출/우수대부 미집계).
