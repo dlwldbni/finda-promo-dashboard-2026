@@ -642,7 +642,16 @@
           "appOpen": 696
         },
         {
-          "date": "2026-09-15"
+          "date": "2026-09-15",
+          "inquiry": 385,
+          "apply": 99,
+          "contract": 23,
+          "amount": 1020900000,
+          "revenue": 1314940,
+          "pointCost": 22900,
+          "sendCost": 439290,
+          "send": 19524,
+          "appOpen": 763
         }
       ],
       "ab": true,
@@ -728,15 +737,15 @@
         {
           "date": "2026-09-15",
           "introView": null,
-          "inquiry": null,
-          "apply": null,
-          "contract": null,
-          "amount": null,
-          "revenue": null,
-          "pointCost": null,
-          "sendCost": null,
-          "send": null,
-          "appOpen": null
+          "inquiry": 70,
+          "apply": 23,
+          "contract": 5,
+          "amount": 30300000,
+          "revenue": 254588,
+          "pointCost": 22900,
+          "sendCost": 223560,
+          "send": 9936,
+          "appOpen": 134
         }
       ],
       "abB": [
@@ -821,15 +830,15 @@
         {
           "date": "2026-09-15",
           "introView": null,
-          "inquiry": null,
-          "apply": null,
-          "contract": null,
-          "amount": null,
-          "revenue": null,
-          "pointCost": null,
-          "sendCost": null,
-          "send": null,
-          "appOpen": null
+          "inquiry": 315,
+          "apply": 76,
+          "contract": 18,
+          "amount": 990600000,
+          "revenue": 1060352,
+          "pointCost": 0,
+          "sendCost": 215730,
+          "send": 9588,
+          "appOpen": 629
         }
       ]
     }
