@@ -566,7 +566,7 @@
     {
       "label": "4차 A/B",
       "start": "2026-09-07",
-      "end": "2026-09-15",
+      "end": "2026-09-16",
       "granularity": "daily",
       "daily": [
         {
@@ -646,12 +646,24 @@
           "inquiry": 385,
           "apply": 99,
           "contract": 23,
-          "amount": 1020900000,
+          "amount": 129360000,
           "revenue": 1314940,
           "pointCost": 22900,
           "sendCost": 439290,
           "send": 19524,
           "appOpen": 763
+        },
+        {
+          "date": "2026-09-16",
+          "inquiry": 365,
+          "apply": 98,
+          "contract": 16,
+          "amount": 93500000,
+          "revenue": 1137290,
+          "pointCost": 54000,
+          "sendCost": 442328,
+          "send": 19659,
+          "appOpen": 748
         }
       ],
       "ab": true,
@@ -746,6 +758,19 @@
           "sendCost": 223560,
           "send": 9936,
           "appOpen": 134
+        },
+        {
+          "date": "2026-09-16",
+          "introView": null,
+          "inquiry": 74,
+          "apply": 20,
+          "contract": 6,
+          "amount": 54000000,
+          "revenue": 807040,
+          "pointCost": 54000,
+          "sendCost": 225563,
+          "send": 10025,
+          "appOpen": 147
         }
       ],
       "abB": [
@@ -833,12 +858,25 @@
           "inquiry": 315,
           "apply": 76,
           "contract": 18,
-          "amount": 990600000,
+          "amount": 99060000,
           "revenue": 1060352,
           "pointCost": 0,
           "sendCost": 215730,
           "send": 9588,
           "appOpen": 629
+        },
+        {
+          "date": "2026-09-16",
+          "introView": null,
+          "inquiry": 291,
+          "apply": 78,
+          "contract": 10,
+          "amount": 39500000,
+          "revenue": 330250,
+          "pointCost": 0,
+          "sendCost": 216765,
+          "send": 9634,
+          "appOpen": 601
         }
       ]
     }

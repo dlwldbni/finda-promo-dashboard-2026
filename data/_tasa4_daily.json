@@ -176,9 +176,35 @@
     "limitCheck": 315,
     "applyCount": 76,
     "contract": 18,
-    "contractAmount": 990600000,
+    "contractAmount": 99060000,
     "sendCost": 215730,
     "revenue": 1060352,
+    "pointCost": 0
+  },
+  {
+    "date": "2026-09-16",
+    "group": "4차-A",
+    "send": 10025,
+    "appOpen": 147,
+    "limitCheck": 74,
+    "applyCount": 20,
+    "contract": 6,
+    "contractAmount": 54000000,
+    "sendCost": 225563,
+    "revenue": 807040,
+    "pointCost": 54000
+  },
+  {
+    "date": "2026-09-16",
+    "group": "4차-B",
+    "send": 9634,
+    "appOpen": 601,
+    "limitCheck": 291,
+    "applyCount": 78,
+    "contract": 10,
+    "contractAmount": 39500000,
+    "sendCost": 216765,
+    "revenue": 330250,
     "pointCost": 0
   }
 ]
