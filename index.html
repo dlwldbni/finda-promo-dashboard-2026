@@ -209,9 +209,9 @@
   .dlog tbody tr:hover td { background:#fafbfc; }
   /* 모달: 회차 탭 + 기간 선택 */
   .modal-runtabs { display:flex; gap:6px; flex-wrap:wrap; margin:14px 0 0; }
-  .rt { background:var(--grey-bg); border:1px solid var(--border); padding:6px 13px; border-radius:8px; font-size:12.5px; font-weight:700; color:var(--text-2); cursor:pointer; font-family:inherit; transition:.15s; }
-  .rt:hover { color:var(--text); border-color:#c7cdd6; }
-  .rt.active { background:var(--c,#2F6FE0); color:#fff; border-color:transparent; }
+  .rt, .st { background:var(--grey-bg); border:1px solid var(--border); padding:6px 13px; border-radius:8px; font-size:12.5px; font-weight:700; color:var(--text-2); cursor:pointer; font-family:inherit; transition:.15s; }
+  .rt:hover, .st:hover { color:var(--text); border-color:#c7cdd6; }
+  .rt.active, .st.active { background:var(--c,#2F6FE0); color:#fff; border-color:transparent; }
   .modal-period { display:flex; align-items:center; gap:8px; margin-top:14px; padding:10px 12px; background:var(--grey-bg); border-radius:10px; font-size:12.5px; font-weight:700; color:var(--text-2); flex-wrap:wrap; }
   .modal-period input[type=date] { font-family:inherit; font-size:12.5px; padding:5px 9px; border:1px solid var(--border); border-radius:7px; color:var(--text); background:#fff; }
   .m-reset { background:#fff; border:1px solid var(--border); padding:5px 11px; border-radius:7px; font-size:12px; font-weight:600; color:var(--text-2); cursor:pointer; font-family:inherit; }
@@ -472,6 +472,7 @@ function toInternal(p){
     const o = Object.assign({}, r, { daily: (r.daily||[]).map(d => ({ date: d.date, m: metricObj(d) })) });
     if (Array.isArray(r.abA)) o.abA = r.abA.map(d => ({ date: d.date, m: metricObj(d) }));
     if (Array.isArray(r.abB)) o.abB = r.abB.map(d => ({ date: d.date, m: metricObj(d) }));
+    if (Array.isArray(r.segments)) o.segments = r.segments.map(s => ({ label: s.label, daily: (s.daily||[]).map(d => ({ date: d.date, m: metricObj(d) })) }));
     return o;
   });
   const daily = runs.flatMap(r => r.daily);
@@ -966,7 +967,7 @@ function renderTrend(k){
 let modalChart = null;
 let modalChart2 = null;
 let refChart = null;
-let modalState = { pid:null, run:'ALL', start:null, end:null, abView:'both', showReferral:false };  // 모달 자체 기간/회차 (전역 필터와 독립)
+let modalState = { pid:null, run:'ALL', start:null, end:null, abView:'both', showReferral:false, seg:0 };  // 모달 자체 기간/회차 (전역 필터와 독립)
 
 function modalSpan(p){ return modalState.run==='ALL' ? {s:p.start, e:p.end} : {s:p.runs[+modalState.run].start, e:p.runs[+modalState.run].end}; }
 // 선택된 run 이 4차 A/B 병합 run 이면 반환(아니면 null). A/B 토글 대상.
@@ -980,7 +981,7 @@ function modalDailyRows(p){
 }
 function openProjModal(pid){
   const p = PROJECTS.find(x=>x.id===pid); if(!p) return;
-  modalState = { pid, run:'ALL', start:p.start, end:p.end, abView:'both', showReferral:false };   // 열 때는 프로젝트 전체 기간
+  modalState = { pid, run:'ALL', start:p.start, end:p.end, abView:'both', showReferral:false, seg:0 };   // 열 때는 프로젝트 전체 기간
   document.getElementById('proj-modal').classList.remove('hidden');
   renderModalContent();
 }
@@ -1106,6 +1107,19 @@ function renderModalContent(){
   const dbody = rows.map(r=>`<tr><td>${r.date.slice(5)}</td>${dcolsSpec.map(c=>`<td class="num">${colValue(c, r.m)}</td>`).join('')}</tr>`).join('');
   const dtable = `<div class="modal-section-title">일자별 로그 (${rows.length}일)</div><div class="dlog-wrap"><table class="dlog"><thead><tr><th>날짜</th>${colHead}</tr></thead><tbody>${dbody || `<tr><td colspan="${dcolsSpec.length+1}" style="text-align:center;color:var(--text-3);padding:18px">선택 기간에 데이터 없음</td></tr>`}</tbody></table></div>`;
 
+  // 세그먼트별 성과 — 선택 회차(run)에 segments가 있을 때만(예: 쿠폰 9월). 세그먼트 이름 탭 클릭으로 전환.
+  let segTable = '';
+  if (selRun && Array.isArray(selRun.segments) && selRun.segments.length) {
+    if (modalState.seg == null || modalState.seg >= selRun.segments.length) modalState.seg = 0;
+    const segTabs = selRun.segments.map((s,i)=>`<button class="st ${modalState.seg===i?'active':''}" data-seg="${i}" style="--c:${cfg.color}">${s.label}</button>`).join('');
+    const segSel = selRun.segments[modalState.seg];
+    const segRows = segSel.daily.filter(d=> d.date>=modalState.start && d.date<=modalState.end).slice().sort((a,b)=> a.date<b.date?-1:1);
+    const segBody = segRows.map(r=>`<tr><td>${r.date.slice(5)}</td>${dcolsSpec.map(c=>`<td class="num">${colValue(c, r.m)}</td>`).join('')}</tr>`).join('');
+    segTable = `<div class="modal-section-title">세그먼트별 성과</div>
+      <div class="modal-runtabs" style="margin-top:0">${segTabs}</div>
+      <div class="dlog-wrap" style="margin-top:10px"><table class="dlog"><thead><tr><th>날짜</th>${colHead}</tr></thead><tbody>${segBody || `<tr><td colspan="${dcolsSpec.length+1}" style="text-align:center;color:var(--text-3);padding:18px">선택 기간에 데이터 없음</td></tr>`}</tbody></table></div>`;
+  }
+
   const back = document.getElementById('proj-modal');
   back.style.setProperty('--c', cfg.color);
   back.querySelector('.modal').style.borderTopColor = cfg.color;
@@ -1154,11 +1168,12 @@ function renderModalContent(){
     <div class="modal-section-title">📈 ${cfg.trendLabel || cfg.headline.label} 추이</div>
     <div class="chart-wrap" style="height:200px"><canvas id="modal-canvas"></canvas></div>
     ${cfg.trendKey2 ? `<div class="modal-section-title">📈 ${cfg.trendLabel2||''} 추이</div><div class="chart-wrap" style="height:200px"><canvas id="modal-canvas2"></canvas></div>` : ''}
-    ${runTable}${dtable}
+    ${runTable}${dtable}${segTable}
     ${ptNote}`;
 
   // 핸들러 (innerHTML 재생성마다 새로 바인딩)
-  back.querySelectorAll('.rt').forEach(b=> b.onclick = ()=>{ modalState.run=b.dataset.run; const sp=modalSpan(p); modalState.start=sp.s; modalState.end=sp.e; renderModalContent(); });
+  back.querySelectorAll('.rt').forEach(b=> b.onclick = ()=>{ modalState.run=b.dataset.run; modalState.seg=0; const sp=modalSpan(p); modalState.start=sp.s; modalState.end=sp.e; renderModalContent(); });
+  back.querySelectorAll('.st').forEach(b=> b.onclick = ()=>{ modalState.seg=+b.dataset.seg; renderModalContent(); });
   back.querySelectorAll('.ab-tag[data-mabview]').forEach(b=> b.onclick = ()=>{ modalState.abView=b.dataset.mabview; renderModalContent(); });
   { const rt=back.querySelector('#ref-toggle'); if(rt) rt.onclick=()=>{ modalState.showReferral=!modalState.showReferral; renderModalContent(); }; }
   const ms=back.querySelector('#m-start'), me=back.querySelector('#m-end');
