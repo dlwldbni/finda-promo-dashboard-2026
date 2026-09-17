@@ -19,12 +19,13 @@
       "start": "2026-09-14",
       "end": "2026-09-22",
       "granularity": "daily",
-      "introViewUnique": 2232,
-      "contributedMauUnique": 1655,
-      "connectDoneUnique": 2816,
+      "introViewUnique": 3716,
+      "contributedMauUnique": 2721,
+      "connectDoneUnique": 5254,
       "daily": [
-        {"date":"2026-09-14","introView":1415,"contributedMau":1041,"connectDone":1711,"pointCost":0,"sendCost":0},
-        {"date":"2026-09-15","introView":1088,"contributedMau":796,"connectDone":1123,"pointCost":120720,"sendCost":0}
+        {"date":"2026-09-14","introView":1415,"contributedMau":1076,"connectDone":1436,"pointCost":0,"sendCost":0},
+        {"date":"2026-09-15","introView":1088,"contributedMau":1281,"connectDone":1678,"pointCost":120640,"sendCost":0},
+        {"date":"2026-09-16","introView":1569,"contributedMau":1126,"connectDone":1301,"pointCost":159810,"sendCost":0}
       ]
     }
   ]
