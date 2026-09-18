@@ -5,7 +5,7 @@
   "name": "달러 환율 예측 프로모션",
   "owner": "은영",
   "status": "live",
-  "periodNote": "프로모션 운영은 9/14~22이며, 포인트는 예측 대상일 익일 매매기준율 발표 후 정산되므로 pointCost는 D+1로 반영됨",
+  "periodNote": "프로모션 운영 9/14~9/30(연장됨, 원래 9/22 종료 예정). 포인트는 예측 대상일 익일 매매기준율 발표 후 정산되므로 pointCost는 D+1로 반영됨",
   "metricKeys": [
     "introView",
     "contributedMau",
@@ -17,15 +17,16 @@
     {
       "label": "9월",
       "start": "2026-09-14",
-      "end": "2026-09-22",
+      "end": "2026-09-30",
       "granularity": "daily",
-      "introViewUnique": 3716,
-      "contributedMauUnique": 2721,
-      "connectDoneUnique": 5254,
+      "introViewUnique": 4090,
+      "contributedMauUnique": 2993,
+      "connectDoneUnique": 6459,
       "daily": [
         {"date":"2026-09-14","introView":1415,"contributedMau":1076,"connectDone":1436,"pointCost":0,"sendCost":0},
         {"date":"2026-09-15","introView":1088,"contributedMau":1281,"connectDone":1678,"pointCost":120640,"sendCost":0},
-        {"date":"2026-09-16","introView":1569,"contributedMau":1126,"connectDone":1301,"pointCost":159810,"sendCost":0}
+        {"date":"2026-09-16","introView":1569,"contributedMau":1126,"connectDone":1301,"pointCost":159810,"sendCost":0},
+        {"date":"2026-09-17","introView":907,"contributedMau":753,"connectDone":1091,"pointCost":168180,"sendCost":0}
       ]
     }
   ]
