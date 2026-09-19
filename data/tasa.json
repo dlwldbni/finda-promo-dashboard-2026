@@ -566,7 +566,7 @@
     {
       "label": "4차 A/B",
       "start": "2026-09-07",
-      "end": "2026-09-16",
+      "end": "2026-09-18",
       "granularity": "daily",
       "daily": [
         {
@@ -664,6 +664,21 @@
           "sendCost": 442328,
           "send": 19659,
           "appOpen": 748
+        },
+        {
+          "date": "2026-09-17",
+          "inquiry": 331,
+          "apply": 98,
+          "contract": 20,
+          "amount": 92000000,
+          "revenue": 1094540,
+          "pointCost": 28000,
+          "sendCost": 386078,
+          "send": 17159,
+          "appOpen": 640
+        },
+        {
+          "date": "2026-09-18"
         }
       ],
       "ab": true,
@@ -771,6 +786,32 @@
           "sendCost": 225563,
           "send": 10025,
           "appOpen": 147
+        },
+        {
+          "date": "2026-09-17",
+          "introView": null,
+          "inquiry": 68,
+          "apply": 19,
+          "contract": 4,
+          "amount": 28000000,
+          "revenue": 301150,
+          "pointCost": 28000,
+          "sendCost": 196110,
+          "send": 8716,
+          "appOpen": 112
+        },
+        {
+          "date": "2026-09-18",
+          "introView": null,
+          "inquiry": null,
+          "apply": null,
+          "contract": null,
+          "amount": null,
+          "revenue": null,
+          "pointCost": null,
+          "sendCost": null,
+          "send": null,
+          "appOpen": null
         }
       ],
       "abB": [
@@ -877,6 +918,32 @@
           "sendCost": 216765,
           "send": 9634,
           "appOpen": 601
+        },
+        {
+          "date": "2026-09-17",
+          "introView": null,
+          "inquiry": 263,
+          "apply": 79,
+          "contract": 16,
+          "amount": 64000000,
+          "revenue": 793390,
+          "pointCost": 0,
+          "sendCost": 189968,
+          "send": 8443,
+          "appOpen": 528
+        },
+        {
+          "date": "2026-09-18",
+          "introView": null,
+          "inquiry": null,
+          "apply": null,
+          "contract": null,
+          "amount": null,
+          "revenue": null,
+          "pointCost": null,
+          "sendCost": null,
+          "send": null,
+          "appOpen": null
         }
       ]
     }
