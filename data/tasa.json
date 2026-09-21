@@ -669,7 +669,7 @@
           "date": "2026-09-17",
           "inquiry": 331,
           "apply": 98,
-          "contract": 20,
+          "contract": 19,
           "amount": 92000000,
           "revenue": 1094540,
           "pointCost": 28000,
@@ -678,7 +678,16 @@
           "appOpen": 640
         },
         {
-          "date": "2026-09-18"
+          "date": "2026-09-18",
+          "inquiry": 358,
+          "apply": 94,
+          "contract": 15,
+          "amount": 154500000,
+          "revenue": 1315645,
+          "pointCost": 34000,
+          "sendCost": 395348,
+          "send": 17571,
+          "appOpen": 683
         }
       ],
       "ab": true,
@@ -803,15 +812,15 @@
         {
           "date": "2026-09-18",
           "introView": null,
-          "inquiry": null,
-          "apply": null,
-          "contract": null,
-          "amount": null,
-          "revenue": null,
-          "pointCost": null,
-          "sendCost": null,
-          "send": null,
-          "appOpen": null
+          "inquiry": 65,
+          "apply": 22,
+          "contract": 3,
+          "amount": 34000000,
+          "revenue": 427160,
+          "pointCost": 34000,
+          "sendCost": 207855,
+          "send": 9238,
+          "appOpen": 113
         }
       ],
       "abB": [
@@ -924,7 +933,7 @@
           "introView": null,
           "inquiry": 263,
           "apply": 79,
-          "contract": 16,
+          "contract": 15,
           "amount": 64000000,
           "revenue": 793390,
           "pointCost": 0,
@@ -935,15 +944,15 @@
         {
           "date": "2026-09-18",
           "introView": null,
-          "inquiry": null,
-          "apply": null,
-          "contract": null,
-          "amount": null,
-          "revenue": null,
-          "pointCost": null,
-          "sendCost": null,
-          "send": null,
-          "appOpen": null
+          "inquiry": 293,
+          "apply": 72,
+          "contract": 12,
+          "amount": 120500000,
+          "revenue": 888485,
+          "pointCost": 0,
+          "sendCost": 187493,
+          "send": 8333,
+          "appOpen": 570
         }
       ]
     }
