@@ -19,15 +19,18 @@
       "start": "2026-09-14",
       "end": "2026-09-30",
       "granularity": "daily",
-      "introViewUnique": 4090,
-      "contributedMauUnique": 2993,
-      "connectDoneUnique": 6459,
+      "introViewUnique": 4681,
+      "contributedMauUnique": 3428,
+      "connectDoneUnique": 8801,
       "daily": [
         {"date":"2026-09-14","introView":1415,"contributedMau":1076,"connectDone":1436,"pointCost":0,"sendCost":0},
         {"date":"2026-09-15","introView":1088,"contributedMau":1281,"connectDone":1678,"pointCost":120640,"sendCost":0},
         {"date":"2026-09-16","introView":1569,"contributedMau":1126,"connectDone":1301,"pointCost":159810,"sendCost":0},
         {"date":"2026-09-17","introView":907,"contributedMau":753,"connectDone":1091,"pointCost":168180,"sendCost":0},
-        {"date":"2026-09-18","pointCost":150300,"sendCost":0}
+        {"date":"2026-09-18","introView":876,"contributedMau":783,"connectDone":1049,"pointCost":150300,"sendCost":0},
+        {"date":"2026-09-19","introView":636,"contributedMau":214,"connectDone":587,"pointCost":0,"sendCost":0},
+        {"date":"2026-09-20","introView":611,"contributedMau":169,"connectDone":655,"pointCost":0,"sendCost":0},
+        {"date":"2026-09-21","pointCost":167740,"sendCost":0}
       ]
     }
   ]
