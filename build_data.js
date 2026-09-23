@@ -117,19 +117,21 @@ function augustRun() {
 // 9월 (sepevt) — data/_sepevt_daily.json (자동갱신 로봇이 이 파일만 갱신). 9/14~9/30.
 //   한도조회(inquiry)=PM_sepevt_reward_success unique(직접) / 가승인=LA_loanlist_view / 올거절=LD_intro_view
 //   신용대출신청=LA_loandetail_clickCTA / 우수대부신청=LD_loandetail_clickCTA (전부 promo_name=sepevt, 날짜별 unique)
-//   본인/친구 한도조회 리워드 수·지급총액·약정=시트. (랜덤포인트 아님 → 리워드 수 지표)
+//   한도조회 수·레퍼럴 지급포인트·총 지급포인트·약정=시트. (2026-09-23 시트 개편: 본인/친구 건수 폐기)
 function sepRun() {
   let rows = [];
   try { rows = JSON.parse(fs.readFileSync(path.join(REPO, 'data', '_sepevt_daily.json'), 'utf8')); } catch (e) { rows = []; }
   const daily = rows.map(d => ({
     date: d.date, introView: nn(d.introView), introClick: nn(d.introClick),
-    // 한도조회 = 시트 기준(본인 한도조회 수 + 친구 한도조회 수). Mixpanel PM_sepevt_reward_success 아님.
+    // 한도조회 = 시트 "한도조회 수" 행(ownReward). Mixpanel PM_sepevt_reward_success 아님.
+    // friendReward 는 시트 개편(09-23)으로 폐기 — 과거 행 호환용으로만 더해둔다.
     inquiry: (d.ownReward != null || d.friendReward != null) ? ((d.ownReward || 0) + (d.friendReward || 0)) : null,
     approve: nn(d.approve), reject: nn(d.reject),
     apply: (d.creditLoan != null || d.otherLoan != null) ? (d.creditLoan || 0) + (d.otherLoan || 0) : null,
     creditLoan: nn(d.creditLoan), otherLoan: nn(d.otherLoan),
     ownReward: nn(d.ownReward), friendReward: nn(d.friendReward),
     rfrView: nn(d.rfrView), rfrShare: nn(d.rfrShare),  // 레퍼럴(별도 토글): 바텀시트 조회 / 공유(clickCTA)
+    rfrPoint: nn(d.rfrPoint),  // 레퍼럴로 나간 지급 포인트 금액(시트). 총 지급포인트(pointCost)의 일부.
     // 포인트탭 진입점(홈슬롯+퀵그리드) 퍼널 일자별 — 날짜 범위 반영용. 전체 퍼널에서 빼면 '포인트탭 외 유입'.
     ptIntroView: nn(d.ptIntroView), ptApprove: nn(d.ptApprove), ptReject: nn(d.ptReject),
     ptCreditLoan: nn(d.ptCreditLoan), ptOtherLoan: nn(d.ptOtherLoan),
