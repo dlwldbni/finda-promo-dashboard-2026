@@ -798,6 +798,7 @@
           "rfrView": 1504,
           "rfrShare": 202,
           "rfrPoint": null,
+          "sepPointTotal": 146000,
           "ptIntroView": 2054,
           "ptApprove": 387,
           "ptReject": 153,
@@ -824,6 +825,7 @@
           "rfrView": 1249,
           "rfrShare": 170,
           "rfrPoint": null,
+          "sepPointTotal": 76100,
           "ptIntroView": 2142,
           "ptApprove": 209,
           "ptReject": 124,
@@ -850,6 +852,7 @@
           "rfrView": 1041,
           "rfrShare": 135,
           "rfrPoint": null,
+          "sepPointTotal": 54900,
           "ptIntroView": 1673,
           "ptApprove": 117,
           "ptReject": 75,
@@ -876,6 +879,7 @@
           "rfrView": 925,
           "rfrShare": 90,
           "rfrPoint": null,
+          "sepPointTotal": 46100,
           "ptIntroView": 1039,
           "ptApprove": 54,
           "ptReject": 30,
@@ -902,6 +906,7 @@
           "rfrView": 817,
           "rfrShare": 91,
           "rfrPoint": null,
+          "sepPointTotal": 22200,
           "ptIntroView": 957,
           "ptApprove": 52,
           "ptReject": 39,
@@ -923,8 +928,8 @@
     "introClick",
     "inquiry",
     "paymentCount",
-    "ownReward",
     "apply",
-    "contract"
+    "contract",
+    "sepPointTotal"
   ]
 }

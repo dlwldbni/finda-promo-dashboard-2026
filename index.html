@@ -373,10 +373,12 @@ const LINES = {
               {key:'introView', label:'인트로 조회', fmt:'int', agg:'sum'},
               {key:'introClick', label:'프로모션 참여', fmt:'int', agg:'sum', sparse:true, after:'introView'},   // 9월 sepevt: 인트로 CTA 클릭(PM_sepevt_intro_clickCTA)
               {key:'inquiry',   label:'한도조회 수', fmt:'int', agg:'sum', sub:[{key:'approve',label:'가승인'},{key:'reject',label:'올거절'}]},
-              {key:'ownReward', label:'본인 한도조회 리워드', fmt:'int', agg:'sum', sparse:true, after:'inquiry'},    // 9월 sepevt (시트). 랜덤포인트 아님.
-              {key:'friendReward', label:'친구 한도조회 리워드', fmt:'int', agg:'sum', sparse:true, after:'inquiry'},  // 9월 sepevt (시트, 레퍼럴 본인 유도)
+              // 9월 sepevt: '본인/친구 한도조회 리워드' 컬럼 제거(2026-09-23).
+              // ownReward 는 시트 '한도조회 수' 그 자체라 inquiry(한도조회 수)와 값이 같아 중복 — 필드는 남기고 컬럼만 뺀다.
               {key:'apply',     label:'대출 신청 수', fmt:'int', agg:'sum', sub:[{key:'creditLoan',label:'신용대출'},{key:'otherLoan',label:'우수대부'}]},
               {key:'contract',  label:'약정 수',     fmt:'int', agg:'sum'},
+              {key:'sepPointTotal', label:'총 지급 포인트', fmt:'won', agg:'sum', sparse:true, after:'contract'},      // 9월 sepevt 전용(시트 지급 총액)
+              {key:'rfrPoint',      label:'레퍼럴 지급 포인트', fmt:'won', agg:'sum', sparse:true, after:'contract'},  // 9월 sepevt 전용(시트, 레퍼럴로 나간 포인트)
               {key:'amount',    label:'약정 금액',   fmt:'won', agg:'sum'},
               {key:'revenue',   label:'매출',        fmt:'won', agg:'sum'},
             ],

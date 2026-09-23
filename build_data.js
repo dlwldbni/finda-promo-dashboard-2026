@@ -131,7 +131,9 @@ function sepRun() {
     creditLoan: nn(d.creditLoan), otherLoan: nn(d.otherLoan),
     ownReward: nn(d.ownReward), friendReward: nn(d.friendReward),
     rfrView: nn(d.rfrView), rfrShare: nn(d.rfrShare),  // 레퍼럴(별도 토글): 바텀시트 조회 / 공유(clickCTA)
-    rfrPoint: nn(d.rfrPoint),  // 레퍼럴로 나간 지급 포인트 금액(시트). 총 지급포인트(pointCost)의 일부.
+    // 시트 포인트 금액 — 9월 회차 전용 컬럼용 키. 다른 회차/프로모션엔 이 키를 넣지 않아 '—' 로 표시된다.
+    rfrPoint: nn(d.rfrPoint),        // 레퍼럴로 나간 지급 포인트 금액(시트)
+    sepPointTotal: nn(d.payTotal),   // 총 지급 포인트(시트 '지급 총액'). pointCost 와 같은 값이지만 컬럼은 9월만 노출.
     // 포인트탭 진입점(홈슬롯+퀵그리드) 퍼널 일자별 — 날짜 범위 반영용. 전체 퍼널에서 빼면 '포인트탭 외 유입'.
     ptIntroView: nn(d.ptIntroView), ptApprove: nn(d.ptApprove), ptReject: nn(d.ptReject),
     ptCreditLoan: nn(d.ptCreditLoan), ptOtherLoan: nn(d.ptOtherLoan),
@@ -205,7 +207,9 @@ const projects = [
 
 // ---- 프로젝트별 실제 추적 지표(metricKeys) 자동 도출 ----
 // (해당 프로젝트가 값을 하나라도 가진 지표만 → 프로젝트마다 지표 세트가 다름)
-const ALL_KEYS = ['introView', 'introClick', 'inquiry', 'paymentCount', 'ownReward', 'friendReward', 'apply', 'contract', 'amount', 'revenue'];
+// sepPointTotal·rfrPoint 는 9월(sepevt) 회차에서만 채워지는 키 → 다른 회차·프로모션 컬럼은 그대로 유지된다.
+// ownReward·friendReward 는 컬럼에서 뺐다(2026-09-23) — inquiry 계산에는 계속 쓰이므로 daily 필드로는 남는다.
+const ALL_KEYS = ['introView', 'introClick', 'inquiry', 'paymentCount', 'apply', 'contract', 'sepPointTotal', 'rfrPoint', 'amount', 'revenue'];
 projects.forEach(p => {
   const rows = p.runs.flatMap(r => r.daily);
   p.metricKeys = ALL_KEYS.filter(k => rows.some(d => d[k] != null));
