@@ -117,15 +117,17 @@ function augustRun() {
 // 9월 (sepevt) — data/_sepevt_daily.json (자동갱신 로봇이 이 파일만 갱신). 9/14~9/30.
 //   한도조회(inquiry)=PM_sepevt_reward_success unique(직접) / 가승인=LA_loanlist_view / 올거절=LD_intro_view
 //   신용대출신청=LA_loandetail_clickCTA / 우수대부신청=LD_loandetail_clickCTA (전부 promo_name=sepevt, 날짜별 unique)
-//   한도조회 수·레퍼럴 지급포인트·총 지급포인트·약정=시트. (2026-09-23 시트 개편: 본인/친구 건수 폐기)
+//   시트는 비용(총 지급포인트·레퍼럴 지급포인트)과 약정 수 용도. 시트 '한도조회 수'는 비용 대사용(ownReward, 미노출).
 function sepRun() {
   let rows = [];
   try { rows = JSON.parse(fs.readFileSync(path.join(REPO, 'data', '_sepevt_daily.json'), 'utf8')); } catch (e) { rows = []; }
   const daily = rows.map(d => ({
     date: d.date, introView: nn(d.introView), introClick: nn(d.introClick),
-    // 한도조회 = 시트 "한도조회 수" 행(ownReward). Mixpanel PM_sepevt_reward_success 아님.
-    // friendReward 는 시트 개편(09-23)으로 폐기 — 과거 행 호환용으로만 더해둔다.
-    inquiry: (d.ownReward != null || d.friendReward != null) ? ((d.ownReward || 0) + (d.friendReward || 0)) : null,
+    // 한도조회 = Mixpanel 가승인(LA_loanlist_view) + 올거절(LD_intro_view), promo_name=sepevt.
+    // ⚠ 2026-09-23 변경: 이전엔 시트 '한도조회 수'를 썼는데, 그 값은 사실상 리워드 지급 건수(PM_sepevt_reward_success 와 일치)라
+    //   실제 한도조회와 갈수록 벌어졌다(9/14 1.12배 → 9/22 0.36배). 퍼널 전 구간을 Mixpanel 소스로 통일한다.
+    //   시트의 한도조회 수(ownReward)는 비용 대사용으로만 남긴다 — 지표/컬럼에는 쓰지 않는다.
+    inquiry: (d.approve != null || d.reject != null) ? ((d.approve || 0) + (d.reject || 0)) : null,
     approve: nn(d.approve), reject: nn(d.reject),
     apply: (d.creditLoan != null || d.otherLoan != null) ? (d.creditLoan || 0) + (d.otherLoan || 0) : null,
     creditLoan: nn(d.creditLoan), otherLoan: nn(d.otherLoan),
