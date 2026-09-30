@@ -750,6 +750,7 @@ function funnelItems(cfg, agg, metricKeys, cvrAgg){
   const has = k => (metricKeys||[]).includes(k);
   const funnel = cfg.funnel || cfg.heroKeys || cfg.metrics.map(m=>m.key);
   const items = [];
+  const usedCvrs = new Set();
   funnel.forEach((key, i) => {
     if(has(key)){ const mt=cfg.metrics.find(m=>m.key===key); items.push({type:'metric', mt, value:agg[key]});
       cfg.metrics.forEach(m2=>{ if(m2.after===key && !funnel.includes(m2.key) && has(m2.key)) items.push({type:'metric', mt:m2, value:agg[m2.key]}); });
@@ -757,10 +758,12 @@ function funnelItems(cfg, agg, metricKeys, cvrAgg){
     if(i < funnel.length-1){
       const nextKey = funnel[i+1];
       const c = (cfg.cvrs||[]).find(x=> x.den===key && x.num===nextKey);
-      if(c && has(key) && has(nextKey)) items.push({type:'cvr', label:c.label, value: cvrAgg[key]? cvrAgg[nextKey]/cvrAgg[key] : null});
+      if(c && has(key) && has(nextKey)) { items.push({type:'cvr', label:c.label, value: cvrAgg[key]? cvrAgg[nextKey]/cvrAgg[key] : null}); usedCvrs.add(c); }
     }
   });
   cfg.metrics.forEach(mt=>{ if(!funnel.includes(mt.key) && !mt.after && has(mt.key)) items.push({type:'metric', mt, value:agg[mt.key]}); });
+  // 퍼널 연속 구간이 아닌(단계 건너뛰는) CVR도 끝에 추가 표시
+  (cfg.cvrs||[]).forEach(c=>{ if(!usedCvrs.has(c) && has(c.den) && has(c.num)) items.push({type:'cvr', label:c.label, value: cvrAgg[c.den]? cvrAgg[c.num]/cvrAgg[c.den] : null}); });
   return items;
 }
 // 표(회차별·일자별) 컬럼 = 핵심지표와 동일 (퍼널 순서 + 가승인/올거절·신용대출/우수대부 세부 + CVR)
@@ -768,6 +771,7 @@ function detailColumns(cfg, metricKeys){
   const has = k => (metricKeys||[]).includes(k);
   const funnel = cfg.funnel || cfg.metrics.map(m=>m.key);
   const cols = [];
+  const usedCvrs = new Set();
   funnel.forEach((key, i) => {
     if(has(key)){
       const mt = cfg.metrics.find(m=>m.key===key);
@@ -777,10 +781,12 @@ function detailColumns(cfg, metricKeys){
     }
     if(i < funnel.length-1){
       const nk = funnel[i+1]; const c=(cfg.cvrs||[]).find(x=> x.den===key && x.num===nk);
-      if(c && has(key) && has(nk)) cols.push({label:c.label, kind:'cvr', num:nk, den:key});
+      if(c && has(key) && has(nk)) { cols.push({label:c.label, kind:'cvr', num:nk, den:key}); usedCvrs.add(c); }
     }
   });
   cfg.metrics.forEach(mt=>{ if(!funnel.includes(mt.key) && !mt.after && has(mt.key)) cols.push({label:mt.label, fmt:mt.fmt, kind:'val', key:mt.key}); });
+  // 퍼널 연속 구간이 아닌(단계 건너뛰는) CVR도 끝에 컬럼 추가
+  (cfg.cvrs||[]).forEach(c=>{ if(!usedCvrs.has(c) && has(c.den) && has(c.num)) cols.push({label:c.label, kind:'cvr', num:c.num, den:c.den}); });
   return cols;
 }
 function colValue(col, obj){
