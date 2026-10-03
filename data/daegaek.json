@@ -1066,7 +1066,7 @@
         },
         {
           "date": "2026-09-29",
-          "introView": 867,
+          "introView": 866,
           "introClick": 351,
           "inquiry": 181,
           "approve": 89,
@@ -1093,7 +1093,7 @@
         },
         {
           "date": "2026-09-30",
-          "introView": 804,
+          "introView": 801,
           "introClick": 321,
           "inquiry": 158,
           "approve": 78,
@@ -1103,7 +1103,7 @@
           "otherLoan": 70,
           "ownReward": null,
           "friendReward": null,
-          "rfrView": 229,
+          "rfrView": 228,
           "rfrShare": 18,
           "rfrPoint": null,
           "sepPointTotal": 0,
