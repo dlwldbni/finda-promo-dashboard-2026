@@ -506,8 +506,13 @@ async function loadProjects(){
     if (state.preset === 'all') state.end = TODAY;   // 기본 진입(전체)일 때만 끝을 최신일로
   }
 }
-// mauDenom 이 설정된 축의 기여도 분모 = 해당 축 외부 데이터파일의 '당월'(최신 월) 값
-function denomMonth(lineKey){ const m = EXTERNAL_DENOM[lineKey] || {}; const ks = Object.keys(m).sort(); return ks.length ? ks[ks.length-1] : ''; }
+// mauDenom 이 설정된 축의 기여도 분모 = 선택 기간 끝날짜가 속한 월의 값 (그 월 값이 없으면 그 이전 가장 최근 월)
+function denomMonth(lineKey){
+  const m = EXTERNAL_DENOM[lineKey] || {}; const ks = Object.keys(m).sort(); if (!ks.length) return '';
+  const target = (state.end || TODAY).slice(0,7);
+  const le = ks.filter(x => x <= target);
+  return le.length ? le[le.length-1] : ks[0];
+}
 function denomTotal(lineKey){ const mo = denomMonth(lineKey); const m = EXTERNAL_DENOM[lineKey] || {}; return mo ? (m[mo]||0) : 0; }
 
 // =====================================================================
