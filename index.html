@@ -407,8 +407,8 @@ const LINES = {
               {num:'contributedMau', den:'introView',      label:'인트로→참여 CVR'},
               {num:'connectDone',    den:'introView',       label:'인트로→연동 CVR', insertAfter:'contributedMau'},
             ],
-            mauDenom:{ file:'_asset_mau.json', numeratorKey:'contributedMau', headlineNoun:'마이데이터 MAU 기여', subLabel:'팀 기여 MAU' },
-            mauSubs:[{key:'connectDone', label:'연동 완료'}, {key:'contributedMau', label:'프로모션 참여'}],
+            mauDenom:{ file:'_asset_mau.json', numeratorKey:'contributedMau', headlineNoun:'마이데이터 MAU 기여', subLabel:'팀 기여 MAU', headlineContrib:true },
+            mauSubs:[{key:'connectDone', label:'연동 완료'}, {key:'introView', label:'인트로 조회'}],
             trendKey:'contributedMau',  trendLabel:'참여율',
             trendKey2:'connectDone',    trendLabel2:'마데연동율',
             cvr:null,
@@ -682,7 +682,8 @@ function renderLineCards(){
     const active = perProject.filter(p=>p.hasData).length;
     const isMau = cfg.mauDenom;
     const denom = isMau ? denomTotal(k) : 0;
-    const hv = isMau ? denom : total[cfg.headline.key];
+    // headlineContrib: 헤드라인을 전체 MAU(분모) 대신 프로젝트 기여 MAU(분자)로 표시
+    const hv = isMau ? (cfg.mauDenom.headlineContrib ? (total[cfg.mauDenom.numeratorKey] || 0) : denom) : total[cfg.headline.key];
     const headLabel = isMau ? `${cfg.mauDenom.headlineNoun} · ${(+String(denomMonth(k)).slice(5) || 0)}월` : cfg.headline.label;
     let subs, cvrHtml = '';
     if (isMau) {
@@ -690,7 +691,9 @@ function renderLineCards(){
       subs = cfg.mauSubs
         ? cfg.mauSubs.map(s=> `<div class="lc-sub"><div class="v">${fmtInt(total[s.key]||0)}</div><div class="l">${s.label}</div></div>`).join('')
         : `<div class="lc-sub"><div class="v">${fmtInt(contrib)}</div><div class="l">${cfg.mauDenom.subLabel}</div></div>`;
-      cvrHtml = `<div class="lc-cvr">전체 MAU 대비 ${pct.toFixed(1)}%</div>`;
+      cvrHtml = cfg.mauDenom.headlineContrib
+        ? `<div class="lc-cvr">전체 MAU ${fmtInt(denom)} 대비 ${pct.toFixed(1)}%</div>`
+        : `<div class="lc-cvr">전체 MAU 대비 ${pct.toFixed(1)}%</div>`;
     } else {
       subs = cfg.subs.map(sk=>{ const mt=cfg.metrics.find(m=>m.key===sk); return `<div class="lc-sub"><div class="v">${fmtCell(mt, total[sk])}</div><div class="l">${mt.label}</div></div>`; }).join('');
       if (cfg.cvr){ const cv = total[cfg.cvr.den] ? total[cfg.cvr.num]/total[cfg.cvr.den] : 0; cvrHtml = `<div class="lc-cvr">${cfg.cvr.label} ${(cv*100).toFixed(1)}%</div>`; }
