@@ -5,7 +5,7 @@
   "name": "코스피 예측 프로모션 (10월 · 유저 리텐션)",
   "owner": "은영",
   "status": "live",
-  "periodNote": "프로모션 운영 10/19~10/29(영업일 9일), 예측 대상일 10/20~10/30, 리텐션 전용 회차. 포인트는 예측 대상일 장 마감 후 정산되어 pointCost는 지급일(D+1) 기준으로 반영됨. 출처: 구글시트 '마이데이터 프로모션 일별 트래킹' 2610KPI 탭(참여 완료=result_wait_view·연동·포인트) + Mixpanel 보드 (2610) 코스피 예측 프로모션 id=11592023(인트로 조회)",
+  "periodNote": "프로모션 운영 10/19~10/29(영업일 9일), 예측 대상일 10/20~10/30, 리텐션 전용 회차. 포인트는 예측 대상일 장 마감 후 정산되어 pointCost는 지급일(D+1) 기준으로 반영됨. 출처: 구글시트 '마이데이터 프로모션 일별 트래킹' 2610KPI 탭(참여·연동·포인트) + Mixpanel 보드 (2610) 코스피 예측 프로모션 id=11592023(인트로 조회)",
   "metricKeys": ["introView", "contributedMau", "connectDone", "pointCost", "sendCost"],
   "runs": [
     {
@@ -14,13 +14,13 @@
       "end": "2026-10-29",
       "granularity": "daily",
       "introViewUnique": 4948,
-      "contributedMauUnique": 3134,
+      "contributedMauUnique": 3903,
       "connectDoneUnique": 6255,
       "daily": [
-        {"date": "2026-10-19", "introView": 2513, "contributedMau": 1838, "connectDone": 1774, "pointCost": 0, "sendCost": 0},
-        {"date": "2026-10-20", "introView": 2146, "contributedMau": 1793, "connectDone": 1572, "pointCost": 100820, "sendCost": 0},
-        {"date": "2026-10-21", "introView": 2646, "contributedMau": 1967, "connectDone": 1631, "pointCost": 184920, "sendCost": 0},
-        {"date": "2026-10-22", "introView": 2157, "contributedMau": 1830, "connectDone": 1396, "pointCost": 121530, "sendCost": 0}
+        {"date": "2026-10-19", "introView": 2513, "contributedMau": 2080, "connectDone": 1774, "pointCost": 0, "sendCost": 0},
+        {"date": "2026-10-20", "introView": 2146, "contributedMau": 1900, "connectDone": 1572, "pointCost": 100820, "sendCost": 0},
+        {"date": "2026-10-21", "introView": 2646, "contributedMau": 2160, "connectDone": 1631, "pointCost": 184920, "sendCost": 0},
+        {"date": "2026-10-22", "introView": 2157, "contributedMau": 1929, "connectDone": 1396, "pointCost": 121530, "sendCost": 0}
       ]
     }
   ]
