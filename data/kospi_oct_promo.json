@@ -13,9 +13,9 @@
       "start": "2026-10-19",
       "end": "2026-10-29",
       "granularity": "daily",
-      "introViewUnique": 6169,
-      "contributedMauUnique": 4798,
-      "connectDoneUnique": 9153,
+      "introViewUnique": 6985,
+      "contributedMauUnique": 5284,
+      "connectDoneUnique": 11101,
       "daily": [
         {"date": "2026-10-19", "introView": 2513, "contributedMau": 2080, "connectDone": 1774, "pointCost": 0, "sendCost": 0},
         {"date": "2026-10-20", "introView": 2146, "contributedMau": 1900, "connectDone": 1572, "pointCost": 100820, "sendCost": 0},
@@ -23,7 +23,8 @@
         {"date": "2026-10-22", "introView": 2157, "contributedMau": 1929, "connectDone": 1396, "pointCost": 121530, "sendCost": 0},
         {"date": "2026-10-23", "introView": 2207, "contributedMau": 1973, "connectDone": 1451, "pointCost": 173630, "sendCost": 0},
         {"date": "2026-10-24", "introView": 1974, "contributedMau": 562, "connectDone": 698, "pointCost": 0, "sendCost": 0},
-        {"date": "2026-10-25", "introView": 1362, "contributedMau": 268, "connectDone": 863, "pointCost": 0, "sendCost": 0}
+        {"date": "2026-10-25", "introView": 1362, "contributedMau": 268, "connectDone": 863, "pointCost": 0, "sendCost": 0},
+        {"date": "2026-10-26", "introView": 2854, "contributedMau": 2286, "connectDone": 2036, "pointCost": 139540, "sendCost": 0}
       ]
     }
   ]
