@@ -12,6 +12,7 @@
     "kospi_oct_promo"
   ],
   "app": [
-    "car_promo"
+    "car_promo",
+    "credit_promo"
   ]
 }

@@ -201,6 +201,43 @@
   .modal-close:hover { background:#e5e7eb; color:var(--text); }
   .modal-body { padding:8px 24px 26px; }
   .modal-section-title { font-size:13px; font-weight:800; margin:22px 0 10px; }
+  /* 프로젝트 인사이트 패널 (data/<id>.json 의 insights) — 표 대신 카드형 시각화 */
+  .ins-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(300px,1fr)); gap:12px; }
+  .ins-card { border:1px solid var(--border); border-radius:10px; padding:13px 14px; background:var(--card); min-width:0; }
+  .ins-card h4 { margin:0 0 2px; font-size:12.5px; font-weight:800; }
+  .ins-card .ins-cap { font-size:11px; color:var(--text-3); margin-bottom:10px; }
+  .ins-take { margin-top:10px; padding:7px 9px; border-radius:7px; background:var(--grey-bg); font-size:11.5px; line-height:1.5; }
+  .ins-fn-row { display:grid; grid-template-columns:92px 1fr 52px; align-items:center; gap:8px; font-size:11.5px; margin:5px 0; }
+  .ins-fn-row .bar { height:16px; border-radius:4px; background:var(--grey-bg); overflow:hidden; }
+  .ins-fn-row .bar i { display:block; height:100%; border-radius:4px; }
+  .ins-fn-row .v { text-align:right; font-variant-numeric:tabular-nums; }
+  .ins-fn-drop { font-size:10.5px; color:var(--text-3); margin:-2px 0 2px 100px; }
+  .ins-fn-tabs { display:flex; gap:6px; margin-bottom:10px; flex-wrap:wrap; }
+  .ins-fn-tab { border:1px solid var(--border); background:#fff; border-radius:999px; padding:3px 10px; font-size:11.5px; cursor:pointer; color:var(--text-2); }
+  .ins-fn-tab.active { background:var(--c); color:#fff; border-color:transparent; }
+  .ins-stack { display:flex; height:26px; border-radius:6px; overflow:hidden; }
+  .ins-stack span { display:flex; align-items:center; justify-content:center; color:#fff; font-size:11px; font-weight:700; white-space:nowrap; overflow:hidden; }
+  .ins-legend { display:flex; gap:12px; margin-top:9px; flex-wrap:wrap; font-size:11.5px; }
+  .ins-legend b { font-variant-numeric:tabular-nums; }
+  .ins-dot { display:inline-block; width:8px; height:8px; border-radius:2px; margin-right:4px; vertical-align:0; }
+  .ins-mx { width:100%; border-collapse:separate; border-spacing:3px; font-size:11.5px; table-layout:fixed; }
+  .ins-mx th { font-weight:600; color:var(--text-3); font-size:10.5px; padding:2px; }
+  .ins-mx td { text-align:center; padding:7px 2px; border-radius:5px; font-variant-numeric:tabular-nums; }
+  .ins-mx td small { display:block; font-size:9.5px; opacity:.8; }
+  .ins-mv-row { display:grid; grid-template-columns:52px 1fr; gap:8px; align-items:center; margin:7px 0; font-size:11.5px; }
+  .ins-mv-bars { display:flex; flex-direction:column; gap:3px; }
+  .ins-mv-bar { display:grid; grid-template-columns:1fr 84px; gap:6px; align-items:center; }
+  .ins-col { display:flex; flex-direction:column; gap:12px; min-width:0; }
+  .ins-mv-bar .bar { height:9px; border-radius:3px; background:var(--grey-bg); overflow:hidden; }
+  .ins-mv-bar .bar i { display:block; height:100%; }
+  .ins-mv-bar .v { font-size:10.5px; text-align:right; font-variant-numeric:tabular-nums; color:var(--text-2); }
+  .ins-ret { display:grid; grid-auto-flow:column; grid-auto-columns:1fr; gap:4px; align-items:end; height:110px; margin-top:4px; }
+  .ins-ret-col { display:flex; flex-direction:column; align-items:center; gap:2px; height:100%; justify-content:flex-end; }
+  .ins-ret-pair { display:flex; gap:2px; align-items:flex-end; height:84px; }
+  .ins-ret-pair i { display:block; width:9px; border-radius:2px 2px 0 0; }
+  .ins-ret-pair i.empty { height:84px !important; background:repeating-linear-gradient(45deg, var(--grey-bg) 0 3px, transparent 3px 6px); }
+  .ins-ret-col .d { font-size:10px; color:var(--text-3); }
+  .ins-ret-col .p { font-size:9.5px; font-variant-numeric:tabular-nums; color:var(--text-2); height:12px; }
   .dlog-wrap { max-height:320px; overflow:auto; border:1px solid var(--border); border-radius:10px; }
   .dlog { width:100%; border-collapse:collapse; font-size:12.5px; }
   .dlog th { position:sticky; top:0; background:var(--grey-bg); z-index:1; font-weight:700; color:var(--text-2); }
@@ -423,16 +460,21 @@ const LINES = {
               {key:'view',         label:'프로모션 페이지 view',   fmt:'int', agg:'sum'},
               {key:'click',        label:'차량 번호 입력',         fmt:'int', agg:'sum'},
               {key:'terms',        label:'동의 완료',             fmt:'int', agg:'sum'},
+              {key:'predict_done', label:'예측 완료',             fmt:'int', agg:'sum'},
+              {key:'change_done',  label:'예측 변경 완료',          fmt:'int', agg:'sum'},
               {key:'result_view',  label:'결과페이지 view',        fmt:'int', agg:'sum'},
               {key:'result_click', label:'한도조회 CTA 클릭',      fmt:'int', agg:'sum'},
             ],
             heroKeys:['view','click','result_view'],
-            funnel:['view','click','terms','result_view','result_click'],
+            funnel:['view','click','terms','predict_done','change_done','result_view','result_click'],
             cvrs:[
               {num:'click',        den:'view',        label:'프로모션 페이지 → CTA 클릭 CVR'},
               {num:'result_view',  den:'terms',        label:'동의서 클릭 → 참여완료 CVR'},
               {num:'result_view',  den:'view',         label:'프로모션 페이지 view → 결과페이지 view CVR (KPI)'},
               {num:'result_click', den:'result_view',  label:'결과페이지 view → 한도조회 CTA 클릭 CTR'},
+              {num:'predict_done', den:'view',          label:'프로모션 진입 → 예측 완료 CVR', insertAfter:'predict_done'},
+              {num:'change_done',  den:'predict_done',  label:'참여 → 예측 변경 완료율 (CRM 성과)'},
+              {num:'result_view',  den:'predict_done',  label:'참여 → 결과 확인율 (지급률)'},
             ],
             cvr:null,
             mauDenom:{ file:'_app_cohort.json', numeratorKey:'contributedActive', headlineNoun:'유저 리텐션 (최근 30일 2일↑ 방문)', subLabel:'참여 유저 리텐션' },
@@ -483,7 +525,7 @@ function toInternal(p){
   if (!metricKeys) { const ks = new Set(); daily.forEach(r => Object.keys(r.m).forEach(k => { if (typeof r.m[k] === 'number') ks.add(k); })); metricKeys = [...ks]; }
   const first = runs.length ? runs[0].start : null;
   const last  = daily.length ? daily.reduce((a,d)=> d.date>a ? d.date : a, daily[0].date) : null;
-  return { id:p.id, line:p.line, emoji:p.emoji||'📁', name:p.name, owner:p.owner||'—', status:p.status||'done', metricKeys, runs, daily, start:first, end:last, periodNote:p.periodNote||null };
+  return { id:p.id, line:p.line, emoji:p.emoji||'📁', name:p.name, owner:p.owner||'—', status:p.status||'done', metricKeys, runs, daily, start:first, end:last, periodNote:p.periodNote||null, trendKey:p.trendKey||null, insights:p.insights||null };
 }
 async function loadProjects(){
   const base = 'data/';
@@ -580,7 +622,7 @@ function lineSeries(lineKey){
   const days = eachDay(state.start, state.end);
   const projs = PROJECTS.filter(p=>p.line===lineKey);
   // 프로젝트별 일자 맵
-  const maps = projs.map(p=>{ const mp={}; p.daily.forEach(d=>mp[d.date]=d.m[hk]||0); return {p, mp}; });
+  const maps = projs.map(p=>{ const k = p.trendKey || hk; const mp={}; p.daily.forEach(d=>mp[d.date]=d.m[k]||0); return {p, mp}; });
   // 버킷 크기 결정
   const N = days.length;
   const bucket = N<=31 ? 1 : (N<=120 ? 7 : 30);
@@ -1184,7 +1226,8 @@ function renderModalContent(){
     ${refBlock}
     <div class="modal-section-title">핵심 지표 <span style="font-weight:500;color:var(--text-3);font-size:11.5px">· 선택 기간 합계</span></div>
     <div class="kpi-row">${kpis}${cvrKpi}</div>
-    ${cfg.kpiNote ? `<div class="kpi-note" style="font-size:11.5px;color:var(--text-3);margin:-4px 0 10px">${cfg.kpiNote}</div>` : ''}
+    ${cfg.kpiNote && (p.metricKeys||[]).includes('terms') ? `<div class="kpi-note" style="font-size:11.5px;color:var(--text-3);margin:-4px 0 10px">${cfg.kpiNote}</div>` : ''}
+    ${p.insights ? insightsHtml(p.insights, cfg) : ''}
     <div class="modal-section-title">📈 ${cfg.trendLabel || cfg.headline.label} 추이</div>
     <div class="chart-wrap" style="height:200px"><canvas id="modal-canvas"></canvas></div>
     ${cfg.trendKey2 ? `<div class="modal-section-title">📈 ${cfg.trendLabel2||''} 추이</div><div class="chart-wrap" style="height:200px"><canvas id="modal-canvas2"></canvas></div>` : ''}
@@ -1194,6 +1237,7 @@ function renderModalContent(){
   // 핸들러 (innerHTML 재생성마다 새로 바인딩)
   back.querySelectorAll('.rt').forEach(b=> b.onclick = ()=>{ modalState.run=b.dataset.run; modalState.seg=0; const sp=modalSpan(p); modalState.start=sp.s; modalState.end=sp.e; renderModalContent(); });
   back.querySelectorAll('.st').forEach(b=> b.onclick = ()=>{ modalState.seg=+b.dataset.seg; renderModalContent(); });
+  back.querySelectorAll('.ins-fn-tab').forEach(b=> b.onclick = ()=>{ modalState.insFunnel=b.dataset.fn; renderModalContent(); });
   back.querySelectorAll('.ab-tag[data-mabview]').forEach(b=> b.onclick = ()=>{ modalState.abView=b.dataset.mabview; renderModalContent(); });
   { const rt=back.querySelector('#ref-toggle'); if(rt) rt.onclick=()=>{ modalState.showReferral=!modalState.showReferral; renderModalContent(); }; }
   const ms=back.querySelector('#m-start'), me=back.querySelector('#m-end');
@@ -1203,7 +1247,7 @@ function renderModalContent(){
 
   if(modalChart) modalChart.destroy();
   const color = cssVar(cfg.cvar);
-  const tk = cfg.trendKey || cfg.headline.key;
+  const tk = p.trendKey || cfg.trendKey || cfg.headline.key;
   const xopt = { ticks:{font:{size:9}, maxRotation:0, autoSkip:true, maxTicksLimit:12}, grid:{display:false} };
   if (mAb && (modalState.abView||'both')==='both') {
     // 전체: A/B 2계열 (색 다르게)
@@ -1249,6 +1293,112 @@ function renderModalContent(){
         scales:{ x:{ ticks:{font:{size:9}, maxRotation:0, autoSkip:true, maxTicksLimit:12}, grid:{display:false} }, y:{ beginAtZero:true, ticks:{font:{size:9}, callback:v=>v+'%'} } } }
     });
   }
+}
+// 프로젝트 인사이트 패널 — 기간 필터와 무관한 누적 스냅샷(insights.asOf 기준). 신용점수 프로모션에서 처음 사용.
+const CHOICES = [
+  { key:'up',   label:'상승', color:'#0E9F6E' },
+  { key:'keep', label:'유지', color:'#6B7280' },
+  { key:'down', label:'하락', color:'#E5484D' },
+];
+function insightsHtml(ins, cfg){
+  const pct = (a,b,d=1)=> b>0 ? (a/b*100).toFixed(d)+'%' : '—';
+  const cards = [];
+
+  // ① 퍼널 — 탭으로 하나씩, 단계별 막대 + 단계 간 이탈
+  if (ins.funnels && ins.funnels.length) {
+    const sel = ins.funnels.find(f=>f.key===modalState.insFunnel) || ins.funnels[0];
+    const tabs = ins.funnels.map(f=>`<button class="ins-fn-tab ${f===sel?'active':''}" data-fn="${f.key}" style="--c:${cfg.color}">${f.title} <span style="opacity:.7">${f.window}</span></button>`).join('');
+    let body;
+    if (!sel.steps.length) body = `<div style="padding:22px 0;text-align:center;color:var(--text-3);font-size:12px">⏳ ${sel.pending||'집계 전'}</div>`;
+    else {
+      const top = sel.steps[0].n || 1;
+      body = sel.steps.map((s,i)=>{
+        const prev = i ? sel.steps[i-1].n : null;
+        const drop = i ? `<div class="ins-fn-drop">↳ 전 단계 대비 ${pct(s.n, prev)}</div>` : '';
+        return `${drop}<div class="ins-fn-row" title="${s.event}"><span>${s.label}</span><span class="bar"><i style="width:${(s.n/top*100).toFixed(1)}%;background:${cfg.color};opacity:${(1-i*0.12).toFixed(2)}"></i></span><span class="v"><b>${comma(s.n)}</b></span></div>`;
+      }).join('');
+      const last = sel.steps[sel.steps.length-1];
+      body += `<div class="ins-take">전체 전환 <b style="color:${cfg.color}">${pct(last.n, top)}</b> · ${sel.steps[0].label} → ${last.label}</div>`;
+    }
+    cards.push(`<div class="ins-card" style="grid-column:1/-1"><h4>🔻 퍼널별 전환율</h4><div class="ins-cap">유니크 · 첫 참여는 당일(D0), 예측 변동은 참여 후 17일 윈도우</div><div class="ins-fn-tabs">${tabs}</div>${body}</div>`);
+  }
+
+  // ② 첫 예측 분포 — 100% 누적 막대
+  if (ins.firstPredict) {
+    const fp = ins.firstPredict, tot = CHOICES.reduce((s,c)=>s+(fp[c.key]||0),0);
+    const seg = CHOICES.map(c=>`<span style="width:${pct(fp[c.key],tot,2)};background:${c.color}">${(fp[c.key]/tot)>=0.08 ? pct(fp[c.key],tot,0) : ''}</span>`).join('');
+    const leg = CHOICES.map(c=>`<span><i class="ins-dot" style="background:${c.color}"></i>${c.label} <b>${comma(fp[c.key])}</b> <span style="color:var(--text-3)">${pct(fp[c.key],tot)}</span></span>`).join('');
+    const topC = CHOICES.slice().sort((a,b)=>fp[b.key]-fp[a.key])[0];
+    cards.push(`<div class="ins-card"><h4>🎯 첫 예측 분포</h4><div class="ins-cap">첫 예측 참여자 ${comma(tot)}명 · D0 기준</div><div class="ins-stack">${seg}</div><div class="ins-legend">${leg}</div>
+      <div class="ins-take">가장 많이 고른 예측은 <b>${topC.label}</b>(${pct(fp[topC.key],tot)}) · 하락 예측은 ${pct(fp.down,tot)}로 소수</div></div>`);
+  }
+
+  // ③ 예측 변동 — before→after 히트맵. 대각선(같은 값)은 회색 처리
+  if (ins.changeMatrix) {
+    const F = ins.changeMatrix.from;
+    let mx = 0; CHOICES.forEach(a=>CHOICES.forEach(b=>{ if(a.key!==b.key) mx=Math.max(mx, F[a.key][b.key]||0); }));
+    const allTot = CHOICES.reduce((s,a)=>s+CHOICES.reduce((t,b)=>t+(F[a.key][b.key]||0),0),0);
+    const head = `<tr><th style="text-align:left">최초 ＼ 변경 후</th>${CHOICES.map(c=>`<th style="color:${c.color}">→ ${c.label}</th>`).join('')}<th>합계</th></tr>`;
+    const rowsH = CHOICES.map(a=>{
+      const rt = CHOICES.reduce((s,b)=>s+(F[a.key][b.key]||0),0);
+      const tds = CHOICES.map(b=>{
+        const v = F[a.key][b.key]||0;
+        if (a.key===b.key) return `<td style="background:var(--grey-bg);color:var(--text-3)">${comma(v)}<small>최초로 복귀</small></td>`;
+        const al = mx ? 0.12 + 0.78*(v/mx) : 0;
+        return `<td style="background:color-mix(in srgb, ${b.color} ${(al*100).toFixed(0)}%, white);color:${al>0.55?'#fff':'var(--text)'}"><b>${comma(v)}</b><small>${pct(v,rt,0)}</small></td>`;
+      }).join('');
+      return `<tr><th style="text-align:left;color:${a.color}">${a.label}</th>${tds}<td style="color:var(--text-2)">${comma(rt)}</td></tr>`;
+    }).join('');
+    // 가장 큰 이동(대각선 제외)
+    let best=null; CHOICES.forEach(a=>CHOICES.forEach(b=>{ if(a.key!==b.key){ const v=F[a.key][b.key]||0; if(!best||v>best.v) best={a,b,v}; } }));
+    cards.push(`<div class="ins-card"><h4>🔀 예측 변동 (최초 → 변경 후)</h4><div class="ins-cap">${ins.changeMatrix.unit} ${comma(allTot)}건 · 행 = 최초 예측 · 칸 안 %는 행 기준</div>
+      <table class="ins-mx"><thead>${head}</thead><tbody>${rowsH}</tbody></table>
+      <div class="ins-take">가장 큰 이동은 <b>${best.a.label} → ${best.b.label}</b> ${comma(best.v)}건 (${pct(best.v, allTot)}) · 회색 칸은 다른 값으로 바꿨다가 최초 예측으로 되돌린 건</div></div>`);
+  }
+
+  // ④ 선택별 신용 서비스 이동 — 선택(상승/유지/하락)마다 서비스별 도달률 막대
+  if (ins.serviceMove) {
+    const sm = ins.serviceMove, svcColors = [cfg.color, '#2F6FE0', '#E8880C'];
+    let mx = 0; CHOICES.forEach(c=>sm.services.forEach(s=>{ const b=sm.byChoice[c.key]; if(b&&b.base) mx=Math.max(mx, b[s.key]/b.base); }));
+    const rowsH = CHOICES.map(c=>{
+      const b = sm.byChoice[c.key]; if(!b) return '';
+      const bars = sm.services.map((s,i)=>`<div class="ins-mv-bar" title="${s.event}"><span class="bar"><i style="width:${mx? (b[s.key]/b.base/mx*100).toFixed(1):0}%;background:${svcColors[i]}"></i></span><span class="v">${pct(b[s.key],b.base)} <span style="color:var(--text-3)">(${comma(b[s.key])})</span></span></div>`).join('');
+      return `<div class="ins-mv-row"><span style="color:${c.color};font-weight:700">${c.label}<br><span style="font-weight:400;color:var(--text-3);font-size:10px">${comma(b.base)}명</span></span><div class="ins-mv-bars">${bars}</div></div>`;
+    }).join('');
+    const leg = sm.services.map((s,i)=>`<span><i class="ins-dot" style="background:${svcColors[i]}"></i>${s.label}</span>`).join('');
+    // 서비스별로 이동률이 가장 높은 선택
+    const takes = sm.services.map(s=>{
+      const r = CHOICES.filter(c=>sm.byChoice[c.key]&&sm.byChoice[c.key].base).map(c=>({c, v:sm.byChoice[c.key][s.key]/sm.byChoice[c.key].base})).sort((x,y)=>y.v-x.v);
+      return `${s.label}은 <b style="color:${r[0].c.color}">${r[0].c.label}</b> 선택자가 가장 높음(${(r[0].v*100).toFixed(1)}% vs ${r[r.length-1].c.label} ${(r[r.length-1].v*100).toFixed(1)}%)`;
+    }).join('<br>');
+    cards.push(`<div class="ins-card"><h4>🧭 선택별 신용 서비스 이동</h4><div class="ins-cap">각 선택 유저 중 ${sm.window} 안에 서비스에 도달한 비율</div><div class="ins-legend" style="margin:0 0 4px">${leg}</div>${rowsH}
+      <div class="ins-take">${takes}</div></div>`);
+  }
+
+  // ⑤ 리텐션 D0~D+N — 단순 재방문 vs 고관여, 칼럼 막대 (미집계 날은 빗금)
+  if (ins.retention) {
+    const rt = ins.retention, H = rt.horizon || 7, byD = {};
+    rt.days.forEach(x=> byD[x.d]=x);
+    // 막대 높이 축 = max(50%, 최댓값) — 리텐션은 대개 낮아서 100% 축이면 안 보임
+    const top = Math.max(0.5, ...rt.days.flatMap(x=> rt.series.map(s=> x[s.key]||0)));
+    const cols = ['#C4B5FD', cfg.color];
+    const colsH = Array.from({length:H+1},(_,d)=>{
+      const x = byD[d] || {};
+      const pair = rt.series.map((s,i)=>{ const v=x[s.key]; return v==null ? `<i class="empty" title="${s.label} D${d?'+'+d:'0'}: 집계 전"></i>` : `<i style="height:${Math.max(2, v/top*84).toFixed(0)}px;background:${cols[i]}" title="${s.label} D${d?'+'+d:'0'}: ${(v*100).toFixed(1)}%"></i>`; }).join('');
+      const lab = rt.series.map(s=> x[s.key]==null ? '' : Math.round(x[s.key]*100)+'%').filter(Boolean).join('/');
+      return `<div class="ins-ret-col"><span class="p">${lab}</span><div class="ins-ret-pair">${pair}</div><span class="d">${d? 'D+'+d : 'D0'}</span></div>`;
+    }).join('');
+    const leg = rt.series.map((s,i)=>`<span title="${s.def}"><i class="ins-dot" style="background:${cols[i]}"></i>${s.label} <span style="color:var(--text-3)">${s.def}</span></span>`).join('');
+    const filled = rt.days.filter(x=>x.d>0 && x.revisit!=null).length;
+    cards.push(`<div class="ins-card" style="grid-column:1/-1"><h4>🔁 참여자 리텐션</h4><div class="ins-cap">첫 예측 참여자 ${comma(rt.cohort)}명 · 참여일 = D0 · 빗금 = 아직 도래 안 함</div>
+      <div class="ins-ret">${colsH}</div><div class="ins-legend">${leg}</div>
+      ${filled ? '' : `<div class="ins-take">오늘 시작이라 D0만 있어요. D+1부터 매일 한 칸씩 채워지고, 단순 재방문과 고관여의 간격이 프로모션 고관여도예요.</div>`}</div>`);
+  }
+
+  // 배치: 퍼널(전폭) / [첫 예측 분포 + 서비스 이동] | 예측 변동 매트릭스 / 리텐션(전폭)
+  const [fnC, fpC, mxC, mvC, rtC] = [cards[0], cards[1], cards[2], cards[3], cards[4]];
+  if (fnC && fpC && mxC && mvC && rtC) cards.splice(0, cards.length, fnC, `<div class="ins-col">${fpC}${mvC}</div>`, mxC, rtC);
+  return `<div class="modal-section-title">🔍 프로모션 인사이트 <span style="font-weight:500;color:var(--text-3);font-size:11.5px">· ${ins.cohortFrom ? ins.cohortFrom.slice(5)+'~' : ''}${ins.asOf.slice(5)} 누적 · 기간 필터 미적용</span></div><div class="ins-grid">${cards.join('')}</div>`;
 }
 function closeProjModal(){
   const back = document.getElementById('proj-modal');

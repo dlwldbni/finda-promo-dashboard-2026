@@ -1,0 +1,183 @@
+{
+  "id": "credit_promo",
+  "line": "app",
+  "emoji": "🎯",
+  "name": "신용점수 맞히기 프로모션",
+  "owner": "지윤",
+  "status": "live",
+  "periodNote": "예측 참여 11/02~11/18 · 잠금 11/19~11/22 · 결과 조회 11/23~11/28 / 기여 유저 리텐션(contributedActive)은 월말 코호트 확정 후 입력 예정",
+  "trendKey": "predict_done",
+  "runs": [
+    {
+      "label": "전체",
+      "start": "2026-11-02",
+      "end": "2026-11-28",
+      "granularity": "daily",
+      "daily": [
+        {
+          "date": "2026-11-02",
+          "view": 3244,
+          "predict_done": 2855,
+          "change_done": 757,
+          "result_view": 0,
+          "result_click": 0
+        }
+      ]
+    }
+  ],
+  "metricKeys": [
+    "view",
+    "predict_done",
+    "change_done",
+    "result_view",
+    "result_click"
+  ],
+  "insights": {
+    "_comment": "Mixpanel project 1452453 · 모두 unique(변동 매트릭스만 변경 건수). 첫 참여 퍼널=1일 윈도우(D0), 예측 변동 퍼널=17일 윈도우, 서비스 이동=참여 후 24시간. 코호트 기준 = 11/02~asOf 첫 예측 참여자.",
+    "asOf": "2026-11-02",
+    "cohortFrom": "2026-11-02",
+    "funnels": [
+      {
+        "key": "first",
+        "title": "① 첫 참여",
+        "window": "D0 · 1일",
+        "steps": [
+          {
+            "label": "프로모션 진입",
+            "event": "PM_credit_intro_choice_view",
+            "n": 3203
+          },
+          {
+            "label": "예측 완료 (참여)",
+            "event": "PM_credit_predict_done_view",
+            "n": 2816
+          },
+          {
+            "label": "리워드 확인",
+            "event": "PM_credit_predict_done_reward",
+            "n": 2810
+          },
+          {
+            "label": "콘텐츠 이동",
+            "event": "PM_credit_content_view",
+            "n": 571
+          }
+        ]
+      },
+      {
+        "key": "change",
+        "title": "② 예측 변동",
+        "window": "D17 · 17일",
+        "steps": [
+          {
+            "label": "참여 (첫 예측)",
+            "event": "PM_credit_predict_done_view",
+            "n": 2816
+          },
+          {
+            "label": "변경 화면 진입",
+            "event": "PM_credit_change_intro_view",
+            "n": 2229
+          },
+          {
+            "label": "변경 선택",
+            "event": "PM_credit_change_predict_clickCTA",
+            "n": 761
+          },
+          {
+            "label": "변경 완료",
+            "event": "PM_credit_change_done_view",
+            "n": 748
+          }
+        ]
+      },
+      {
+        "key": "result",
+        "title": "③ 결과 조회",
+        "window": "11/23 오픈",
+        "pending": "결과 조회는 11/23부터 집계돼요",
+        "steps": []
+      }
+    ],
+    "firstPredict": {
+      "up": 1251,
+      "keep": 1401,
+      "down": 164
+    },
+    "changeMatrix": {
+      "unit": "변경 완료 건수",
+      "from": {
+        "up": {
+          "up": 52,
+          "keep": 238,
+          "down": 76
+        },
+        "keep": {
+          "up": 504,
+          "keep": 90,
+          "down": 117
+        },
+        "down": {
+          "up": 56,
+          "keep": 70,
+          "down": 22
+        }
+      }
+    },
+    "serviceMove": {
+      "window": "참여 후 24시간",
+      "services": [
+        {
+          "key": "cra",
+          "label": "신용점수 올리기",
+          "event": "CRA_main_view"
+        },
+        {
+          "key": "ci",
+          "label": "신용 메인",
+          "event": "CI_main_view"
+        }
+      ],
+      "byChoice": {
+        "up": {
+          "base": 1251,
+          "cra": 33,
+          "ci": 86
+        },
+        "keep": {
+          "base": 1400,
+          "cra": 20,
+          "ci": 162
+        },
+        "down": {
+          "base": 164,
+          "cra": 5,
+          "ci": 19
+        }
+      }
+    },
+    "retention": {
+      "cohort": 2816,
+      "series": [
+        {
+          "key": "revisit",
+          "label": "단순 재방문",
+          "def": "Opened Finda App"
+        },
+        {
+          "key": "engaged",
+          "label": "고관여",
+          "def": "신용 서비스(올리기·신용 메인) 이용 또는 프로모션 재진입 · D+1부터"
+        }
+      ],
+      "days": [
+        {
+          "d": 0,
+          "revisit": 0.17,
+          "engaged": null
+        }
+      ],
+      "horizon": 14
+    }
+  }
+}
