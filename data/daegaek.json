@@ -748,33 +748,17 @@
           "revenue": null,
           "pointCost": 55803,
           "sendCost": null
-        },
-        {
-          "date": "2026-08-15",
-          "introView": 314,
-          "inquiry": 33,
-          "paymentCount": null,
-          "approve": 26,
-          "reject": 7,
-          "apply": 2,
-          "creditLoan": 1,
-          "otherLoan": 1,
-          "contract": null,
-          "amount": null,
-          "revenue": null,
-          "pointCost": null,
-          "sendCost": null
         }
       ],
       "pointTab": {
-        "introView": 5494,
-        "inquiry": 1311,
-        "approve": 722,
-        "reject": 589,
-        "apply": 120,
+        "introView": 5378,
+        "inquiry": 1300,
+        "approve": 717,
+        "reject": 583,
+        "apply": 119,
         "creditLoan": 88,
-        "otherLoan": 32,
-        "asOf": "2026-08-15"
+        "otherLoan": 31,
+        "asOf": "2026-08-14"
       }
     },
     {
