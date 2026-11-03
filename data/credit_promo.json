@@ -140,21 +140,51 @@
       ],
       "byChoice": {
         "up": {
-          "base": 1251,
-          "cra": 33,
-          "ci": 86
+          "base": 1515,
+          "content": {
+            "cra": 18,
+            "ci": 6
+          },
+          "reach": {
+            "cra": 33,
+            "ci": 86
+          }
         },
         "keep": {
-          "base": 1400,
-          "cra": 20,
-          "ci": 162
+          "base": 1799,
+          "content": {
+            "cra": 6,
+            "ci": 5
+          },
+          "reach": {
+            "cra": 20,
+            "ci": 162
+          }
         },
         "down": {
-          "base": 164,
-          "cra": 5,
-          "ci": 19
+          "base": 206,
+          "content": {
+            "cra": 1,
+            "ci": 1
+          },
+          "reach": {
+            "cra": 5,
+            "ci": 19
+          }
         }
-      }
+      },
+      "modes": [
+        {
+          "key": "content",
+          "label": "콘텐츠 경유 클릭",
+          "note": "프로모션 콘텐츠에서 직접 넘어간 클릭 (PM_credit_content_clickCRA·clickCI)"
+        },
+        {
+          "key": "reach",
+          "label": "24시간 내 도달 (참고)",
+          "note": "경로 무관 서비스 화면 진입 · 신용 메인은 오가닉 방문 포함"
+        }
+      ]
     },
     "retention": {
       "cohort": 2816,

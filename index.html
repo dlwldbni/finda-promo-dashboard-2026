@@ -1356,23 +1356,29 @@ function insightsHtml(ins, cfg){
       <div class="ins-take">가장 큰 이동은 <b>${best.a.label} → ${best.b.label}</b> ${comma(best.v)}건 (${pct(best.v, allTot)}) · 회색 칸은 다른 값으로 바꿨다가 최초 예측으로 되돌린 건</div></div>`);
   }
 
-  // ④ 선택별 신용 서비스 이동 — 선택(상승/유지/하락)마다 서비스별 도달률 막대
+  // ④ 선택별 신용 서비스 이동 — 선택(상승/유지/하락)마다 서비스별 이동률 막대.
+  // modes = 콘텐츠 경유 클릭(메인) / 24시간 내 도달(참고). modes 없는 옛 데이터(byChoice[c][svc] 평평한 구조)는 도달 하나로 본다.
   if (ins.serviceMove) {
     const sm = ins.serviceMove, svcColors = [cfg.color, '#2F6FE0', '#E8880C'];
-    let mx = 0; CHOICES.forEach(c=>sm.services.forEach(s=>{ const b=sm.byChoice[c.key]; if(b&&b.base) mx=Math.max(mx, b[s.key]/b.base); }));
-    const rowsH = CHOICES.map(c=>{
-      const b = sm.byChoice[c.key]; if(!b) return '';
-      const bars = sm.services.map((s,i)=>`<div class="ins-mv-bar" title="${s.event}"><span class="bar"><i style="width:${mx? (b[s.key]/b.base/mx*100).toFixed(1):0}%;background:${svcColors[i]}"></i></span><span class="v">${pct(b[s.key],b.base)} <span style="color:var(--text-3)">(${comma(b[s.key])})</span></span></div>`).join('');
-      return `<div class="ins-mv-row"><span style="color:${c.color};font-weight:700">${c.label}<br><span style="font-weight:400;color:var(--text-3);font-size:10px">${comma(b.base)}명</span></span><div class="ins-mv-bars">${bars}</div></div>`;
-    }).join('');
+    const modes = sm.modes || [{ key:null, label:'24시간 내 도달', note:'' }];
+    const val = (b, mode, s) => mode.key ? ((b[mode.key]||{})[s.key]||0) : (b[s.key]||0);
     const leg = sm.services.map((s,i)=>`<span><i class="ins-dot" style="background:${svcColors[i]}"></i>${s.label}</span>`).join('');
-    // 서비스별로 이동률이 가장 높은 선택
-    const takes = sm.services.map(s=>{
-      const r = CHOICES.filter(c=>sm.byChoice[c.key]&&sm.byChoice[c.key].base).map(c=>({c, v:sm.byChoice[c.key][s.key]/sm.byChoice[c.key].base})).sort((x,y)=>y.v-x.v);
-      return `${s.label}은 <b style="color:${r[0].c.color}">${r[0].c.label}</b> 선택자가 가장 높음(${(r[0].v*100).toFixed(1)}% vs ${r[r.length-1].c.label} ${(r[r.length-1].v*100).toFixed(1)}%)`;
-    }).join('<br>');
-    cards.push(`<div class="ins-card"><h4>🧭 선택별 신용 서비스 이동</h4><div class="ins-cap">각 선택 유저 중 ${sm.window} 안에 서비스에 도달한 비율</div><div class="ins-legend" style="margin:0 0 4px">${leg}</div>${rowsH}
-      <div class="ins-take">${takes}</div></div>`);
+    const sections = modes.map((mode, mi)=>{
+      let mx = 0; CHOICES.forEach(c=>sm.services.forEach(s=>{ const b=sm.byChoice[c.key]; if(b&&b.base) mx=Math.max(mx, val(b,mode,s)/b.base); }));
+      const rowsH = CHOICES.map(c=>{
+        const b = sm.byChoice[c.key]; if(!b) return '';
+        const bars = sm.services.map((s,i)=>{ const v=val(b,mode,s); return `<div class="ins-mv-bar"><span class="bar"><i style="width:${mx? (v/b.base/mx*100).toFixed(1):0}%;background:${svcColors[i]};opacity:${mi?0.45:1}"></i></span><span class="v">${pct(v,b.base)} <span style="color:var(--text-3)">(${comma(v)})</span></span></div>`; }).join('');
+        return `<div class="ins-mv-row"><span style="color:${c.color};font-weight:700">${c.label}<br><span style="font-weight:400;color:var(--text-3);font-size:10px">${comma(b.base)}명</span></span><div class="ins-mv-bars">${bars}</div></div>`;
+      }).join('');
+      // 서비스별로 이동률이 가장 높은 선택
+      const takes = sm.services.map(s=>{
+        const r = CHOICES.filter(c=>sm.byChoice[c.key]&&sm.byChoice[c.key].base).map(c=>({c, v:val(sm.byChoice[c.key],mode,s)/sm.byChoice[c.key].base})).sort((x,y)=>y.v-x.v);
+        return `${s.label}: <b style="color:${r[0].c.color}">${r[0].c.label}</b> 선택자가 가장 높음(${(r[0].v*100).toFixed(1)}% vs ${r[r.length-1].c.label} ${(r[r.length-1].v*100).toFixed(1)}%)`;
+      }).join('<br>');
+      const head = `<div style="font-size:11.5px;font-weight:700;margin:${mi?'14px':'2px'} 0 0;${mi?'padding-top:10px;border-top:1px dashed var(--border);color:var(--text-2)':''}">${mode.label}</div>${mode.note?`<div class="ins-cap" style="margin-bottom:2px">${mode.note}</div>`:''}`;
+      return head + rowsH + (mi ? '' : `<div class="ins-take">${takes}</div>`);
+    }).join('');
+    cards.push(`<div class="ins-card"><h4>🧭 선택별 신용 서비스 이동</h4><div class="ins-cap">각 선택 유저 중 ${sm.window} 안에 이동한 비율</div><div class="ins-legend" style="margin:0 0 4px">${leg}</div>${sections}</div>`);
   }
 
   // ⑤ 리텐션 D0~D+N — 단순 재방문 vs 고관여, 칼럼 막대 (미집계 날은 빗금)
