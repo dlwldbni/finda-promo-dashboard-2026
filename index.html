@@ -1320,7 +1320,7 @@ function insightsHtml(ins, cfg){
       const last = sel.steps[sel.steps.length-1];
       body += `<div class="ins-take">전체 전환 <b style="color:${cfg.color}">${pct(last.n, top)}</b> · ${sel.steps[0].label} → ${last.label}</div>`;
     }
-    cards.push(`<div class="ins-card" style="grid-column:1/-1"><h4>🔻 퍼널별 전환율</h4><div class="ins-cap">유니크 · 첫 참여는 당일(D0), 예측 변동은 참여 후 17일 윈도우</div><div class="ins-fn-tabs">${tabs}</div>${body}</div>`);
+    cards.push(`<div class="ins-card" style="grid-column:1/-1"><h4>🔻 퍼널별 전환율</h4><div class="ins-cap">유니크 · 누적 = 11/2~11/18 참여 코호트, 17일 전환 윈도우(D17) · 하루 단위 성과(D0)는 아래 일자별 로그</div><div class="ins-fn-tabs">${tabs}</div>${body}</div>`);
   }
 
   // ② 첫 예측 분포 — 100% 누적 막대

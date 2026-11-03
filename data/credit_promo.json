@@ -33,14 +33,14 @@
     "result_click"
   ],
   "insights": {
-    "_comment": "Mixpanel project 1452453 · 모두 unique(변동 매트릭스만 변경 건수). 첫 참여 퍼널=1일 윈도우(D0), 예측 변동 퍼널=17일 윈도우, 서비스 이동=참여 후 24시간. 코호트 기준 = 11/02~asOf 첫 예측 참여자.",
+    "_comment": "Mixpanel project 1452453 · 모두 unique(변동 매트릭스만 변경 건수). 일별(runs.daily)=그날 기준 D0. 누적(insights)=11/02~11/18 참여 코호트, 17일 전환 윈도우(D17). 매일 08:00 클라우드 루틴이 갱신.",
     "asOf": "2026-11-02",
     "cohortFrom": "2026-11-02",
     "funnels": [
       {
         "key": "first",
         "title": "① 첫 참여",
-        "window": "D0 · 1일",
+        "window": "누적 D17",
         "steps": [
           {
             "label": "프로모션 진입",
@@ -67,7 +67,7 @@
       {
         "key": "change",
         "title": "② 예측 변동",
-        "window": "D17 · 17일",
+        "window": "누적 D17",
         "steps": [
           {
             "label": "참여 (첫 예측)",
@@ -125,7 +125,7 @@
       }
     },
     "serviceMove": {
-      "window": "참여 후 24시간",
+      "window": "참여 후 17일",
       "services": [
         {
           "key": "cra",
@@ -181,7 +181,7 @@
         },
         {
           "key": "reach",
-          "label": "24시간 내 도달 (참고)",
+          "label": "서비스 화면 도달 (참고)",
           "note": "경로 무관 서비스 화면 진입 · 신용 메인은 오가닉 방문 포함"
         }
       ]
