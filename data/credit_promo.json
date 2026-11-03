@@ -6,6 +6,12 @@
   "owner": "지윤",
   "status": "live",
   "periodNote": "예측 참여 11/02~11/18 · 잠금 11/19~11/22 · 결과 조회 11/23~11/28 / 기여 유저 리텐션(contributedActive)은 월말 코호트 확정 후 입력 예정",
+  "links": [
+    {
+      "label": "Mixpanel 대시보드",
+      "url": "https://mixpanel.com/project/1452453/view/1378435/app/boards#id=11624480"
+    }
+  ],
   "trendKey": "predict_done",
   "runs": [
     {

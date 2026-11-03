@@ -106,6 +106,8 @@
   td.num, th.num { text-align:right; font-variant-numeric:tabular-nums; }
   tr:hover td { background:#fafbfc; }
   .proj-name { font-weight:700; display:flex; align-items:center; gap:8px; }
+  .link-chip { font-size:11px; color:var(--blue); background:#fff; border:1px solid var(--border); padding:1px 8px; border-radius:999px; font-weight:600; text-decoration:none; }
+  .link-chip:hover { border-color:var(--blue); background:var(--grey-bg); }
   .owner-chip { font-size:11px; color:var(--text-2); background:var(--grey-bg); border:1px solid var(--border); padding:1px 7px; border-radius:999px; font-weight:600; }
   .status-chip { font-size:10.5px; font-weight:700; padding:1px 7px; border-radius:4px; }
   .status-chip.done{ background:#E5E7EB; color:#4B5563;} .status-chip.live{ background:#FEF3C7; color:#B45309;}
@@ -525,7 +527,7 @@ function toInternal(p){
   if (!metricKeys) { const ks = new Set(); daily.forEach(r => Object.keys(r.m).forEach(k => { if (typeof r.m[k] === 'number') ks.add(k); })); metricKeys = [...ks]; }
   const first = runs.length ? runs[0].start : null;
   const last  = daily.length ? daily.reduce((a,d)=> d.date>a ? d.date : a, daily[0].date) : null;
-  return { id:p.id, line:p.line, emoji:p.emoji||'📁', name:p.name, owner:p.owner||'—', status:p.status||'done', metricKeys, runs, daily, start:first, end:last, periodNote:p.periodNote||null, trendKey:p.trendKey||null, insights:p.insights||null };
+  return { id:p.id, line:p.line, emoji:p.emoji||'📁', name:p.name, owner:p.owner||'—', status:p.status||'done', metricKeys, runs, daily, start:first, end:last, periodNote:p.periodNote||null, trendKey:p.trendKey||null, insights:p.insights||null, links:Array.isArray(p.links)?p.links:[] };
 }
 async function loadProjects(){
   const base = 'data/';
@@ -1188,7 +1190,7 @@ function renderModalContent(){
   const runLabel = modalState.run==='ALL' ? (p.runs.length>1?`${p.runs.length}개 회차`:`${p.start.slice(5)}~${p.end.slice(5)}`) : p.runs[+modalState.run].label;
   back.querySelector('.modal-head').innerHTML = `<div>
       <div class="modal-title">${p.emoji} ${p.name} <span class="status-chip ${p.status}">${p.status==='live'?'진행중':'완료'}</span></div>
-      <div class="modal-sub"><span class="owner-chip">👤 ${p.owner}</span><span class="pc-period">${runLabel}</span><span style="color:${cfg.color};font-weight:700">${cfg.emoji} ${cfg.name}</span></div>
+      <div class="modal-sub"><span class="owner-chip">👤 ${p.owner}</span><span class="pc-period">${runLabel}</span><span style="color:${cfg.color};font-weight:700">${cfg.emoji} ${cfg.name}</span>${p.links.map(l=>`<a class="link-chip" href="${l.url}" target="_blank" rel="noopener">🔗 ${l.label} ↗</a>`).join('')}</div>
     </div><button class="modal-close" onclick="closeProjModal()">✕</button>`;
   // 4차 A/B 비교 블록 — 선택 run 이 4차 A/B 일 때만. 전체/A/B 토글이 모달 전체 뷰(지표·표·그래프)를 필터.
   let abModal='';
