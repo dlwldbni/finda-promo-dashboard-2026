@@ -205,11 +205,6 @@
           "d": 0,
           "revisit": 0.31,
           "engaged": null
-        },
-        {
-          "d": 1,
-          "revisit": 0,
-          "engaged": 0
         }
       ],
       "horizon": 14
