@@ -16,9 +16,9 @@
       "daily": [
         {
           "date": "2026-11-02",
-          "view": 3244,
-          "predict_done": 2855,
-          "change_done": 757,
+          "view": 4016,
+          "predict_done": 3521,
+          "change_done": 972,
           "result_view": 0,
           "result_click": 0
         }
@@ -45,22 +45,22 @@
           {
             "label": "프로모션 진입",
             "event": "PM_credit_intro_choice_view",
-            "n": 3203
+            "n": 4016
           },
           {
             "label": "예측 완료 (참여)",
             "event": "PM_credit_predict_done_view",
-            "n": 2816
+            "n": 3530
           },
           {
             "label": "리워드 확인",
             "event": "PM_credit_predict_done_reward",
-            "n": 2810
+            "n": 3523
           },
           {
             "label": "콘텐츠 이동",
             "event": "PM_credit_content_view",
-            "n": 571
+            "n": 712
           }
         ]
       },
@@ -72,22 +72,22 @@
           {
             "label": "참여 (첫 예측)",
             "event": "PM_credit_predict_done_view",
-            "n": 2816
+            "n": 3521
           },
           {
             "label": "변경 화면 진입",
             "event": "PM_credit_change_intro_view",
-            "n": 2229
+            "n": 2927
           },
           {
             "label": "변경 선택",
             "event": "PM_credit_change_predict_clickCTA",
-            "n": 761
+            "n": 1005
           },
           {
             "label": "변경 완료",
             "event": "PM_credit_change_done_view",
-            "n": 748
+            "n": 989
           }
         ]
       },
@@ -100,27 +100,27 @@
       }
     ],
     "firstPredict": {
-      "up": 1251,
-      "keep": 1401,
-      "down": 164
+      "up": 1516,
+      "keep": 1799,
+      "down": 206
     },
     "changeMatrix": {
       "unit": "변경 완료 건수",
       "from": {
         "up": {
-          "up": 52,
-          "keep": 238,
-          "down": 76
+          "up": 67,
+          "keep": 311,
+          "down": 97
         },
         "keep": {
-          "up": 504,
-          "keep": 90,
-          "down": 117
+          "up": 641,
+          "keep": 114,
+          "down": 153
         },
         "down": {
-          "up": 56,
-          "keep": 70,
-          "down": 22
+          "up": 77,
+          "keep": 84,
+          "down": 34
         }
       }
     },
@@ -146,8 +146,8 @@
             "ci": 6
           },
           "reach": {
-            "cra": 33,
-            "ci": 86
+            "cra": 51,
+            "ci": 150
           }
         },
         "keep": {
@@ -157,8 +157,8 @@
             "ci": 5
           },
           "reach": {
-            "cra": 20,
-            "ci": 162
+            "cra": 26,
+            "ci": 295
           }
         },
         "down": {
@@ -168,8 +168,8 @@
             "ci": 1
           },
           "reach": {
-            "cra": 5,
-            "ci": 19
+            "cra": 6,
+            "ci": 28
           }
         }
       },
@@ -187,7 +187,7 @@
       ]
     },
     "retention": {
-      "cohort": 2816,
+      "cohort": 3521,
       "series": [
         {
           "key": "revisit",
@@ -203,8 +203,13 @@
       "days": [
         {
           "d": 0,
-          "revisit": 0.17,
+          "revisit": 0.31,
           "engaged": null
+        },
+        {
+          "d": 1,
+          "revisit": 0,
+          "engaged": 0
         }
       ],
       "horizon": 14
