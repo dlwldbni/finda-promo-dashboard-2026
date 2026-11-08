@@ -38,33 +38,41 @@
         },
         {
           "date": "2026-11-04",
-          "view": 2553,
-          "predict_done": 1958,
-          "change_done": 737,
+          "view": 2558,
+          "predict_done": 1961,
+          "change_done": 740,
           "result_view": 0,
           "result_click": 0
         },
         {
           "date": "2026-11-05",
-          "view": 1336,
-          "predict_done": 1101,
-          "change_done": 577,
+          "view": 1341,
+          "predict_done": 1107,
+          "change_done": 579,
           "result_view": 0,
           "result_click": 0
         },
         {
           "date": "2026-11-06",
-          "view": 1378,
-          "predict_done": 1103,
-          "change_done": 561,
+          "view": 1386,
+          "predict_done": 1109,
+          "change_done": 564,
           "result_view": 0,
           "result_click": 0
         },
         {
           "date": "2026-11-07",
-          "view": 516,
-          "predict_done": 412,
-          "change_done": 212,
+          "view": 523,
+          "predict_done": 418,
+          "change_done": 222,
+          "result_view": 0,
+          "result_click": 0
+        },
+        {
+          "date": "2026-11-08",
+          "view": 462,
+          "predict_done": 393,
+          "change_done": 184,
           "result_view": 0,
           "result_click": 0
         }
@@ -80,7 +88,7 @@
   ],
   "insights": {
     "_comment": "Mixpanel project 1452453 · 모두 unique(변동 매트릭스만 변경 건수). 일별(runs.daily)=그날 기준 D0. 누적(insights)=11/02~11/18 참여 코호트, 17일 전환 윈도우(D17). 매일 08:00 클라우드 루틴이 갱신.",
-    "asOf": "2026-11-07",
+    "asOf": "2026-11-08",
     "cohortFrom": "2026-11-02",
     "funnels": [
       {
@@ -91,22 +99,22 @@
           {
             "label": "프로모션 진입",
             "event": "PM_credit_intro_choice_view",
-            "n": 12783
+            "n": 13250
           },
           {
             "label": "예측 완료 (참여)",
             "event": "PM_credit_predict_done_view",
-            "n": 10761
+            "n": 11175
           },
           {
             "label": "리워드 확인",
             "event": "PM_credit_predict_done_reward",
-            "n": 10753
+            "n": 11167
           },
           {
             "label": "콘텐츠 이동",
             "event": "PM_credit_content_view",
-            "n": 2870
+            "n": 2992
           }
         ]
       },
@@ -118,22 +126,22 @@
           {
             "label": "참여 (첫 예측)",
             "event": "PM_credit_predict_done_view",
-            "n": 10759
+            "n": 11173
           },
           {
             "label": "변경 화면 진입",
             "event": "PM_credit_change_intro_view",
-            "n": 9416
+            "n": 9778
           },
           {
             "label": "변경 선택",
             "event": "PM_credit_change_predict_clickCTA",
-            "n": 3661
+            "n": 3817
           },
           {
             "label": "변경 완료",
             "event": "PM_credit_change_done_view",
-            "n": 3646
+            "n": 3801
           }
         ]
       },
@@ -146,27 +154,27 @@
       }
     ],
     "firstPredict": {
-      "up": 5331,
-      "keep": 4697,
-      "down": 731
+      "up": 5557,
+      "keep": 4857,
+      "down": 759
     },
     "changeMatrix": {
       "unit": "변경 완료 건수",
       "from": {
         "up": {
-          "up": 362,
-          "keep": 1603,
-          "down": 430
+          "up": 368,
+          "keep": 1674,
+          "down": 447
         },
         "keep": {
-          "up": 2260,
-          "keep": 466,
-          "down": 595
+          "up": 2370,
+          "keep": 489,
+          "down": 618
         },
         "down": {
-          "up": 331,
-          "keep": 356,
-          "down": 159
+          "up": 346,
+          "keep": 381,
+          "down": 165
         }
       }
     },
@@ -186,36 +194,36 @@
       ],
       "byChoice": {
         "up": {
-          "base": 5331,
+          "base": 5557,
           "content": {
-            "cra": 82,
-            "ci": 39
+            "cra": 88,
+            "ci": 42
           },
           "reach": {
-            "cra": 444,
-            "ci": 1173
+            "cra": 494,
+            "ci": 1294
           }
         },
         "keep": {
-          "base": 4697,
+          "base": 4857,
           "content": {
-            "cra": 46,
-            "ci": 25
+            "cra": 49,
+            "ci": 27
           },
           "reach": {
-            "cra": 301,
-            "ci": 1205
+            "cra": 339,
+            "ci": 1436
           }
         },
         "down": {
-          "base": 731,
+          "base": 759,
           "content": {
-            "cra": 9,
+            "cra": 10,
             "ci": 7
           },
           "reach": {
-            "cra": 43,
-            "ci": 160
+            "cra": 49,
+            "ci": 179
           }
         }
       },
@@ -233,7 +241,7 @@
       ]
     },
     "retention": {
-      "cohort": 2467,
+      "cohort": 2394,
       "series": [
         {
           "key": "revisit",
@@ -254,38 +262,43 @@
         },
         {
           "d": 1,
-          "revisit": 0.44,
-          "engaged": 0.13
+          "revisit": 0.43,
+          "engaged": 0.12
         },
         {
           "d": 2,
-          "revisit": 0.42,
-          "engaged": 0.15
+          "revisit": 0.41,
+          "engaged": 0.14
         },
         {
           "d": 3,
-          "revisit": 0.44,
-          "engaged": 0.15
+          "revisit": 0.4,
+          "engaged": 0.13
         },
         {
           "d": 4,
-          "revisit": 0.39,
+          "revisit": 0.37,
           "engaged": 0.09
         },
         {
           "d": 5,
-          "revisit": 0.15,
-          "engaged": 0.02
+          "revisit": 0.33,
+          "engaged": 0.06
+        },
+        {
+          "d": 6,
+          "revisit": 0.17,
+          "engaged": 0.05
         }
       ],
       "horizon": 14
     },
     "summary": [
-      "11/7 진입 516명 중 412명이 참여해 전환율 80%로, 전날(80%)과 같은 수준이에요.",
-      "진입·참여는 전날 대비 약 63% 줄었는데, 토요일이라 유입이 빠진 것으로 보여요.",
-      "상승 선택자의 올리기 콘텐츠 클릭률(1.5%)이 유지(1.0%)의 약 1.6배예요. 하락은 클릭 9명이라 아직 표본이 적어요.",
-      "변경 완료는 누적 6,562건, 유지→상승 2,260건이 가장 커요. D+1 재방문 44% 중 고관여는 13%로 10명 중 3명꼴이에요."
+      "11/8 진입 462명 중 393명이 참여해 전환율 85%로, 전날(80%)보다 5%p 올랐어요.",
+      "진입은 전날보다 12%, 참여는 6% 줄었는데 일요일이라 유입이 더 빠진 것으로 보여요.",
+      "상승 선택자의 올리기 콘텐츠 클릭률(1.6%)이 유지(1.0%)의 약 1.6배예요. 하락은 클릭 10명이라 아직 표본이 적어요.",
+      "변경 완료는 누적 6,858건, 유지→상승 2,370건이 가장 커요. D+1 재방문 43% 중 고관여는 12%로 약 4명 중 1명꼴이에요."
     ],
-    "summaryAsOf": "2026-11-07"
+    "summaryAsOf": "2026-11-08"
   }
 }
