@@ -910,7 +910,7 @@
           "ptIntroView": 1021,
           "ptApprove": 64,
           "ptReject": 41,
-          "ptCreditLoan": 16,
+          "ptCreditLoan": 8,
           "ptOtherLoan": 4,
           "contract": 6,
           "amount": null,
