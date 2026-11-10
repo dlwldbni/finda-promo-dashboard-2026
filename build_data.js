@@ -147,33 +147,29 @@ function sepRun() {
     pointTabDaily: rows.some(r => r.ptIntroView != null || r.ptApprove != null) };
 }
 
-// 11월 (novevt) — data/_novevt_daily.json (자동갱신 로봇이 이 파일만 갱신). 11/9~11/20. 친구공유 스킴 없음.
-//   한도조회(inquiry)=LA_result_complete unique (promo_name=novevt) — 11월부터 포인트 지급(참여 인정) 트리거가
-//     LA_loanlist_view/LD_intro_view → LA_result_complete{service LA/TA/LD} 로 바뀌어, 통합대출(TA) 경로까지 포함한다.
-//     그래서 가승인+올거절(세부)의 합은 한도조회보다 작다 — 세부는 참고용.
-//   인트로조회=PM_novevt_intro_view / 프로모션참여=PM_novevt_intro_clickCTA / 신청=LA|LD_loandetail_clickCTA(promo_name=novevt)
-//   지급 포인트(혜택1 랜덤 100~1,000P)=PM_novevt_reward_success 의 reward_amount 합. 약정(혜택2 10,000P, 12/10 지급)=시트(생기면).
+// 11월 (novevt) — data/_novevt_daily.json (클라우드 루틴이 매일 10시 이 파일만 갱신). 11/9~11/20. 친구공유 스킴 없음.
+//   한도조회(inquiry)=시트 '지급 건수'(실제 포인트 지급 = 한도조회, 사용자 지정 2026-11-10). 약정·지급 포인트도 시트.
+//   인트로조회·신청 = Mixpanel 보드 리포트 '11월 대고객 프로모션-성과 대시보드'(93933364)와 같은 퍼널을 하루씩:
+//     PM_novevt_intro_view → LA_result_complete(promo_name=novevt) → LA_loandetail_clickCTA(promo_name=novevt), unique, 1일.
+//     introView=step1, mpInquiry=step2(Mixpanel 기준 한도조회 — 포인트탭 제외 계산용), apply=step3.
+//   포인트탭(ptIntroView/ptInquiry/ptApply) = 슬롯 퍼널 + (그리드 퍼널 − 슬롯·그리드 둘 다 탄 유저) — 중복 제거.
 function novRun() {
   let rows = [];
   try { rows = JSON.parse(fs.readFileSync(path.join(REPO, 'data', '_novevt_daily.json'), 'utf8')); } catch (e) { rows = []; }
   if (!rows.length) return null;
   const daily = rows.map(d => ({
     date: d.date, introView: nn(d.introView), introClick: nn(d.introClick),
-    inquiry: nn(d.inquiry),
-    approve: nn(d.approve), reject: nn(d.reject),
-    apply: (d.creditLoan != null || d.otherLoan != null) ? (d.creditLoan || 0) + (d.otherLoan || 0) : null,
-    creditLoan: nn(d.creditLoan), otherLoan: nn(d.otherLoan),
-    rewardCount: nn(d.rewardCount),     // 리워드 지급 건수(1인1회) — 비용 대사용, 지표 미노출
-    sepPointTotal: nn(d.rewardPoint),   // 총 지급 포인트 컬럼(9월과 같은 키 재사용)
-    ptIntroView: nn(d.ptIntroView), ptInquiry: nn(d.ptInquiry), ptApprove: nn(d.ptApprove), ptReject: nn(d.ptReject),
-    ptCreditLoan: nn(d.ptCreditLoan), ptOtherLoan: nn(d.ptOtherLoan),
+    inquiry: nn(d.inquiry), mpInquiry: nn(d.mpInquiry),
+    apply: nn(d.apply),
+    sepPointTotal: nn(d.pointCost),   // 총 지급 포인트 컬럼(9월과 같은 키 재사용)
+    ptIntroView: nn(d.ptIntroView), ptInquiry: nn(d.ptInquiry), ptApply: nn(d.ptApply),
     contract: nn(d.contract), amount: null, revenue: null,
-    pointCost: nn(d.rewardPoint), sendCost: null,
+    pointCost: nn(d.pointCost), sendCost: null,
   }));
   const dates = rows.map(r => r.date);
   return { label: '11월', start: '2026-11-09', end: dates[dates.length - 1], granularity: 'daily', daily,
     pointTabDaily: rows.some(r => r.ptIntroView != null),
-    note: '11월은 한도조회 = <b>LA_result_complete</b>(포인트 지급 트리거, 통합대출 경로 포함). 가승인·올거절은 참고 세부라 합이 한도조회보다 작아요. 지급 포인트는 혜택1(랜덤) 기준이며, 약정 10,000P(혜택2)는 12/10 일괄 지급이라 아직 미포함.' };
+    note: '11월 한도조회 = 시트 <b>포인트 지급 건수</b>(1인 1회, 실제 지급 기준). 인트로·신청은 Mixpanel 퍼널(인트로 → LA_result_complete → 신용대출 신청 클릭) 기준이라 인트로→한도조회 CVR 은 두 소스를 섞은 값이에요. 약정 10,000P(혜택2)는 12/10 일괄 지급이라 지급 포인트에 아직 미포함.' };
 }
 
 // 쿠폰함 프로모션 (민주) — data/_coupon_daily.json. 지표: 한도조회(가승인 세부)·신청·약정·매출 (인트로조회·올거절·신용대출/우수대부 미집계).

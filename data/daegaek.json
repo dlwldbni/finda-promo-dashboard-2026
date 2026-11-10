@@ -1146,31 +1146,24 @@
       "daily": [
         {
           "date": "2026-11-09",
-          "introView": 4021,
+          "introView": 4023,
           "introClick": 2965,
-          "inquiry": 1847,
-          "approve": 820,
-          "reject": 686,
-          "apply": 457,
-          "creditLoan": 312,
-          "otherLoan": 145,
-          "rewardCount": 1842,
-          "sepPointTotal": 301753,
-          "ptIntroView": 330,
-          "ptInquiry": 100,
-          "ptApprove": 78,
-          "ptReject": 3,
-          "ptCreditLoan": 2,
-          "ptOtherLoan": 0,
-          "contract": null,
+          "inquiry": 2023,
+          "mpInquiry": 1897,
+          "apply": 333,
+          "sepPointTotal": 330525,
+          "ptIntroView": 310,
+          "ptInquiry": 98,
+          "ptApply": 2,
+          "contract": 45,
           "amount": null,
           "revenue": null,
-          "pointCost": 301753,
+          "pointCost": 330525,
           "sendCost": null
         }
       ],
       "pointTabDaily": true,
-      "note": "11월은 한도조회 = <b>LA_result_complete</b>(포인트 지급 트리거, 통합대출 경로 포함). 가승인·올거절은 참고 세부라 합이 한도조회보다 작아요. 지급 포인트는 혜택1(랜덤) 기준이며, 약정 10,000P(혜택2)는 12/10 일괄 지급이라 아직 미포함."
+      "note": "11월 한도조회 = 시트 <b>포인트 지급 건수</b>(1인 1회, 실제 지급 기준). 인트로·신청은 Mixpanel 퍼널(인트로 → LA_result_complete → 신용대출 신청 클릭) 기준이라 인트로→한도조회 CVR 은 두 소스를 섞은 값이에요. 약정 10,000P(혜택2)는 12/10 일괄 지급이라 지급 포인트에 아직 미포함."
     }
   ],
   "metricKeys": [
