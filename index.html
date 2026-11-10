@@ -329,7 +329,7 @@
 </div>
 <script>
 (function(){
-  function decodePw(){ return atob('NjIwMnBlcw==').split('').reverse().join(''); }
+  function decodePw(){ return atob('NjIwMmh0d29yZw==').split('').reverse().join(''); }
   var gate=document.getElementById('password-gate'), btn=document.getElementById('pwd-submit'), input=document.getElementById('pwd-input'), err=document.getElementById('pwd-error');
   function unlock(){ try{ sessionStorage.setItem('promo_dashboard_unlocked','1'); }catch(e){} if(gate) gate.style.display='none'; document.documentElement.classList.add('unlocked'); document.body.style.overflow='auto'; }
   function check(){ var typed=(input.value||'').trim(); if(typed===decodePw()) unlock(); else { err.classList.add('show'); err.textContent='비밀번호가 일치하지 않습니다'; input.value=''; input.focus(); } }
@@ -874,7 +874,7 @@ function renderKpiItems(items, cfg, agg, extraSub){
     }
     const st = subText(it.mt, agg||{});
     const ex = (extraSub && extraSub[it.mt.key]) ? `<div class="kpi-sub" style="color:${cfg.color};font-weight:700">${extraSub[it.mt.key]}</div>` : '';
-    return `<div class="kpi" style="--c:${cfg.color};--cbg:var(${cfg.cvar}-bg)"><div class="l">${it.mt.label}${it.mt.agg==='avg'?' (일평균)':''}</div><div class="v">${fmtCell(it.mt, it.value)}</div>${st?`<div class="kpi-sub">${st}</div>`:''}${ex}</div>`;
+    return `<div class="kpi" style="--c:${cfg.color};--cbg:var(${cfg.cvar}-bg)"><div class="l">${it.mt.label}${it.mt.agg==='avg'?' (일평균)':''}</div><div class="v">${it.value==null?'—':fmtCell(it.mt, it.value)}</div>${st?`<div class="kpi-sub">${st}</div>`:''}${ex}</div>`;
   }).join('');
 }
 
@@ -1076,7 +1076,8 @@ function renderModalContent(){
     // 9월: 일자별 포인트탭(선택 기간 합산, 날짜 범위 반영). 8월: 누적 1회(전체 기간 볼 때만).
     const rangeAware = !!selRun.pointTabDaily;
     const pt = rangeAware
-      ? { introView: dsum('ptIntroView'), inquiry: dsum('ptApprove')+dsum('ptReject'), apply: dsum('ptCreditLoan')+dsum('ptOtherLoan') }
+      // 11월(novevt)은 한도조회=LA_result_complete 라 포인트탭도 ptInquiry(같은 이벤트 퍼널)를 쓴다. 9월은 가승인+올거절.
+      ? { introView: dsum('ptIntroView'), inquiry: inR.some(d=> d.m && d.m.ptInquiry!=null) ? dsum('ptInquiry') : dsum('ptApprove')+dsum('ptReject'), apply: dsum('ptCreditLoan')+dsum('ptOtherLoan') }
       : selRun.pointTab;
     const show = rangeAware || (modalState.start<=selRun.start && modalState.end>=selRun.end);
     if(show){
@@ -1084,8 +1085,8 @@ function renderModalContent(){
       ptExtraSub = {}; const noteRows = []; const ex = {};
       PTMAP.forEach(x=>{
         if(pt[x.key]==null) return;
-        // 한도조회 '전체' = 가승인+올거절(Mixpanel). 2026-09-23 이후 daily.inquiry 와 같은 값이다.
-        const tot = inR.reduce((s,d)=> { const m=d.m||{}; return s + (x.key==='inquiry' ? ((m.approve||0)+(m.reject||0)) : (m[x.key]||0)); }, 0);
+        // 한도조회 '전체' = daily.inquiry (9월=가승인+올거절, 11월=LA_result_complete).
+        const tot = inR.reduce((s,d)=> s + ((d.m||{})[x.key]||0), 0);
         const excl = tot - pt[x.key];
         if(excl<0) return;
         ex[x.key] = excl;
@@ -1114,7 +1115,9 @@ function renderModalContent(){
   // 대고객(daegaek)은 핵심지표를 curated 세트로 고정: 프로모션참여 / 인트로→한도조회 CVR / 한도조회 / 한도조회→신청 CVR / 신청 / 신청→약정 CVR / 약정 / 마케팅비용
   if (p.id === 'daegaek') {
     const M = k => cfg.metrics.find(m=>m.key===k);
-    const cvrItem = (num,den,label)=>({type:'cvr', label, value: cvrAgg[den] ? cvrAgg[num]/cvrAgg[den] : null});
+    // 선택 기간에 값이 하나도 없는 지표(예: 11월 약정 — 시트 입력 전)는 0 이 아니라 미집계(—)로 둔다.
+    const hasVal = k => rows.some(r=> r.m && r.m[k]!=null);
+    const cvrItem = (num,den,label)=>({type:'cvr', label, value: (cvrAgg[den] && hasVal(num)) ? cvrAgg[num]/cvrAgg[den] : null});
     kpiItems = [
       {type:'metric', mt:M('introClick'), value:tot.agg.introClick},
       cvrItem('inquiry','introView','인트로→한도조회 CVR'),
@@ -1122,7 +1125,7 @@ function renderModalContent(){
       cvrItem('apply','inquiry','한도조회→신청 CVR'),
       {type:'metric', mt:M('apply'), value:tot.agg.apply},
       cvrItem('contract','apply','신청→약정 CVR'),
-      {type:'metric', mt:M('contract'), value:tot.agg.contract},
+      {type:'metric', mt:M('contract'), value: hasVal('contract') ? tot.agg.contract : null},
     ];
     if (tot.agg.pointCost) kpiItems.push({type:'metric', mt:{key:'pointCost', label:'마케팅 비용 (지급 포인트)', fmt:'wonFull'}, value:tot.agg.pointCost});
   }
@@ -1228,6 +1231,7 @@ function renderModalContent(){
     ${refBlock}
     <div class="modal-section-title">핵심 지표 <span style="font-weight:500;color:var(--text-3);font-size:11.5px">· 선택 기간 합계</span></div>
     <div class="kpi-row">${kpis}${cvrKpi}</div>
+    ${selRun && selRun.note ? `<div class="kpi-note" style="font-size:11.5px;color:var(--text-3);margin:-4px 0 10px">ℹ️ ${selRun.note}</div>` : ''}
     ${cfg.kpiNote && (p.metricKeys||[]).includes('terms') ? `<div class="kpi-note" style="font-size:11.5px;color:var(--text-3);margin:-4px 0 10px">${cfg.kpiNote}</div>` : ''}
     ${p.insights ? insightsHtml(p.insights, cfg) : ''}
     <div class="modal-section-title">📈 ${cfg.trendLabel || cfg.headline.label} 추이</div>
