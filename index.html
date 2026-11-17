@@ -534,7 +534,7 @@ function toInternal(p){
   if (!metricKeys) { const ks = new Set(); daily.forEach(r => Object.keys(r.m).forEach(k => { if (typeof r.m[k] === 'number') ks.add(k); })); metricKeys = [...ks]; }
   const first = runs.length ? runs[0].start : null;
   const last  = daily.length ? daily.reduce((a,d)=> d.date>a ? d.date : a, daily[0].date) : null;
-  return { id:p.id, line:p.line, emoji:p.emoji||'📁', name:p.name, owner:p.owner||'—', status:p.status||'done', metricKeys, runs, daily, start:first, end:last, periodNote:p.periodNote||null, trendKey:p.trendKey||null, insights:p.insights||null, kpiGoals:Array.isArray(p.kpiGoals)?p.kpiGoals:null, links:Array.isArray(p.links)?p.links:[] };
+  return { id:p.id, line:p.line, emoji:p.emoji||'📁', name:p.name, owner:p.owner||'—', status:p.status||'done', metricKeys, runs, daily, start:first, end:last, periodNote:p.periodNote||null, trendKey:p.trendKey||null, insights:p.insights||null, kpiGoals:Array.isArray(p.kpiGoals)?p.kpiGoals:null, kpiOverrides:p.kpiOverrides||null, kpiFootnote:p.kpiFootnote||null, links:Array.isArray(p.links)?p.links:[] };
 }
 async function loadProjects(){
   const base = 'data/';
@@ -1153,13 +1153,31 @@ function renderModalContent(){
       } else if (g.type==='ratio') {
         const v = hasOf(g.num) && sumOf(g.den) ? sumOf(g.num)/sumOf(g.den) : null;
         kpiItems.push({type:'cvr', label:g.label, value:v});
+      } else if (g.type==='sum') {
+        kpiItems.push({type:'metric', mt:{key:g.key+'_sum', label:g.label, fmt:'wonFull'}, value: hasOf(g.key) ? sumOf(g.key) : null, subText: g.budget ? `예산 ${fmtWonFull(g.budget)} 중 ${(sumOf(g.key)/g.budget*100).toFixed(1)}% 사용` : ''});
       } else if (g.type==='budget') {
         const used = sumOf(g.key);
         kpiItems.push({type:'cvr', label:g.label, value: g.budget ? used/g.budget : null, subText:`${fmtWonFull(used)} / 예산 ${fmtWonFull(g.budget)}`});
       }
     });
   }
-  const kpis = renderKpiItems(kpiItems, cfg, tot.agg, ptExtraSub);
+  // 프로젝트별 KPI 카드 덮어쓰기(p.kpiOverrides) — 키: 지표 key 또는 'cvr:라벨'.
+  //   hide: 카드 숨김 / label: 이름 변경 / num·den: 선택 기간 일별 합으로 CVR 재계산 / src: 카드 아래 데이터 출처 표기
+  if (p.kpiOverrides) {
+    const sumOf = k => rows.reduce((s,r)=> s + ((r.m && r.m[k]) || 0), 0);
+    const hasOf = k => rows.some(r=> r.m && r.m[k]!=null);
+    kpiItems = kpiItems.filter(it=>{ const o=p.kpiOverrides[it.type==='cvr' ? 'cvr:'+it.label : it.mt.key]; return !(o && o.hide); }).map(it=>{
+      const o = p.kpiOverrides[it.type==='cvr' ? 'cvr:'+it.label : it.mt.key];
+      if (!o) return it;
+      const n = Object.assign({}, it);
+      if (o.num && o.den) n.value = (hasOf(o.num) && sumOf(o.den)) ? sumOf(o.num)/sumOf(o.den) : null;
+      if (o.label) { if (n.type==='cvr') n.label = o.label; else n.mt = Object.assign({}, it.mt, {label:o.label}); }
+      if (o.src) n.subText = (n.subText ? n.subText+'<br>' : '') + `<span style="color:var(--text-3)">출처 · ${o.src}</span>`;
+      return n;
+    });
+  }
+  const kpis = renderKpiItems(kpiItems, cfg, tot.agg, ptExtraSub)
+    + (p.kpiFootnote ? `<div style="grid-column:1/-1;font-size:11.5px;color:var(--text-3);line-height:1.6;margin-top:2px">📌 ${p.kpiFootnote}</div>` : '');
   const cvrKpi = '';
 
   // 회차(월별) 탭
