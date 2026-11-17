@@ -1,0 +1,37 @@
+{
+  "id": "kospi_nov_promo",
+  "line": "asset",
+  "emoji": "📈",
+  "name": "코스피 예측 프로모션 (11월 · 유저 리텐션)",
+  "owner": "은영",
+  "status": "live",
+  "periodNote": "프로모션 운영 11/16~11/27(영업일 10일), 예측 대상일 11/17~11/30, 리텐션 전용 회차. 11월부터 참여(contributedMau)는 예측 완료(result_wait_view) 기준. 포인트는 예측 대상일 장 마감 후 정산되어 pointCost는 지급일(D+1) 기준으로 반영됨. 이벤트 로그는 10월과 같은 PM_2610kospi_*로 수집(날짜로 구분). 출처: 구글시트 2611KPI 탭(참여·연동·포인트) + Mixpanel 보드 (2611) 코스피 예측 프로모션 id=11651079(인트로 조회)",
+  "metricKeys": [
+    "introView",
+    "contributedMau",
+    "connectDone",
+    "pointCost",
+    "sendCost"
+  ],
+  "runs": [
+    {
+      "label": "11월",
+      "start": "2026-11-16",
+      "end": "2026-11-30",
+      "granularity": "daily",
+      "introViewUnique": 1639,
+      "contributedMauUnique": 1071,
+      "connectDoneUnique": 1803,
+      "daily": [
+        {
+          "date": "2026-11-16",
+          "introView": 1638,
+          "contributedMau": 1071,
+          "connectDone": 1803,
+          "pointCost": 0,
+          "sendCost": 0
+        }
+      ]
+    }
+  ]
+}

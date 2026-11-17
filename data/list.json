@@ -9,7 +9,8 @@
   "asset": [
     "kospi_promo",
     "usd_promo",
-    "kospi_oct_promo"
+    "kospi_oct_promo",
+    "kospi_nov_promo"
   ],
   "app": [
     "car_promo",
