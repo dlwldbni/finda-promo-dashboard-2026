@@ -230,6 +230,13 @@
   .ins-mv-bars { display:flex; flex-direction:column; gap:3px; }
   .ins-mv-bar { display:grid; grid-template-columns:1fr 84px; gap:6px; align-items:center; }
   .ins-col { display:flex; flex-direction:column; gap:12px; min-width:0; }
+  /* 마데프 전용 블록(회차별 정답률·월별 비교 표) */
+  .ins-tbl { width:100%; border-collapse:collapse; font-size:11.5px; font-variant-numeric:tabular-nums; }
+  .ins-tbl th { font-weight:600; color:var(--text-3); font-size:10.5px; text-align:right; padding:4px 6px; border-bottom:1px solid var(--border); white-space:nowrap; }
+  .ins-tbl th:first-child, .ins-tbl td:first-child { text-align:left; }
+  .ins-tbl td { text-align:right; padding:5px 6px; border-bottom:1px solid var(--grey-bg); white-space:nowrap; }
+  .ins-tbl tr.pending td { color:var(--text-3); }
+  .ins-pend { padding:18px 0; text-align:center; color:var(--text-3); font-size:12px; }
   .ins-mv-bar .bar { height:9px; border-radius:3px; background:var(--grey-bg); overflow:hidden; }
   .ins-mv-bar .bar i { display:block; height:100%; }
   .ins-mv-bar .v { font-size:10.5px; text-align:right; font-variant-numeric:tabular-nums; color:var(--text-2); }
@@ -527,7 +534,7 @@ function toInternal(p){
   if (!metricKeys) { const ks = new Set(); daily.forEach(r => Object.keys(r.m).forEach(k => { if (typeof r.m[k] === 'number') ks.add(k); })); metricKeys = [...ks]; }
   const first = runs.length ? runs[0].start : null;
   const last  = daily.length ? daily.reduce((a,d)=> d.date>a ? d.date : a, daily[0].date) : null;
-  return { id:p.id, line:p.line, emoji:p.emoji||'📁', name:p.name, owner:p.owner||'—', status:p.status||'done', metricKeys, runs, daily, start:first, end:last, periodNote:p.periodNote||null, trendKey:p.trendKey||null, insights:p.insights||null, links:Array.isArray(p.links)?p.links:[] };
+  return { id:p.id, line:p.line, emoji:p.emoji||'📁', name:p.name, owner:p.owner||'—', status:p.status||'done', metricKeys, runs, daily, start:first, end:last, periodNote:p.periodNote||null, trendKey:p.trendKey||null, insights:p.insights||null, kpiGoals:Array.isArray(p.kpiGoals)?p.kpiGoals:null, links:Array.isArray(p.links)?p.links:[] };
 }
 async function loadProjects(){
   const base = 'data/';
@@ -870,11 +877,11 @@ function renderKpiItems(items, cfg, agg, extraSub){
   return items.map(it=>{
     if(it.type==='cvr'){
       const exc = (extraSub && extraSub['cvr:'+it.label]) ? `<div class="kpi-sub" style="color:${cfg.color};font-weight:700">${extraSub['cvr:'+it.label]}</div>` : '';
-      return `<div class="kpi cvr-kpi" style="--c:${cfg.color}"><div class="l">${it.label}</div><div class="v">${it.value==null?'—':(it.value*100).toFixed(1)+'%'}</div>${exc}</div>`;
+      return `<div class="kpi cvr-kpi" style="--c:${cfg.color}"><div class="l">${it.label}</div><div class="v">${it.value==null?'—':(it.value*100).toFixed(1)+'%'}</div>${exc}${it.subText?`<div class="kpi-sub">${it.subText}</div>`:''}</div>`;
     }
     const st = subText(it.mt, agg||{});
     const ex = (extraSub && extraSub[it.mt.key]) ? `<div class="kpi-sub" style="color:${cfg.color};font-weight:700">${extraSub[it.mt.key]}</div>` : '';
-    return `<div class="kpi" style="--c:${cfg.color};--cbg:var(${cfg.cvar}-bg)"><div class="l">${it.mt.label}${it.mt.agg==='avg'?' (일평균)':''}</div><div class="v">${it.value==null?'—':fmtCell(it.mt, it.value)}</div>${st?`<div class="kpi-sub">${st}</div>`:''}${ex}</div>`;
+    return `<div class="kpi" style="--c:${cfg.color};--cbg:var(${cfg.cvar}-bg)"><div class="l">${it.mt.label}${it.mt.agg==='avg'?' (일평균)':''}</div><div class="v">${it.value==null?'—':fmtCell(it.mt, it.value)}</div>${st?`<div class="kpi-sub">${st}</div>`:''}${ex}${it.subText?`<div class="kpi-sub">${it.subText}</div>`:''}</div>`;
   }).join('');
 }
 
@@ -1133,6 +1140,25 @@ function renderModalContent(){
     if (tot.agg.pointCost) kpiItems.push({type:'metric', mt:{key:'pointCost', label:'마케팅 비용 (지급 포인트)', fmt:'wonFull'}, value:tot.agg.pointCost});
   }
   // 2026-09-23: 대고객 한도조회도 Mixpanel(가승인+올거절) 기준이 되어 포인트탭과 소스가 일치 → 예외 해제
+  // 프로젝트별 추가 KPI 카드(p.kpiGoals) — 마데프에서 처음 사용. 선택 기간 rows 기준으로 계산.
+  //   perRound: 합계 ÷ 평일 수(금~일 참여는 월요일 회차로 묶임) vs 목표 / ratio: 일별 합 num÷den / budget: 합계 ÷ 예산
+  if (p.kpiGoals) {
+    const sumOf = k => rows.reduce((s,r)=> s + ((r.m && r.m[k]) || 0), 0);
+    const hasOf = k => rows.some(r=> r.m && r.m[k]!=null);
+    p.kpiGoals.forEach(g=>{
+      if (g.type==='perRound') {
+        const wd = rows.filter(r=>{ const w=toDate(r.date).getDay(); return w>0 && w<6 && r.m && r.m[g.key]!=null; }).length;
+        const avg = wd ? sumOf(g.key)/wd : null;
+        kpiItems.push({type:'metric', mt:{key:g.key+'_round', label:g.label, fmt:'int'}, value: avg==null?null:Math.round(avg), subText: avg==null ? '' : `목표 ${comma(g.target)}명 · <b style="color:${cfg.color}">${(avg/g.target*100).toFixed(1)}% 달성</b> · ${wd}회차`});
+      } else if (g.type==='ratio') {
+        const v = hasOf(g.num) && sumOf(g.den) ? sumOf(g.num)/sumOf(g.den) : null;
+        kpiItems.push({type:'cvr', label:g.label, value:v});
+      } else if (g.type==='budget') {
+        const used = sumOf(g.key);
+        kpiItems.push({type:'cvr', label:g.label, value: g.budget ? used/g.budget : null, subText:`${fmtWonFull(used)} / 예산 ${fmtWonFull(g.budget)}`});
+      }
+    });
+  }
   const kpis = renderKpiItems(kpiItems, cfg, tot.agg, ptExtraSub);
   const cvrKpi = '';
 
@@ -1329,17 +1355,20 @@ function insightsHtml(ins, cfg){
       const last = sel.steps[sel.steps.length-1];
       body += `<div class="ins-take">전체 전환 <b style="color:${cfg.color}">${pct(last.n, top)}</b> · ${sel.steps[0].label} → ${last.label}</div>`;
     }
-    cards.push(`<div class="ins-card" style="grid-column:1/-1"><h4>🔻 퍼널별 전환율</h4><div class="ins-cap">유니크 · 누적 = 11/2~11/18 참여 코호트, 17일 전환 윈도우(D17) · 하루 단위 성과(D0)는 아래 일자별 로그</div><div class="ins-fn-tabs">${tabs}</div>${body}</div>`);
+    cards.push(`<div class="ins-card" style="grid-column:1/-1"><h4>🔻 퍼널별 전환율</h4><div class="ins-cap">${ins.funnelCap || '유니크 · 누적 = 11/2~11/18 참여 코호트, 17일 전환 윈도우(D17) · 하루 단위 성과(D0)는 아래 일자별 로그'}</div><div class="ins-fn-tabs">${tabs}</div>${body}</div>`);
   }
 
   // ② 첫 예측 분포 — 100% 누적 막대
+  const CH = Array.isArray(ins.choices) && ins.choices.length ? ins.choices : CHOICES;   // 마데프: 올라간다/내려간다 2지선다
   if (ins.firstPredict) {
-    const fp = ins.firstPredict, tot = CHOICES.reduce((s,c)=>s+(fp[c.key]||0),0);
-    const seg = CHOICES.map(c=>`<span style="width:${pct(fp[c.key],tot,2)};background:${c.color}">${(fp[c.key]/tot)>=0.08 ? pct(fp[c.key],tot,0) : ''}</span>`).join('');
-    const leg = CHOICES.map(c=>`<span><i class="ins-dot" style="background:${c.color}"></i>${c.label} <b>${comma(fp[c.key])}</b> <span style="color:var(--text-3)">${pct(fp[c.key],tot)}</span></span>`).join('');
-    const topC = CHOICES.slice().sort((a,b)=>fp[b.key]-fp[a.key])[0];
-    cards.push(`<div class="ins-card"><h4>🎯 첫 예측 분포</h4><div class="ins-cap">첫 예측 참여자 ${comma(tot)}명 · D0 기준</div><div class="ins-stack">${seg}</div><div class="ins-legend">${leg}</div>
-      <div class="ins-take">가장 많이 고른 예측은 <b>${topC.label}</b>(${pct(fp[topC.key],tot)}) · 하락 예측은 ${pct(fp.down,tot)}로 소수</div></div>`);
+    const fp = ins.firstPredict, tot = CH.reduce((s,c)=>s+(fp[c.key]||0),0);
+    const seg = CH.map(c=>`<span style="width:${pct(fp[c.key],tot,2)};background:${c.color}">${(fp[c.key]/tot)>=0.08 ? pct(fp[c.key],tot,0) : ''}</span>`).join('');
+    const leg = CH.map(c=>`<span><i class="ins-dot" style="background:${c.color}"></i>${c.label} <b>${comma(fp[c.key])}</b> <span style="color:var(--text-3)">${pct(fp[c.key],tot)}</span></span>`).join('');
+    const topC = CH.slice().sort((a,b)=>fp[b.key]-fp[a.key])[0];
+    const fpTitle = ins.firstPredictTitle || '🎯 첫 예측 분포', fpCap = ins.firstPredictCap || `첫 예측 참여자 ${comma(tot)}명 · D0 기준`;
+    const fpTake = CH===CHOICES ? ` · 하락 예측은 ${pct(fp.down,tot)}로 소수` : '';
+    cards.push(`<div class="ins-card"><h4>${fpTitle}</h4><div class="ins-cap">${fpCap}</div><div class="ins-stack">${seg}</div><div class="ins-legend">${leg}</div>
+      <div class="ins-take">가장 많이 고른 예측은 <b>${topC.label}</b>(${pct(fp[topC.key],tot)})${fpTake}</div></div>`);
   }
 
   // ③ 예측 변동 — before→after 히트맵. 대각선(같은 값)은 회색 처리
@@ -1396,7 +1425,7 @@ function insightsHtml(ins, cfg){
     rt.days.forEach(x=> byD[x.d]=x);
     // 막대 높이 축 = max(50%, 최댓값) — 리텐션은 대개 낮아서 100% 축이면 안 보임
     const top = Math.max(0.5, ...rt.days.flatMap(x=> rt.series.map(s=> x[s.key]||0)));
-    const cols = ['#C4B5FD', cfg.color];
+    const cols = rt.colors || ['#C4B5FD', cfg.color, '#9CA3AF'];
     const colsH = Array.from({length:H+1},(_,d)=>{
       const x = byD[d] || {};
       const pair = rt.series.map((s,i)=>{ const v=x[s.key]; return v==null ? `<i class="empty" title="${s.label} D${d?'+'+d:'0'}: 집계 전"></i>` : `<i style="height:${Math.max(2, v/top*84).toFixed(0)}px;background:${cols[i]}" title="${s.label} D${d?'+'+d:'0'}: ${(v*100).toFixed(1)}%"></i>`; }).join('');
@@ -1405,14 +1434,82 @@ function insightsHtml(ins, cfg){
     }).join('');
     const leg = rt.series.map((s,i)=>`<span title="${s.def}"><i class="ins-dot" style="background:${cols[i]}"></i>${s.label} <span style="color:var(--text-3)">${s.def}</span></span>`).join('');
     const filled = rt.days.filter(x=>x.d>0 && x.revisit!=null).length;
-    cards.push(`<div class="ins-card" style="grid-column:1/-1"><h4>🔁 참여자 리텐션</h4><div class="ins-cap">첫 예측 참여자 ${comma(rt.cohort)}명 · 참여일 = D0 · 빗금 = 아직 도래 안 함</div>
+    var rtCard = `<div class="ins-card" style="grid-column:1/-1"><h4>🔁 참여자 리텐션</h4><div class="ins-cap">${rt.cohortLabel || '첫 예측 참여자'} ${comma(rt.cohort)}명 · 참여일 = D0 · 빗금 = 아직 도래 안 함</div>
       <div class="ins-ret">${colsH}</div><div class="ins-legend">${leg}</div>
-      ${filled ? '' : `<div class="ins-take">오늘 시작이라 D0만 있어요. D+1부터 매일 한 칸씩 채워지고, 단순 재방문과 고관여의 간격이 프로모션 고관여도예요.</div>`}</div>`);
+      ${rt.take ? `<div class="ins-take">${rt.take}</div>` : (filled ? '' : `<div class="ins-take">${rt.pendingNote || '오늘 시작이라 D0만 있어요. D+1부터 매일 한 칸씩 채워지고, 단순 재방문과 고관여의 간격이 프로모션 고관여도예요.'}</div>`)}</div>`;
+    cards.push(rtCard);
   }
 
   // 배치: 퍼널(전폭) / [첫 예측 분포 + 서비스 이동] | 예측 변동 매트릭스 / 리텐션(전폭)
   const [fnC, fpC, mxC, mvC, rtC] = [cards[0], cards[1], cards[2], cards[3], cards[4]];
   if (fnC && fpC && mxC && mvC && rtC) cards.splice(0, cards.length, fnC, `<div class="ins-col">${fpC}${mvC}</div>`, mxC, rtC);
+
+  // ---- 마데프(코스피 예측) 전용 블록 — 해당 키가 있을 때만. 신용점수 화면에는 영향 없음 ----
+  const extra = [], tail = [];
+  const pend = (t)=> `<div class="ins-pend">⏳ ${t}</div>`;
+  const chOf = k => CH.find(c=>c.key===k);
+  // 회차별 정답률
+  if (ins.rounds) {
+    const R = ins.rounds, rowsH = (R.rows||[]).map(r=>{
+      const a = r.actual ? chOf(r.actual) : null, tot = (r.success||0)+(r.fail||0);
+      const upTot = (r.pick||{}); const pickTot = CH.reduce((s,c)=>s+(upTot[c.key]||0),0);
+      const pickTxt = pickTot ? CH.map(c=>`<span style="color:${c.color}">${pct(upTot[c.key]||0,pickTot,0)}</span>`).join(' / ') : '—';
+      return `<tr class="${a?'':'pending'}"><td>${r.round}</td><td>${a?`<b style="color:${a.color}">${a.label}</b>`:'정산 전'}</td><td>${pickTxt}</td><td>${tot?comma(tot):'—'}</td><td>${tot?`<b>${pct(r.success,tot)}</b>`:'—'}</td><td>${r.cost?fmtWonFull(r.cost):'—'}</td></tr>`;
+    }).join('');
+    const done = (R.rows||[]).filter(r=>r.actual && (r.success||r.fail));
+    const s = done.reduce((a,r)=>a+(r.success||0),0), f = done.reduce((a,r)=>a+(r.fail||0),0);
+    extra.push(`<div class="ins-card" style="grid-column:1/-1"><h4>📅 회차별 정답률</h4><div class="ins-cap">${R.cap||'회차일 = 예측 대상 거래일 · 예측 비율은 예측 완료 기준'}</div>
+      ${rowsH ? `<table class="ins-tbl"><thead><tr><th>회차</th><th>실제 등락</th><th>예측 비율 (${CH.map(c=>c.label).join(' / ')})</th><th>정산 인원</th><th>정답률</th><th>지급액</th></tr></thead><tbody>${rowsH}</tbody></table>` : pend('첫 회차 정산 전')}
+      ${done.length ? `<div class="ins-take">정산된 ${done.length}회차 누적 정답률 <b style="color:${cfg.color}">${pct(s,s+f)}</b> (성공 ${comma(s)} / 실패 ${comma(f)})</div>` : ''}</div>`);
+  }
+  // 결과별 다음 회차 재참여율
+  if (ins.outcomeRejoin) {
+    const O = ins.outcomeRejoin, items = [{k:'success',label:'성공',color:cfg.color},{k:'fail',label:'실패',color:'#9CA3AF'}];
+    const has = items.some(it=>O[it.k] && O[it.k].base);
+    const mx = Math.max(0.01, ...items.map(it=> O[it.k]&&O[it.k].base ? O[it.k].rejoin/O[it.k].base : 0));
+    const body = has ? items.map(it=>{ const b=O[it.k]||{}; return `<div class="ins-fn-row"><span>${it.label} <span style="color:var(--text-3)">${comma(b.base||0)}명</span></span><span class="bar"><i style="width:${b.base?(b.rejoin/b.base/mx*100).toFixed(1):0}%;background:${it.color}"></i></span><span class="v"><b>${pct(b.rejoin||0,b.base||0)}</b></span></div>`; }).join('')
+      + `<div class="ins-take">${O.take || '결과를 확인한 뒤 다음 회차에 다시 예측한 비율 (8월: 소액 당첨자의 재참여가 더 높았음)'}</div>` : pend(O.pending || '첫 회차 정산 후 집계');
+    extra.push(`<div class="ins-card"><h4>↩️ 결과별 다음 회차 재참여율</h4><div class="ins-cap">${O.cap||'결과 팝업 확인 유저 기준 · 다음 회차 예측 완료 여부'}</div>${body}</div>`);
+  }
+  // 참여 횟수 분포
+  if (ins.frequency) {
+    const F = ins.frequency, tot = (F.buckets||[]).reduce((s,b)=>s+b.n,0);
+    const top = Math.max(1, ...(F.buckets||[]).map(b=>b.n));
+    const habit = (F.buckets||[]).filter(b=>b.habit).reduce((s,b)=>s+b.n,0);
+    const body = tot ? (F.buckets||[]).map(b=>`<div class="ins-fn-row"><span>${b.label}</span><span class="bar"><i style="width:${(b.n/top*100).toFixed(1)}%;background:${cfg.color};opacity:${b.habit?1:0.45}"></i></span><span class="v"><b>${comma(b.n)}</b> <span style="color:var(--text-3)">${pct(b.n,tot,0)}</span></span></div>`).join('')
+      + `<div class="ins-take">3회 이상(습관 형성) <b style="color:${cfg.color}">${pct(habit,tot)}</b>${F.target?` · 목표 ${(F.target*100).toFixed(0)}% ${habit/tot>=F.target?'✅ 달성':'⚠️ 미달'}`:''}${F.note?` · ${F.note}`:''}</div>` : pend('집계 전');
+    extra.push(`<div class="ins-card"><h4>🔢 참여 횟수 분포</h4><div class="ins-cap">${F.cap||'기연동 참여자 기준 · 진한 막대 = 3회 이상'} · ${comma(tot)}명</div>${body}</div>`);
+  }
+  // 유입구별 전환
+  if (ins.channels) {
+    const C = ins.channels, mx = Math.max(0.0001, ...C.rows.map(r=> r.base ? r.n/r.base : 0));
+    const body = C.rows.map(r=>`<div class="ins-fn-row" title="${r.def||''}"><span>${r.label}</span><span class="bar"><i style="width:${r.base?(r.n/r.base/mx*100).toFixed(1):0}%;background:${cfg.color}"></i></span><span class="v"><b>${r.base?pct(r.n,r.base,(r.n/r.base)<0.01?2:1):'—'}</b></span></div><div class="ins-fn-drop" style="margin-top:-4px">${r.base?`${comma(r.base)} → ${comma(r.n)}`:(r.pending||'집계 전')}${r.def?` · ${r.def}`:''}</div>`).join('');
+    extra.push(`<div class="ins-card"><h4>🚪 유입구별 전환</h4><div class="ins-cap">${C.cap||'노출(또는 발송) → 클릭(또는 참여)'}</div>${body}</div>`);
+  }
+  // 신규 유입 프로모션 연계
+  if (ins.crossPromo) {
+    const X = ins.crossPromo;
+    const body = X.base ? `<div class="ins-fn-row"><span>${X.fromLabel||'신규 연동'}</span><span class="bar"><i style="width:100%;background:${cfg.color};opacity:.35"></i></span><span class="v"><b>${comma(X.base)}</b></span></div><div class="ins-fn-drop">↳ ${pct(X.joined,X.base)}</div><div class="ins-fn-row"><span>${X.toLabel||'코스피 예측 참여'}</span><span class="bar"><i style="width:${(X.joined/X.base*100).toFixed(1)}%;background:${cfg.color}"></i></span><span class="v"><b>${comma(X.joined)}</b></span></div>` : pend(X.pending || '집계 전');
+    extra.push(`<div class="ins-card"><h4>🤝 신규 유입 프로모션 연계</h4><div class="ins-cap">${X.cap||'신규 유입 프로모션으로 연동한 유저 중 코스피 예측까지 참여한 비율'}</div>${body}</div>`);
+  }
+  // 월별 비교
+  if (ins.monthCompare) {
+    const M = ins.monthCompare;
+    const head = `<tr><th>지표</th>${M.months.map(m=>`<th>${m}</th>`).join('')}</tr>`;
+    const body = M.rows.map(r=>`<tr><td>${r.label}</td>${r.values.map((v,i)=>`<td style="${i===r.values.length-1?`color:${cfg.color};font-weight:700`:''}">${v==null?'—':v}</td>`).join('')}</tr>`).join('');
+    tail.push(`<div class="ins-card" style="grid-column:1/-1"><h4>🗓 월별 비교</h4><div class="ins-cap">${M.cap||'회차 수가 달라 절대값보다 비중·배율로 비교'}</div><table class="ins-tbl"><thead>${head}</thead><tbody>${body}</tbody></table></div>`);
+  }
+  if (extra.length || tail.length) {
+    // 마데프 배치: 퍼널 → 회차별 정답률 → [예측 분포·재참여 | 참여 횟수] → 유입구·연계 → 리텐션 → 월별 비교
+    const rt = (typeof rtCard!=='undefined') ? rtCard : null;
+    const base = cards.filter(c=> c!==rt);
+    const fn = ins.funnels && ins.funnels.length ? base.shift() : null;
+    const fp = ins.firstPredict ? base.shift() : null;
+    const rounds = ins.rounds ? extra.shift() : null;
+    const rejoin = ins.outcomeRejoin ? extra.shift() : null;
+    const ordered = [fn, rounds, (fp||rejoin) ? `<div class="ins-col">${fp||''}${rejoin||''}</div>` : null, ...extra, ...base, rt, ...tail].filter(Boolean);
+    cards.splice(0, cards.length, ...ordered);
+  }
   return `<div class="modal-section-title">🔍 프로모션 인사이트 <span style="font-weight:500;color:var(--text-3);font-size:11.5px">· ${ins.cohortFrom ? ins.cohortFrom.slice(5)+'~' : ''}${ins.asOf.slice(5)} 누적 · 기간 필터 미적용</span></div><div class="ins-grid">${cards.join('')}</div>`;
 }
 function closeProjModal(){
