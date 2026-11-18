@@ -4,7 +4,8 @@
   {"date":"2026-11-11","introView":2631,"introClick":1954,"inquiry":1360,"mpInquiry":1248,"apply":237,"contract":64,"pointCost":222811,"ptIntroView":684,"ptInquiry":113,"ptApply":6},
   {"date":"2026-11-12","introView":1777,"introClick":1283,"inquiry":868,"mpInquiry":807,"apply":160,"contract":55,"pointCost":143606,"ptIntroView":585,"ptInquiry":95,"ptApply":3},
   {"date":"2026-11-13","introView":1564,"introClick":1131,"inquiry":767,"mpInquiry":715,"apply":162,"contract":56,"pointCost":123504,"ptIntroView":491,"ptInquiry":65,"ptApply":5},
-  {"date":"2026-11-14","introView":975,"introClick":675,"inquiry":401,"mpInquiry":375,"apply":58,"contract":11,"pointCost":66280,"ptIntroView":446,"ptInquiry":53,"ptApply":0},
-  {"date":"2026-11-15","introView":1320,"introClick":896,"inquiry":493,"mpInquiry":470,"apply":83,"contract":10,"pointCost":83413,"ptIntroView":475,"ptInquiry":58,"ptApply":2},
-  {"date":"2026-11-16","introView":2943,"introClick":2239,"inquiry":1368,"mpInquiry":1495,"apply":338,"contract":114,"pointCost":225879,"ptIntroView":521,"ptInquiry":73,"ptApply":5}
+  {"date":"2026-11-14","introView":977,"introClick":676,"inquiry":401,"mpInquiry":376,"apply":58,"contract":11,"pointCost":66280,"ptIntroView":446,"ptInquiry":53,"ptApply":0},
+  {"date":"2026-11-15","introView":1321,"introClick":896,"inquiry":493,"mpInquiry":472,"apply":83,"contract":10,"pointCost":83413,"ptIntroView":476,"ptInquiry":60,"ptApply":2},
+  {"date":"2026-11-16","introView":2971,"introClick":2253,"inquiry":1368,"mpInquiry":1505,"apply":338,"contract":114,"pointCost":225879,"ptIntroView":540,"ptInquiry":76,"ptApply":5},
+  {"date":"2026-11-17","introView":1995,"introClick":1488,"inquiry":null,"mpInquiry":966,"apply":216,"contract":null,"pointCost":null,"ptIntroView":435,"ptInquiry":47,"ptApply":5}
 ]
