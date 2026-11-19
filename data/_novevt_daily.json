@@ -4,8 +4,9 @@
   {"date":"2026-11-11","introView":2631,"introClick":1954,"inquiry":1360,"mpInquiry":1248,"apply":237,"contract":64,"pointCost":222811,"ptIntroView":684,"ptInquiry":113,"ptApply":6},
   {"date":"2026-11-12","introView":1777,"introClick":1283,"inquiry":868,"mpInquiry":807,"apply":160,"contract":55,"pointCost":143606,"ptIntroView":585,"ptInquiry":95,"ptApply":3},
   {"date":"2026-11-13","introView":1565,"introClick":1131,"inquiry":767,"mpInquiry":715,"apply":162,"contract":56,"pointCost":123504,"ptIntroView":491,"ptInquiry":65,"ptApply":5},
-  {"date":"2026-11-14","introView":978,"introClick":678,"inquiry":401,"mpInquiry":376,"apply":58,"contract":11,"pointCost":66280,"ptIntroView":448,"ptInquiry":53,"ptApply":0},
-  {"date":"2026-11-15","introView":1322,"introClick":896,"inquiry":493,"mpInquiry":472,"apply":83,"contract":10,"pointCost":83413,"ptIntroView":476,"ptInquiry":60,"ptApply":2},
-  {"date":"2026-11-16","introView":2981,"introClick":2257,"inquiry":1368,"mpInquiry":1512,"apply":338,"contract":114,"pointCost":225879,"ptIntroView":541,"ptInquiry":76,"ptApply":5},
-  {"date":"2026-11-17","introView":2016,"introClick":1497,"inquiry":999,"mpInquiry":985,"apply":220,"contract":77,"pointCost":165813,"ptIntroView":449,"ptInquiry":49,"ptApply":5}
+  {"date":"2026-11-14","introView":978,"introClick":678,"inquiry":401,"mpInquiry":378,"apply":58,"contract":11,"pointCost":66280,"ptIntroView":448,"ptInquiry":53,"ptApply":0},
+  {"date":"2026-11-15","introView":1325,"introClick":898,"inquiry":493,"mpInquiry":472,"apply":83,"contract":10,"pointCost":83413,"ptIntroView":477,"ptInquiry":60,"ptApply":2},
+  {"date":"2026-11-16","introView":2988,"introClick":2260,"inquiry":1368,"mpInquiry":1518,"apply":338,"contract":114,"pointCost":225879,"ptIntroView":542,"ptInquiry":76,"ptApply":5},
+  {"date":"2026-11-17","introView":2031,"introClick":1504,"inquiry":999,"mpInquiry":995,"apply":220,"contract":77,"pointCost":165813,"ptIntroView":462,"ptInquiry":51,"ptApply":5},
+  {"date":"2026-11-18","introView":1803,"introClick":1350,"inquiry":null,"mpInquiry":816,"apply":179,"contract":null,"pointCost":null,"ptIntroView":448,"ptInquiry":37,"ptApply":6}
 ]
