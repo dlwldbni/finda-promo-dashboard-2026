@@ -120,39 +120,47 @@
           "date": "2026-11-14",
           "view": 256,
           "predict_done": 199,
-          "change_done": 144,
+          "change_done": 145,
           "result_view": 0,
           "result_click": 0
         },
         {
           "date": "2026-11-15",
-          "view": 695,
-          "predict_done": 512,
-          "change_done": 267,
+          "view": 699,
+          "predict_done": 516,
+          "change_done": 272,
           "result_view": 0,
           "result_click": 0
         },
         {
           "date": "2026-11-16",
-          "view": 488,
-          "predict_done": 366,
-          "change_done": 500,
+          "view": 491,
+          "predict_done": 368,
+          "change_done": 506,
           "result_view": 0,
           "result_click": 0
         },
         {
           "date": "2026-11-17",
-          "view": 435,
-          "predict_done": 337,
-          "change_done": 230,
+          "view": 440,
+          "predict_done": 343,
+          "change_done": 232,
           "result_view": 0,
           "result_click": 0
         },
         {
           "date": "2026-11-18",
-          "view": 1309,
-          "predict_done": 1002,
-          "change_done": 747,
+          "view": 1370,
+          "predict_done": 1021,
+          "change_done": 789,
+          "result_view": 0,
+          "result_click": 0
+        },
+        {
+          "date": "2026-11-19",
+          "view": 0,
+          "predict_done": 0,
+          "change_done": 0,
           "result_view": 0,
           "result_click": 0
         }
@@ -168,7 +176,7 @@
   ],
   "insights": {
     "_comment": "Mixpanel project 1452453 · 모두 unique(변동 매트릭스만 변경 건수). 일별(runs.daily)=그날 기준 D0. 누적(insights)=11/02~11/18 참여 코호트, 17일 전환 윈도우(D17). 매일 08:00 클라우드 루틴이 갱신.",
-    "asOf": "2026-11-18",
+    "asOf": "2026-11-19",
     "cohortFrom": "2026-11-02",
     "funnels": [
       {
@@ -337,7 +345,7 @@
       "days": [
         {
           "d": 0,
-          "revisit": 0.51,
+          "revisit": 0.5,
           "engaged": null
         },
         {
@@ -362,7 +370,7 @@
         },
         {
           "d": 5,
-          "revisit": 0.34,
+          "revisit": 0.33,
           "engaged": 0.08
         },
         {
@@ -372,12 +380,12 @@
         },
         {
           "d": 7,
-          "revisit": 0.43,
+          "revisit": 0.42,
           "engaged": 0.11
         },
         {
           "d": 8,
-          "revisit": 0.41,
+          "revisit": 0.4,
           "engaged": 0.09
         },
         {
@@ -397,28 +405,28 @@
         },
         {
           "d": 12,
-          "revisit": 0.4,
+          "revisit": 0.38,
           "engaged": 0.09
         },
         {
           "d": 13,
-          "revisit": 0.48,
-          "engaged": 0.2
+          "revisit": 0.46,
+          "engaged": 0.19
         },
         {
           "d": 14,
-          "revisit": 0.5,
-          "engaged": 0.17
+          "revisit": 0.45,
+          "engaged": 0.15
         }
       ],
       "horizon": 14
     },
     "summary": [
-      "11/18 진입 1,309명 중 1,002명이 참여해 전환율 77%로, 전날(77%)과 비슷하고 최근 4일 평균(76%)과도 같은 수준이에요.",
-      "진입(435→1,309명)과 참여(337→1,002명)가 전날의 약 3배로 뛰었어요. 예측 참여 마지막 날 효과로 보여요.",
+      "11/19부터 잠금 기간이라 진입·참여·변경이 모두 0명이에요. 예측 참여는 11/18에 마감돼 누적 참여는 16,644명이에요.",
+      "마감일 11/18은 진입 1,370명 중 1,021명이 참여해 전환율 75%로, 최근 평균(약 76%)과 비슷했어요. 마감 효과로 보여요.",
       "상승 선택자의 올리기 콘텐츠 클릭률(1.7%)이 유지(1.1%)의 약 1.6배예요. 하락은 클릭 14명이라 아직 표본이 적어요.",
-      "변경 완료는 747명으로 전날(230명)의 3배 이상이고, 유지→상승 4,106건이 가장 커요. D+1 재방문 41% 중 고관여는 12%예요."
+      "변경은 유지→상승 4,106건이 가장 커요. D+1 재방문 41% 중 고관여는 12%로, 재방문 대비 서비스 이용 전환은 낮은 편이에요."
     ],
-    "summaryAsOf": "2026-11-18"
+    "summaryAsOf": "2026-11-19"
   }
 }
