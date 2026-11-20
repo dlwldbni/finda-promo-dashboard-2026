@@ -19,7 +19,7 @@
       "start": "2026-11-16",
       "end": "2026-11-30",
       "granularity": "daily",
-      "introViewUnique": 2805,
+      "introViewUnique": 3103,
       "daily": [
         {
           "date": "2026-11-16",
@@ -55,6 +55,18 @@
           "mpIntro": 1476,
           "mpIntroConnect": 28,
           "pointCost": 109920,
+          "sendCost": 0
+        },
+        {
+          "date": "2026-11-19",
+          "introView": 1441,
+          "contributedMau": 1360,
+          "connectDone": 1294,
+          "unconnClick": 62,
+          "unconnConnect": 5,
+          "mpIntro": 1441,
+          "mpIntroConnect": 22,
+          "pointCost": 138990,
           "sendCost": 0
         }
       ]
@@ -92,7 +104,7 @@
   ],
   "insights": {
     "_comment": "Mixpanel project 1452453. 11/16은 PM_2610kospi_*와 PM_2611kospi_* 합산(앱 업데이트 중 교차), 11/17~ PM_2611kospi_*. 누적 유니크는 두 이름 간 겹침을 D+1 겹침만 빼서 근사. 참여·정산 KPI는 Databricks.",
-    "asOf": "2026-11-18",
+    "asOf": "2026-11-19",
     "cohortFrom": "2026-11-16",
     "choices": [
       {
@@ -115,22 +127,22 @@
           {
             "label": "인트로 조회",
             "event": "PM_2610/2611kospi_intro_view",
-            "n": 2805
+            "n": 3103
           },
           {
             "label": "예측 클릭",
             "event": "PM_2610/2611kospi_predict_clickCTA",
-            "n": 2342
+            "n": 2604
           },
           {
             "label": "예측 완료",
             "event": "PM_2610/2611kospi_result_wait_view",
-            "n": 1913
+            "n": 2119
           },
           {
             "label": "결과 확인",
             "event": "PM_2611kospi_result_popup_view",
-            "n": 1133
+            "n": 1306
           }
         ]
       },
@@ -142,17 +154,17 @@
           {
             "label": "미연동 클릭",
             "event": "predict_clickCTA(N)",
-            "n": 355
+            "n": 413
           },
           {
             "label": "연동 완료",
             "event": "MD_loading_view",
-            "n": 29
+            "n": 33
           },
           {
             "label": "복귀 예측 완료",
             "event": "result_wait_view",
-            "n": 22
+            "n": 23
           }
         ]
       },
@@ -164,17 +176,17 @@
           {
             "label": "결과 팝업 확인",
             "event": "PM_2611kospi_result_popup_view",
-            "n": 880
+            "n": 960
           },
           {
             "label": "팝업 CTA 클릭",
             "event": "PM_2611kospi_result_popup_clickCTA",
-            "n": 855
+            "n": 934
           },
           {
             "label": "다음 회차 예측 완료",
             "event": "PM_2611kospi_result_wait_view",
-            "n": 791
+            "n": 862
           }
         ]
       }
@@ -205,10 +217,21 @@
         },
         {
           "round": "11/19(목)",
-          "actual": null,
+          "actual": "up",
           "pick": {
             "up": 825,
             "down": 470
+          },
+          "success": 856,
+          "fail": 499,
+          "cost": 138990
+        },
+        {
+          "round": "11/20(금)",
+          "actual": null,
+          "pick": {
+            "up": 907,
+            "down": 391
           },
           "success": null,
           "fail": null,
@@ -219,31 +242,31 @@
     },
     "outcomeRejoin": {
       "success": {
-        "base": 497,
-        "rejoin": 446
+        "base": 601,
+        "rejoin": 541
       },
       "fail": {
-        "base": 439,
-        "rejoin": 387
+        "base": 385,
+        "rejoin": 339
       },
-      "take": "성공 89.7% vs 실패 88.2%로 차이가 거의 없어요. 결과와 상관없이 대부분 바로 다음 회차에 참여해요.",
-      "cap": "11/17 회차 결과 팝업 확인 유저(11/18) 기준 · 당일 다음 회차 예측 완료 여부 · Mixpanel"
+      "take": "성공 90.0% vs 실패 88.1%로 이틀 연속 차이가 거의 없어요. 결과와 상관없이 대부분 바로 다음 회차에 참여해요.",
+      "cap": "11/18 회차 결과 팝업 확인 유저(11/19) 기준 · 당일 다음 회차 예측 완료 여부 · Mixpanel"
     },
     "frequency": {
       "target": 0.48,
-      "note": "3회차 진행 · Mixpanel 예측 완료 기준(근사)",
+      "note": "4회차 진행 · Mixpanel 예측 완료 기준(근사)",
       "buckets": [
         {
           "label": "1회",
-          "n": 547
+          "n": 553
         },
         {
           "label": "2회",
-          "n": 822
+          "n": 328
         },
         {
           "label": "3~5회",
-          "n": 191,
+          "n": 908,
           "habit": true
         },
         {
@@ -290,11 +313,16 @@
         },
         {
           "d": 2,
-          "revisit": 0.7011,
-          "control": 0.27
+          "revisit": 0.7432,
+          "control": 0.291
+        },
+        {
+          "d": 3,
+          "revisit": 0.6418,
+          "control": 0.2198
         }
       ],
-      "pendingNote": "D+1 2.35배 · D+2 2.60배(목표 2.4배). 11/17 참여자 D+1은 80.39% vs 30.62%(2.63배)."
+      "pendingNote": "D+1 2.35배 · D+2 2.55배 · D+3 2.92배(목표 2.4배). 11/18 참여자 D+1은 76.74% vs 26.94%(2.85배). D+2는 늦게 들어온 로그 반영해 갱신."
     },
     "monthCompare": {
       "months": [
@@ -319,7 +347,7 @@
             "1,853",
             "943",
             "2,134",
-            "1,318"
+            "1,329"
           ]
         },
         {
@@ -328,7 +356,7 @@
             "64.8%",
             "69.2%",
             "75.7%",
-            "91.0%"
+            "92.1%"
           ]
         },
         {
@@ -337,7 +365,7 @@
             "14.09%",
             "2.42%",
             "15.1%",
-            "8.1%"
+            "8.0%"
           ]
         },
         {
@@ -346,7 +374,7 @@
             "68%",
             "55%",
             "67%",
-            "76%"
+            "70%"
           ]
         },
         {
@@ -364,13 +392,13 @@
             "1.9배",
             null,
             "2.4배",
-            "2.35~2.63배"
+            "2.35~2.85배"
           ]
         }
       ],
       "cap": "일평균 참여: 8·9월 회고 기준, 10월 이후 Databricks 회차 기준 · 회차 수가 달라 비중·배율로 비교"
     },
-    "funnelCap": "유니크 · 누적 = 11/16~18 (11/16은 두 이벤트명 합산, 근사) · 하루 단위 성과는 아래 일자별 로그"
+    "funnelCap": "유니크 · 누적 = 11/16~19 (11/16은 두 이벤트명 합산, 근사) · 하루 단위 성과는 아래 일자별 로그"
   },
   "kpiOverrides": {
     "introView": {
