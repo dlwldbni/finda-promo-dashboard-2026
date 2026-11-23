@@ -150,9 +150,9 @@
         },
         {
           "date": "2026-11-18",
-          "view": 1400,
-          "predict_done": 1039,
-          "change_done": 814,
+          "view": 1410,
+          "predict_done": 1046,
+          "change_done": 822,
           "result_view": 0,
           "result_click": 0
         },
@@ -187,6 +187,14 @@
           "change_done": 0,
           "result_view": 0,
           "result_click": 0
+        },
+        {
+          "date": "2026-11-23",
+          "view": 0,
+          "predict_done": 0,
+          "change_done": 0,
+          "result_view": 0,
+          "result_click": 524
         }
       ]
     }
@@ -200,7 +208,7 @@
   ],
   "insights": {
     "_comment": "Mixpanel project 1452453 · 모두 unique(변동 매트릭스만 변경 건수). 일별(runs.daily)=그날 기준 D0. 누적(insights)=11/02~11/18 참여 코호트, 17일 전환 윈도우(D17). 매일 08:00 클라우드 루틴이 갱신.",
-    "asOf": "2026-11-22",
+    "asOf": "2026-11-23",
     "cohortFrom": "2026-11-02",
     "funnels": [
       {
@@ -211,22 +219,22 @@
           {
             "label": "프로모션 진입",
             "event": "PM_credit_intro_choice_view",
-            "n": 20010
+            "n": 20014
           },
           {
             "label": "예측 완료 (참여)",
             "event": "PM_credit_predict_done_view",
-            "n": 16697
+            "n": 16701
           },
           {
             "label": "리워드 확인",
             "event": "PM_credit_predict_done_reward",
-            "n": 16684
+            "n": 16688
           },
           {
             "label": "콘텐츠 이동",
             "event": "PM_credit_content_view",
-            "n": 4683
+            "n": 4684
           }
         ]
       },
@@ -238,36 +246,61 @@
           {
             "label": "참여 (첫 예측)",
             "event": "PM_credit_predict_done_view",
-            "n": 16697
+            "n": 16701
           },
           {
             "label": "변경 화면 진입",
             "event": "PM_credit_change_intro_view",
-            "n": 14753
+            "n": 14758
           },
           {
             "label": "변경 선택",
             "event": "PM_credit_change_predict_clickCTA",
-            "n": 6433
+            "n": 6435
           },
           {
             "label": "변경 완료",
             "event": "PM_credit_change_done_view",
-            "n": 6419
+            "n": 6421
           }
         ]
       },
       {
         "key": "result",
         "title": "③ 결과 조회",
-        "window": "11/23 오픈",
-        "pending": "결과 조회는 11/23부터 집계돼요",
-        "steps": []
+        "window": "11/23~",
+        "steps": [
+          {
+            "label": "결과 화면 진입",
+            "event": "PM_credit_result_before_view",
+            "n": 2219
+          },
+          {
+            "label": "결과 확인 클릭",
+            "event": "PM_credit_result_before_clickCTA",
+            "n": 1945
+          },
+          {
+            "label": "결과 확인",
+            "event": "PM_credit_result_view",
+            "n": 0
+          },
+          {
+            "label": "한도조회 유도 진입",
+            "event": "PM_credit_la_view",
+            "n": 0
+          },
+          {
+            "label": "한도조회 CTA 클릭",
+            "event": "PM_credit_la_clickCTA",
+            "n": 0
+          }
+        ]
       }
     ],
     "firstPredict": {
-      "up": 8449,
-      "keep": 7047,
+      "up": 8451,
+      "keep": 7049,
       "down": 1201
     },
     "changeMatrix": {
@@ -275,11 +308,11 @@
       "from": {
         "up": {
           "up": 595,
-          "keep": 3167,
+          "keep": 3169,
           "down": 853
         },
         "keep": {
-          "up": 4154,
+          "up": 4156,
           "keep": 766,
           "down": 1081
         },
@@ -306,25 +339,25 @@
       ],
       "byChoice": {
         "up": {
-          "base": 8449,
+          "base": 8451,
           "content": {
             "cra": 147,
             "ci": 68
           },
           "reach": {
-            "cra": 1202,
-            "ci": 3184
+            "cra": 1217,
+            "ci": 3202
           }
         },
         "keep": {
-          "base": 7047,
+          "base": 7049,
           "content": {
             "cra": 76,
             "ci": 40
           },
           "reach": {
-            "cra": 861,
-            "ci": 3110
+            "cra": 865,
+            "ci": 3128
           }
         },
         "down": {
@@ -334,8 +367,8 @@
             "ci": 11
           },
           "reach": {
-            "cra": 110,
-            "ci": 432
+            "cra": 115,
+            "ci": 437
           }
         }
       },
@@ -389,7 +422,7 @@
         },
         {
           "d": 4,
-          "revisit": 0.35,
+          "revisit": 0.34,
           "engaged": 0.08
         },
         {
@@ -404,7 +437,7 @@
         },
         {
           "d": 7,
-          "revisit": 0.42,
+          "revisit": 0.41,
           "engaged": 0.11
         },
         {
@@ -424,12 +457,12 @@
         },
         {
           "d": 11,
-          "revisit": 0.36,
+          "revisit": 0.34,
           "engaged": 0.06
         },
         {
           "d": 12,
-          "revisit": 0.39,
+          "revisit": 0.38,
           "engaged": 0.09
         },
         {
@@ -440,17 +473,17 @@
         {
           "d": 14,
           "revisit": 0.43,
-          "engaged": 0.15
+          "engaged": 0.14
         }
       ],
       "horizon": 14
     },
     "summary": [
-      "11/22은 잠금 기간이라 진입·참여·변경이 모두 0명이에요. 예측 참여는 11/18에 마감돼 누적 참여는 16,697명이에요.",
-      "마감일 11/18은 진입 1,400명 중 1,039명이 참여해 전환율 74%로, 전날(약 78%)보다 소폭 낮았어요. 마감 임박 유입 영향으로 보여요.",
+      "11/23은 결과 조회 첫날로, 결과 화면 진입 2,219명 중 1,945명(88%)이 확인 버튼을 눌렀어요.",
+      "한도조회 유도 화면은 1,734명이 봤고 CTA 클릭은 524명(진입 대비 약 30%)이에요. 결과 확인 이벤트는 0으로 집계돼 퍼널 뒷단은 추적 점검이 필요해 보여요.",
       "상승 선택자의 올리기 콘텐츠 클릭률(1.7%)이 유지(1.1%)의 약 1.6배예요. 하락은 클릭 14명이라 아직 표본이 적어요.",
-      "변경은 유지→상승 4,154건이 가장 커요. D+1 재방문 40% 중 고관여는 12%로, 재방문 대비 서비스 이용 전환은 낮은 편이에요."
+      "변경은 유지→상승 4,156건이 가장 커요. D+1 재방문 40% 중 고관여는 12%로, 재방문 대비 서비스 이용 전환은 낮은 편이에요."
     ],
-    "summaryAsOf": "2026-11-22"
+    "summaryAsOf": "2026-11-23"
   }
 }
