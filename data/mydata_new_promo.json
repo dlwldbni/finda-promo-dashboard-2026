@@ -5,7 +5,7 @@
   "name": "마이데이터 신규 연동 프로모션 (11월 · 2,000P)",
   "owner": "은영",
   "status": "live",
-  "periodNote": "이벤트 기간 11/23(월)~11/30(월). 마이데이터 연결 이력이 없는 유저가 프로모션 페이지 CTA로 처음 연결하면 2,000P(1인 1회, 예산 300만원=1,500건, 도달 시 조기 마감). 주지표는 미연동 앱오픈→연동 CVR(가입 당일 온보딩 제외, Databricks) 베이스라인 2.7%(11/2~15) → 목표 3.2%. contributedMau=포인트 지급 건수(최초 연동, DB CH2611_MD_NEW_CONNECT_REWARDED), connectDone=프로모션 경유 연동 완료(Mixpanel PM_2611mydata_complete), introView=프로모션 페이지 진입(PM_2611mydata_intro_view unique). 11/23~27은 코스피 리텐션 프로모션과 기간이 겹침. 출처: 구글시트 2611MD_KPI·2611MD_CRM + Mixpanel 보드 id=11665574",
+  "periodNote": "이벤트 기간 11/23(월)~11/30(월). 마이데이터 연결 이력이 없는 유저가 프로모션 페이지 CTA로 처음 연결하면 2,000P(1인 1회, 예산 300만원=1,500건, 도달 시 조기 마감). 주지표는 미연동 앱오픈→연동 CVR(가입 당일 온보딩 제외, Databricks) 베이스라인 4.42%(11/2~15, 11/10 적재오류 제외) → 목표 5.30% (user360 스냅샷 md_status 전환 ÷ act_last_login_date 기준). contributedMau=포인트 지급 건수(최초 연동, DB CH2611_MD_NEW_CONNECT_REWARDED), connectDone=프로모션 경유 연동 완료(Mixpanel PM_2611mydata_complete), introView=프로모션 페이지 진입(PM_2611mydata_intro_view unique). 11/23~27은 코스피 리텐션 프로모션과 기간이 겹침. 출처: 구글시트 2611MD_KPI·2611MD_CRM + Mixpanel 보드 id=11665574",
   "metricKeys": [
     "introView",
     "contributedMau",
@@ -42,7 +42,7 @@
       "type": "ratio",
       "num": "firstConnect",
       "den": "unconnOpen",
-      "label": "미연동 앱오픈 → 연동 CVR (목표 3.2%)"
+      "label": "미연동 앱오픈 → 연동 CVR (목표 5.30%)"
     },
     {
       "type": "sum",
