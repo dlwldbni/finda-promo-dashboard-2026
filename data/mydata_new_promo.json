@@ -92,7 +92,7 @@
     "_comment": "신규 연동 프로모션 인사이트. asOf까지 누적 스냅샷, 기간 필터 미적용. 매일 갱신.",
     "asOf": "2026-11-23",
     "cohortFrom": "2026-11-23",
-    "funnelCap": "유니크 · 11/23 진입 코호트, 1일 전환 윈도우 · Mixpanel",
+    "funnelCap": "유니크 · 11/23 코호트 · '진입 → 연동 완료'는 1일 창, '지급 → 포인트 사용'은 지급 이후 누적(첫 사용까지 평균 0.5시간, 사용 5명 모두 잔액 2,000P 미만=프로모션 포인트 소진 추정)",
     "funnels": [
       {
         "key": "main",
@@ -123,6 +123,33 @@
             "label": "연동 완료",
             "event": "PM_2611mydata_complete",
             "n": 21
+          }
+        ]
+      },
+      {
+        "key": "point",
+        "title": "지급 → 포인트 사용",
+        "window": "11/24 기준",
+        "steps": [
+          {
+            "label": "포인트 지급 (11/23)",
+            "event": "PM_2611mydata_complete · Mixpanel",
+            "n": 21
+          },
+          {
+            "label": "포인트탭 방문",
+            "event": "RW_main_view (7일 창, 진행 중) · Mixpanel",
+            "n": 15
+          },
+          {
+            "label": "내 포인트 클릭",
+            "event": "RW_main_click_mypoint · Mixpanel",
+            "n": 6
+          },
+          {
+            "label": "상점 구매 (포인트 사용)",
+            "event": "pcs.user_finda_point_history PURCHASE_SHOP 차감 · Databricks",
+            "n": 5
           }
         ]
       }
