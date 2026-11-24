@@ -28,7 +28,8 @@
           "unconnOpen": 8416,
           "firstConnect": 432,
           "pointCost": 42000,
-          "sendCost": 0
+          "sendCost": 0,
+          "ctaClick": 45
         }
       ]
     }
@@ -56,5 +57,140 @@
       "label": "누적 포인트 비용",
       "budget": 3000000
     }
-  ]
+  ],
+  "trendLabel": "일별 포인트 지급 건수",
+  "trendLabel2": "일별 연동 완료(프로모션 경유)",
+  "kpiOverrides": {
+    "introView": {
+      "label": "프로모션 페이지 진입",
+      "src": "Mixpanel 진입 이벤트"
+    },
+    "contributedMau": {
+      "label": "포인트 지급 (최초 연동)",
+      "src": "Databricks 지급 이벤트"
+    },
+    "cvr:인트로→참여 CVR": {
+      "label": "진입→지급 CVR",
+      "src": "DB 지급 ÷ 진입"
+    },
+    "cvr:인트로→연동 CVR": {
+      "label": "CTA 클릭→연동 CVR",
+      "num": "connectDone",
+      "den": "ctaClick",
+      "src": "Mixpanel CTA→완료"
+    },
+    "connectDone": {
+      "label": "연동 완료 (프로모션 경유)",
+      "src": "Mixpanel 완료 이벤트"
+    },
+    "pointCost": {
+      "hide": true
+    }
+  },
+  "kpiFootnote": "포인트 지급·미연동 앱오픈→연동 CVR은 Databricks 실제 DB 값이고, 진입·CTA·연동 완료·아래 인사이트는 Mixpanel 이벤트 기준이에요. 미연동 앱오픈→연동 CVR은 프로모션 경유 여부와 무관한 전체 최초 연동 기준이에요.",
+  "insights": {
+    "_comment": "신규 연동 프로모션 인사이트. asOf까지 누적 스냅샷, 기간 필터 미적용. 매일 갱신.",
+    "asOf": "2026-11-23",
+    "cohortFrom": "2026-11-23",
+    "funnelCap": "유니크 · 11/23 진입 코호트, 1일 전환 윈도우 · Mixpanel",
+    "funnels": [
+      {
+        "key": "main",
+        "title": "진입 → 연동 완료",
+        "window": "1일",
+        "steps": [
+          {
+            "label": "프로모션 페이지 진입",
+            "event": "PM_2611mydata_intro_view",
+            "n": 275
+          },
+          {
+            "label": "CTA 클릭",
+            "event": "PM_2611mydata_intro_clickCTA",
+            "n": 45
+          },
+          {
+            "label": "마이데이터 인트로",
+            "event": "PM_2611mydata_mydata_intro_view",
+            "n": 45
+          },
+          {
+            "label": "로딩 진입",
+            "event": "PM_2611mydata_loading_view",
+            "n": 22
+          },
+          {
+            "label": "연동 완료",
+            "event": "PM_2611mydata_complete",
+            "n": 21
+          }
+        ]
+      }
+    ],
+    "channels": {
+      "cap": "배너 = 노출 → 클릭 (Mixpanel MY_top_banner_view/click, id별 unique) · 푸시 = D0 오픈 → D0 마데 연동 (Databricks, 시트 2611MD_CRM) · 11/23 누적",
+      "rows": [
+        {
+          "label": "홈 배너 367 (미연동자)",
+          "base": 2169,
+          "n": 67,
+          "def": "노출 → 클릭"
+        },
+        {
+          "label": "홈 배너 368 (7일 약정자)",
+          "base": 17,
+          "n": 1,
+          "def": "노출 → 클릭"
+        },
+        {
+          "label": "푸시 8771 (11/23 일회성)",
+          "base": 341,
+          "n": 13,
+          "def": "D0 오픈 → D0 마데 연동 · 발송 96,437"
+        },
+        {
+          "label": "푸시 8773 (인트로 이탈)",
+          "base": 5,
+          "n": 0,
+          "def": "D0 오픈 → D0 마데 연동 · 발송 22"
+        },
+        {
+          "label": "푸시 8774 (상환캘린더)",
+          "base": 49,
+          "n": 0,
+          "def": "D0 오픈 → D0 마데 연동 · 발송 619"
+        }
+      ]
+    },
+    "crossPromo": {
+      "base": 21,
+      "joined": 5,
+      "fromLabel": "신규 연동 완료",
+      "toLabel": "코스피 예측 완료",
+      "cap": "11/23 연동 완료(PM_2611mydata_complete) 유저 기준 · 이후 코스피 예측 완료(PM_2611kospi_result_wait_view)까지 14일 창 · 중간에 코스피 인트로 조회 6명 · Mixpanel"
+    },
+    "retention": {
+      "cohort": 21,
+      "cohortLabel": "11/23 연동 완료(프로모션 경유)",
+      "horizon": 7,
+      "series": [
+        {
+          "key": "revisit",
+          "label": "지급자 재방문",
+          "def": "PM_2611mydata_complete → Opened Finda App"
+        },
+        {
+          "key": "control",
+          "label": "대조군",
+          "def": "MD_loading_view(전체 연동) → Opened Finda App"
+        }
+      ],
+      "colors": [
+        "#E8880C",
+        "#C9CDD4"
+      ],
+      "days": [],
+      "pendingNote": "11/23 지급자의 D+1(11/24)부터 매일 한 칸씩 채워져요. 대조군보다 높으면 포인트로 데려온 연동이 앱 재방문으로 이어진다는 뜻이에요."
+    }
+  }
 }

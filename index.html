@@ -534,7 +534,7 @@ function toInternal(p){
   if (!metricKeys) { const ks = new Set(); daily.forEach(r => Object.keys(r.m).forEach(k => { if (typeof r.m[k] === 'number') ks.add(k); })); metricKeys = [...ks]; }
   const first = runs.length ? runs[0].start : null;
   const last  = daily.length ? daily.reduce((a,d)=> d.date>a ? d.date : a, daily[0].date) : null;
-  return { id:p.id, line:p.line, emoji:p.emoji||'📁', name:p.name, owner:p.owner||'—', status:p.status||'done', metricKeys, runs, daily, start:first, end:last, periodNote:p.periodNote||null, trendKey:p.trendKey||null, insights:p.insights||null, kpiGoals:Array.isArray(p.kpiGoals)?p.kpiGoals:null, kpiOverrides:p.kpiOverrides||null, kpiFootnote:p.kpiFootnote||null, links:Array.isArray(p.links)?p.links:[] };
+  return { id:p.id, line:p.line, emoji:p.emoji||'📁', name:p.name, owner:p.owner||'—', status:p.status||'done', metricKeys, runs, daily, start:first, end:last, periodNote:p.periodNote||null, trendKey:p.trendKey||null, trendLabel:p.trendLabel||null, trendLabel2:p.trendLabel2||null, insights:p.insights||null, kpiGoals:Array.isArray(p.kpiGoals)?p.kpiGoals:null, kpiOverrides:p.kpiOverrides||null, kpiFootnote:p.kpiFootnote||null, links:Array.isArray(p.links)?p.links:[] };
 }
 async function loadProjects(){
   const base = 'data/';
@@ -1281,9 +1281,9 @@ function renderModalContent(){
     ${selRun && selRun.note ? `<div class="kpi-note" style="font-size:11.5px;color:var(--text-3);margin:-4px 0 10px">ℹ️ ${selRun.note}</div>` : ''}
     ${cfg.kpiNote && (p.metricKeys||[]).includes('terms') ? `<div class="kpi-note" style="font-size:11.5px;color:var(--text-3);margin:-4px 0 10px">${cfg.kpiNote}</div>` : ''}
     ${p.insights ? insightsHtml(p.insights, cfg) : ''}
-    <div class="modal-section-title">📈 ${cfg.trendLabel || cfg.headline.label} 추이</div>
+    <div class="modal-section-title">📈 ${p.trendLabel || cfg.trendLabel || cfg.headline.label} 추이</div>
     <div class="chart-wrap" style="height:200px"><canvas id="modal-canvas"></canvas></div>
-    ${cfg.trendKey2 ? `<div class="modal-section-title">📈 ${cfg.trendLabel2||''} 추이</div><div class="chart-wrap" style="height:200px"><canvas id="modal-canvas2"></canvas></div>` : ''}
+    ${cfg.trendKey2 ? `<div class="modal-section-title">📈 ${p.trendLabel2 || cfg.trendLabel2 || ''} 추이</div><div class="chart-wrap" style="height:200px"><canvas id="modal-canvas2"></canvas></div>` : ''}
     ${runTable}${dtable}${segTable}
     ${ptNote}`;
 
@@ -1320,7 +1320,7 @@ function renderModalContent(){
     modalChart = new Chart(document.getElementById('modal-canvas'), {
       type:'bar',
       data:{ labels:rows.map(r=>r.date.slice(5)), datasets:[{ data:rows.map(r=>r.m[tk]||0), backgroundColor:barColor, borderRadius:3 }]},
-      options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}, tooltip:{callbacks:{label:c=>`${cfg.trendLabel || cfg.headline.label}: ${comma(c.parsed.y)}`}}},
+      options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}, tooltip:{callbacks:{label:c=>`${p.trendLabel || cfg.trendLabel || cfg.headline.label}: ${comma(c.parsed.y)}`}}},
         scales:{ x:xopt, y:{ beginAtZero:true, ticks:{font:{size:9}} } } }
     });
   }
@@ -1329,7 +1329,7 @@ function renderModalContent(){
     modalChart2 = new Chart(document.getElementById('modal-canvas2'), {
       type:'bar',
       data:{ labels:rows.map(r=>r.date.slice(5)), datasets:[{ data:rows.map(r=>r.m[cfg.trendKey2]||0), backgroundColor:color, borderRadius:3 }]},
-      options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}, tooltip:{callbacks:{label:c=>`${cfg.trendLabel2}: ${comma(c.parsed.y)}`}}},
+      options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}, tooltip:{callbacks:{label:c=>`${p.trendLabel2 || cfg.trendLabel2}: ${comma(c.parsed.y)}`}}},
         scales:{ x:{ ticks:{font:{size:9}, maxRotation:0, autoSkip:true, maxTicksLimit:12}, grid:{display:false} }, y:{ beginAtZero:true, ticks:{font:{size:9}} } } }
     });
   }
