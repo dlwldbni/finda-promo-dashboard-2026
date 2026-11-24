@@ -29,7 +29,9 @@
           "firstConnect": 432,
           "pointCost": 42000,
           "sendCost": 0,
-          "ctaClick": 45
+          "ctaClick": 45,
+          "pointTabVisit": 15,
+          "pointUse": 5
         }
       ]
     }
@@ -56,6 +58,18 @@
       "key": "pointCost",
       "label": "누적 포인트 비용",
       "budget": 3000000
+    },
+    {
+      "type": "ratio",
+      "num": "pointTabVisit",
+      "den": "contributedMau",
+      "label": "지급 → 포인트탭 이동률"
+    },
+    {
+      "type": "ratio",
+      "num": "pointUse",
+      "den": "contributedMau",
+      "label": "지급 → 포인트 사용률"
     }
   ],
   "trendLabel": "일별 포인트 지급 건수",
@@ -85,6 +99,12 @@
     },
     "pointCost": {
       "hide": true
+    },
+    "cvr:지급 → 포인트탭 이동률": {
+      "src": "Databricks 지급 후 RW_main_view"
+    },
+    "cvr:지급 → 포인트 사용률": {
+      "src": "Databricks 지급 후 포인트 차감"
     }
   },
   "kpiFootnote": "포인트 지급·미연동 앱오픈→연동 CVR은 Databricks 실제 DB 값이고, 진입·CTA·연동 완료·아래 인사이트는 Mixpanel 이벤트 기준이에요. 미연동 앱오픈→연동 CVR은 프로모션 경유 여부와 무관한 전체 최초 연동 기준이에요.",
@@ -129,16 +149,16 @@
       {
         "key": "point",
         "title": "지급 → 포인트 사용",
-        "window": "11/24 기준",
+        "window": "지급 후 누적",
         "steps": [
           {
             "label": "포인트 지급 (11/23)",
-            "event": "PM_2611mydata_complete · Mixpanel",
+            "event": "pcs NOVEVT_MYDATA 적립 · Databricks",
             "n": 21
           },
           {
-            "label": "포인트탭 방문",
-            "event": "RW_main_view (7일 창, 진행 중) · Mixpanel",
+            "label": "포인트탭 이동",
+            "event": "지급 후 RW_main_view · Databricks",
             "n": 15
           },
           {
@@ -147,8 +167,8 @@
             "n": 6
           },
           {
-            "label": "상점 구매 (포인트 사용)",
-            "event": "pcs.user_finda_point_history PURCHASE_SHOP 차감 · Databricks",
+            "label": "포인트 사용 (상점 구매)",
+            "event": "지급 후 포인트 차감 · Databricks",
             "n": 5
           }
         ]
