@@ -353,7 +353,11 @@
       "cap": "PM_2611kospi_result_wait_view의 predict_date 개수 기준 · 11/16 옛 이벤트명 참여분 미포함 · 진한 막대 = 3회 이상"
     },
     "crossPromo": {
-      "pending": "11/23 신규 유입 프로모션 이벤트 시작 후 집계"
+      "base": 21,
+      "joined": 5,
+      "fromLabel": "신규 연동 완료",
+      "toLabel": "코스피 예측 완료",
+      "cap": "11/23 신규 연동 프로모션 연동 완료(PM_2611mydata_complete) 유저 기준 · 이후 코스피 예측 완료(result_wait_view)까지 14일 창 · 중간에 코스피 인트로 조회 6명 · Mixpanel"
     },
     "retention": {
       "cohort": 1552,
