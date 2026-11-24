@@ -1504,11 +1504,11 @@ function insightsHtml(ins, cfg){
     const body = C.rows.map(r=>`<div class="ins-fn-row" title="${r.def||''}"><span>${r.label}</span><span class="bar"><i style="width:${r.base?(r.n/r.base/mx*100).toFixed(1):0}%;background:${cfg.color}"></i></span><span class="v"><b>${r.base?pct(r.n,r.base,(r.n/r.base)<0.01?2:1):'—'}</b></span></div><div class="ins-fn-drop" style="margin-top:-4px">${r.base?`${comma(r.base)} → ${comma(r.n)}`:(r.pending||'집계 전')}${r.def?` · ${r.def}`:''}</div>`).join('');
     extra.push(`<div class="ins-card"><h4>🚪 유입구별 전환</h4><div class="ins-cap">${C.cap||'노출(또는 발송) → 클릭(또는 참여)'}</div>${body}</div>`);
   }
-  // 신규 유입 프로모션 연계
+  // 프로모션간 연계
   if (ins.crossPromo) {
     const X = ins.crossPromo;
     const body = X.base ? `<div class="ins-fn-row"><span>${X.fromLabel||'신규 연동'}</span><span class="bar"><i style="width:100%;background:${cfg.color};opacity:.35"></i></span><span class="v"><b>${comma(X.base)}</b></span></div><div class="ins-fn-drop">↳ ${pct(X.joined,X.base)}</div><div class="ins-fn-row"><span>${X.toLabel||'코스피 예측 참여'}</span><span class="bar"><i style="width:${(X.joined/X.base*100).toFixed(1)}%;background:${cfg.color}"></i></span><span class="v"><b>${comma(X.joined)}</b></span></div>` : pend(X.pending || '집계 전');
-    extra.push(`<div class="ins-card"><h4>🤝 신규 유입 프로모션 연계</h4><div class="ins-cap">${X.cap||'신규 유입 프로모션으로 연동한 유저 중 코스피 예측까지 참여한 비율'}</div>${body}</div>`);
+    extra.push(`<div class="ins-card"><h4>🤝 프로모션간 연계</h4><div class="ins-cap">${X.cap||'신규 유입 프로모션으로 연동한 유저 중 코스피 예측까지 참여한 비율'}</div>${body}</div>`);
   }
   // 월별 비교
   if (ins.monthCompare) {
