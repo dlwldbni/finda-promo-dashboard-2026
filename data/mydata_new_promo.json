@@ -22,6 +22,12 @@
       "daily": [
         {
           "date": "2026-11-23",
+          "introView": 275,
+          "contributedMau": 21,
+          "connectDone": 21,
+          "unconnOpen": 8416,
+          "firstConnect": 432,
+          "pointCost": 42000,
           "sendCost": 0
         }
       ]
