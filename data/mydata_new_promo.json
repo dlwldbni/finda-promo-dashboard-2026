@@ -32,6 +32,19 @@
           "ctaClick": 45,
           "pointTabVisit": 15,
           "pointUse": 5
+        },
+        {
+          "date": "2026-11-24",
+          "introView": 77,
+          "contributedMau": 5,
+          "connectDone": 5,
+          "unconnOpen": 7809,
+          "firstConnect": 312,
+          "pointCost": 10000,
+          "sendCost": 0,
+          "ctaClick": 17,
+          "pointTabVisit": 2,
+          "pointUse": 0
         }
       ]
     }
@@ -110,9 +123,9 @@
   "kpiFootnote": "포인트 지급·미연동 앱오픈→연동 CVR은 Databricks 실제 DB 값이고, 진입·CTA·연동 완료·아래 인사이트는 Mixpanel 이벤트 기준이에요. 미연동 앱오픈→연동 CVR은 프로모션 경유 여부와 무관한 전체 최초 연동 기준이에요.",
   "insights": {
     "_comment": "신규 연동 프로모션 인사이트. asOf까지 누적 스냅샷, 기간 필터 미적용. 매일 갱신.",
-    "asOf": "2026-11-23",
+    "asOf": "2026-11-24",
     "cohortFrom": "2026-11-23",
-    "funnelCap": "유니크 · 11/23 코호트 · '진입 → 연동 완료'는 1일 창, '지급 → 포인트 사용'은 지급 이후 누적(첫 사용까지 평균 0.5시간, 사용 5명 모두 잔액 2,000P 미만=프로모션 포인트 소진 추정)",
+    "funnelCap": "유니크 · 11/23~24 누적 코호트 · '진입 → 연동 완료'는 1일 창, '지급 → 포인트 사용'은 11/23 지급자의 지급 이후 누적(사용 5명 모두 기존 포인트 합산)",
     "funnels": [
       {
         "key": "main",
@@ -122,27 +135,27 @@
           {
             "label": "프로모션 페이지 진입",
             "event": "PM_2611mydata_intro_view",
-            "n": 275
+            "n": 357
           },
           {
             "label": "CTA 클릭",
             "event": "PM_2611mydata_intro_clickCTA",
-            "n": 45
+            "n": 62
           },
           {
             "label": "마이데이터 인트로",
             "event": "PM_2611mydata_mydata_intro_view",
-            "n": 45
+            "n": 62
           },
           {
             "label": "로딩 진입",
             "event": "PM_2611mydata_loading_view",
-            "n": 22
+            "n": 28
           },
           {
             "label": "연동 완료",
             "event": "PM_2611mydata_complete",
-            "n": 21
+            "n": 26
           }
         ]
       },
@@ -175,18 +188,18 @@
       }
     ],
     "channels": {
-      "cap": "배너 = 노출 → 클릭 (Mixpanel MY_top_banner_view/click, id별 unique) · 푸시 = D0 오픈 → D0 마데 연동 (Databricks, 시트 2611MD_CRM) · 11/23 누적",
+      "cap": "배너 = 노출 → 클릭 (Mixpanel MY_top_banner_view/click, id별 unique) · 푸시 = D0 오픈 → D0 마데 연동 (Databricks, 시트 2611MD_CRM) · 11/23~24 누적",
       "rows": [
         {
           "label": "홈 배너 367 (미연동자)",
-          "base": 2169,
-          "n": 67,
+          "base": 4793,
+          "n": 130,
           "def": "노출 → 클릭"
         },
         {
           "label": "홈 배너 368 (7일 약정자)",
-          "base": 17,
-          "n": 1,
+          "base": 38,
+          "n": 3,
           "def": "노출 → 클릭"
         },
         {
@@ -199,22 +212,22 @@
           "label": "푸시 8773 (인트로 이탈)",
           "base": 5,
           "n": 0,
-          "def": "D0 오픈 → D0 마데 연동 · 발송 22"
+          "def": "D0 오픈 → D0 마데 연동 · 발송 29"
         },
         {
           "label": "푸시 8774 (상환캘린더)",
-          "base": 49,
+          "base": 50,
           "n": 0,
-          "def": "D0 오픈 → D0 마데 연동 · 발송 619"
+          "def": "D0 오픈 → D0 마데 연동 · 발송 643"
         }
       ]
     },
     "crossPromo": {
-      "base": 21,
-      "joined": 5,
+      "base": 26,
+      "joined": 7,
       "fromLabel": "신규 연동 완료",
       "toLabel": "코스피 예측 완료",
-      "cap": "11/23 연동 완료(PM_2611mydata_complete) 유저 기준 · 이후 코스피 예측 완료(PM_2611kospi_result_wait_view)까지 14일 창 · 중간에 코스피 인트로 조회 6명 · Mixpanel"
+      "cap": "11/23~24 연동 완료(PM_2611mydata_complete) 유저 기준 · 이후 코스피 예측 완료(PM_2611kospi_result_wait_view)까지 14일 창 · 중간에 코스피 인트로 조회 8명 · Mixpanel"
     },
     "retention": {
       "cohort": 21,
@@ -236,8 +249,19 @@
         "#E8880C",
         "#C9CDD4"
       ],
-      "days": [],
-      "pendingNote": "11/23 지급자의 D+1(11/24)부터 매일 한 칸씩 채워져요. 대조군보다 높으면 포인트로 데려온 연동이 앱 재방문으로 이어진다는 뜻이에요."
+      "days": [
+        {
+          "d": 0,
+          "revisit": 0.6667,
+          "control": 0.4526
+        },
+        {
+          "d": 1,
+          "revisit": 0.2857,
+          "control": 0.1851
+        }
+      ],
+      "take": "D+1 재방문 지급자 28.6% vs 대조군 18.5% (1.5배) · D0 66.7% vs 45.3%. 지급자 21명이라 하루 1~2명에도 비율이 크게 움직여요."
     }
   }
 }
