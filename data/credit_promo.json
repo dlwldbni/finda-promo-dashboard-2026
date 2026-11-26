@@ -26,7 +26,9 @@
           "predict_done": 3795,
           "change_done": 1078,
           "result_view": 0,
-          "result_click": 0
+          "result_click": 0,
+          "result_success": 0,
+          "result_fail": 0
         },
         {
           "date": "2026-11-03",
@@ -34,7 +36,9 @@
           "predict_done": 2390,
           "change_done": 855,
           "result_view": 0,
-          "result_click": 0
+          "result_click": 0,
+          "result_success": 0,
+          "result_fail": 0
         },
         {
           "date": "2026-11-04",
@@ -42,7 +46,9 @@
           "predict_done": 1969,
           "change_done": 743,
           "result_view": 0,
-          "result_click": 0
+          "result_click": 0,
+          "result_success": 0,
+          "result_fail": 0
         },
         {
           "date": "2026-11-05",
@@ -50,7 +56,9 @@
           "predict_done": 1118,
           "change_done": 591,
           "result_view": 0,
-          "result_click": 0
+          "result_click": 0,
+          "result_success": 0,
+          "result_fail": 0
         },
         {
           "date": "2026-11-06",
@@ -58,7 +66,9 @@
           "predict_done": 1143,
           "change_done": 596,
           "result_view": 0,
-          "result_click": 0
+          "result_click": 0,
+          "result_success": 0,
+          "result_fail": 0
         },
         {
           "date": "2026-11-07",
@@ -66,7 +76,9 @@
           "predict_done": 429,
           "change_done": 236,
           "result_view": 0,
-          "result_click": 0
+          "result_click": 0,
+          "result_success": 0,
+          "result_fail": 0
         },
         {
           "date": "2026-11-08",
@@ -74,7 +86,9 @@
           "predict_done": 410,
           "change_done": 202,
           "result_view": 0,
-          "result_click": 0
+          "result_click": 0,
+          "result_success": 0,
+          "result_fail": 0
         },
         {
           "date": "2026-11-09",
@@ -82,7 +96,9 @@
           "predict_done": 534,
           "change_done": 303,
           "result_view": 0,
-          "result_click": 0
+          "result_click": 0,
+          "result_success": 0,
+          "result_fail": 0
         },
         {
           "date": "2026-11-10",
@@ -90,7 +106,9 @@
           "predict_done": 443,
           "change_done": 245,
           "result_view": 0,
-          "result_click": 0
+          "result_click": 0,
+          "result_success": 0,
+          "result_fail": 0
         },
         {
           "date": "2026-11-11",
@@ -98,7 +116,9 @@
           "predict_done": 1139,
           "change_done": 487,
           "result_view": 0,
-          "result_click": 0
+          "result_click": 0,
+          "result_success": 0,
+          "result_fail": 0
         },
         {
           "date": "2026-11-12",
@@ -106,7 +126,9 @@
           "predict_done": 397,
           "change_done": 236,
           "result_view": 0,
-          "result_click": 0
+          "result_click": 0,
+          "result_success": 0,
+          "result_fail": 0
         },
         {
           "date": "2026-11-13",
@@ -114,7 +136,9 @@
           "predict_done": 461,
           "change_done": 245,
           "result_view": 0,
-          "result_click": 0
+          "result_click": 0,
+          "result_success": 0,
+          "result_fail": 0
         },
         {
           "date": "2026-11-14",
@@ -122,7 +146,9 @@
           "predict_done": 199,
           "change_done": 145,
           "result_view": 0,
-          "result_click": 0
+          "result_click": 0,
+          "result_success": 0,
+          "result_fail": 0
         },
         {
           "date": "2026-11-15",
@@ -130,7 +156,9 @@
           "predict_done": 519,
           "change_done": 274,
           "result_view": 0,
-          "result_click": 0
+          "result_click": 0,
+          "result_success": 0,
+          "result_fail": 0
         },
         {
           "date": "2026-11-16",
@@ -138,7 +166,9 @@
           "predict_done": 370,
           "change_done": 510,
           "result_view": 0,
-          "result_click": 0
+          "result_click": 0,
+          "result_success": 0,
+          "result_fail": 0
         },
         {
           "date": "2026-11-17",
@@ -146,7 +176,9 @@
           "predict_done": 346,
           "change_done": 237,
           "result_view": 0,
-          "result_click": 0
+          "result_click": 0,
+          "result_success": 0,
+          "result_fail": 0
         },
         {
           "date": "2026-11-18",
@@ -154,7 +186,9 @@
           "predict_done": 1046,
           "change_done": 822,
           "result_view": 0,
-          "result_click": 0
+          "result_click": 0,
+          "result_success": 0,
+          "result_fail": 0
         },
         {
           "date": "2026-11-19",
@@ -162,7 +196,9 @@
           "predict_done": 0,
           "change_done": 0,
           "result_view": 0,
-          "result_click": 0
+          "result_click": 0,
+          "result_success": 0,
+          "result_fail": 0
         },
         {
           "date": "2026-11-20",
@@ -170,7 +206,9 @@
           "predict_done": 0,
           "change_done": 0,
           "result_view": 0,
-          "result_click": 0
+          "result_click": 0,
+          "result_success": 0,
+          "result_fail": 0
         },
         {
           "date": "2026-11-21",
@@ -178,7 +216,9 @@
           "predict_done": 0,
           "change_done": 0,
           "result_view": 0,
-          "result_click": 0
+          "result_click": 0,
+          "result_success": 0,
+          "result_fail": 0
         },
         {
           "date": "2026-11-22",
@@ -186,7 +226,9 @@
           "predict_done": 0,
           "change_done": 0,
           "result_view": 0,
-          "result_click": 0
+          "result_click": 0,
+          "result_success": 0,
+          "result_fail": 0
         },
         {
           "date": "2026-11-23",
@@ -194,7 +236,9 @@
           "predict_done": 0,
           "change_done": 0,
           "result_view": 2058,
-          "result_click": 548
+          "result_click": 548,
+          "result_success": 1013,
+          "result_fail": 910
         },
         {
           "date": "2026-11-24",
@@ -202,7 +246,9 @@
           "predict_done": 0,
           "change_done": 0,
           "result_view": 603,
-          "result_click": 219
+          "result_click": 219,
+          "result_success": 278,
+          "result_fail": 292
         },
         {
           "date": "2026-11-25",
@@ -210,7 +256,9 @@
           "predict_done": 0,
           "change_done": 0,
           "result_view": 354,
-          "result_click": 106
+          "result_click": 106,
+          "result_success": 161,
+          "result_fail": 165
         }
       ]
     }
@@ -510,6 +558,15 @@
       "상승 선택자의 올리기 콘텐츠 클릭률(1.7%)이 유지(1.1%)의 약 1.6배예요. 하락은 클릭 14명이라 아직 표본이 적어요.",
       "변경은 유지→상승 4,163건이 가장 커요. D+1 재방문 40% 중 고관여는 12%로, 재방문 대비 서비스 이용 전환은 낮은 편이에요."
     ],
-    "summaryAsOf": "2026-11-25"
+    "summaryAsOf": "2026-11-25",
+    "resultType": {
+      "event": "PM_credit_result_point_view",
+      "property": "result_type",
+      "from": "2026-11-23",
+      "success": 1388,
+      "fail": 1331,
+      "special": 3,
+      "_note": "누적 unique. 정답=success+special(스페셜 30,000P 당첨도 정답)"
+    }
   }
 }
