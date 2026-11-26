@@ -193,24 +193,24 @@
           "view": 0,
           "predict_done": 0,
           "change_done": 0,
-          "result_view": 0,
-          "result_click": 544
+          "result_view": 2058,
+          "result_click": 548
         },
         {
           "date": "2026-11-24",
           "view": 0,
           "predict_done": 0,
           "change_done": 0,
-          "result_view": 0,
-          "result_click": 217
+          "result_view": 603,
+          "result_click": 219
         },
         {
           "date": "2026-11-25",
           "view": 0,
           "predict_done": 0,
           "change_done": 0,
-          "result_view": 0,
-          "result_click": 104
+          "result_view": 354,
+          "result_click": 106
         }
       ]
     }
@@ -289,27 +289,37 @@
           {
             "label": "결과 화면 진입",
             "event": "PM_credit_result_before_view",
-            "n": 3310
+            "n": 3340
           },
           {
             "label": "결과 확인 클릭",
             "event": "PM_credit_result_before_clickCTA",
-            "n": 2835
+            "n": 2866
           },
           {
             "label": "결과 확인",
-            "event": "PM_credit_result_view",
-            "n": 0
+            "event": "PM_credit_result_after_view",
+            "n": 2857
+          },
+          {
+            "label": "포인트 받기 화면",
+            "event": "PM_credit_result_point_view",
+            "n": 2675
+          },
+          {
+            "label": "포인트 받기 클릭",
+            "event": "PM_credit_result_point_clickCTA",
+            "n": 2594
           },
           {
             "label": "한도조회 유도 진입",
             "event": "PM_credit_la_view",
-            "n": 0
+            "n": 2590
           },
           {
             "label": "한도조회 CTA 클릭",
             "event": "PM_credit_la_clickCTA",
-            "n": 0
+            "n": 832
           }
         ]
       }
