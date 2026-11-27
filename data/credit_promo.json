@@ -235,40 +235,50 @@
           "view": 0,
           "predict_done": 0,
           "change_done": 0,
-          "result_view": 2070,
-          "result_click": 552,
-          "result_success": 1014,
-          "result_fail": 916
+          "result_view": 2079,
+          "result_click": 553,
+          "result_success": 1016,
+          "result_fail": 923
         },
         {
           "date": "2026-11-24",
           "view": 0,
           "predict_done": 0,
           "change_done": 0,
-          "result_view": 605,
-          "result_click": 219,
-          "result_success": 278,
-          "result_fail": 294
+          "result_view": 610,
+          "result_click": 220,
+          "result_success": 281,
+          "result_fail": 296
         },
         {
           "date": "2026-11-25",
           "view": 0,
           "predict_done": 0,
           "change_done": 0,
-          "result_view": 359,
+          "result_view": 364,
           "result_click": 106,
-          "result_success": 164,
-          "result_fail": 165
+          "result_success": 167,
+          "result_fail": 166
         },
         {
           "date": "2026-11-26",
           "view": 0,
           "predict_done": 0,
           "change_done": 0,
-          "result_view": 278,
-          "result_click": 77,
-          "result_success": 128,
-          "result_fail": 121
+          "result_view": 298,
+          "result_click": 82,
+          "result_success": 139,
+          "result_fail": 128
+        },
+        {
+          "date": "2026-11-27",
+          "view": 0,
+          "predict_done": 0,
+          "change_done": 0,
+          "result_view": 212,
+          "result_click": 69,
+          "result_success": 109,
+          "result_fail": 83
         }
       ]
     }
@@ -282,7 +292,7 @@
   ],
   "insights": {
     "_comment": "Mixpanel project 1452453 · 모두 unique(변동 매트릭스만 변경 건수). 일별(runs.daily)=그날 기준 D0. 누적(insights)=11/02~11/18 참여 코호트, 17일 전환 윈도우(D17). 매일 08:00 클라우드 루틴이 갱신.",
-    "asOf": "2026-11-26",
+    "asOf": "2026-11-27",
     "cohortFrom": "2026-11-02",
     "funnels": [
       {
@@ -347,37 +357,37 @@
           {
             "label": "결과 화면 진입",
             "event": "PM_credit_result_before_view",
-            "n": 3596
+            "n": 3805
           },
           {
             "label": "결과 확인 클릭",
             "event": "PM_credit_result_before_clickCTA",
-            "n": 3076
+            "n": 3249
           },
           {
             "label": "결과 확인",
             "event": "PM_credit_result_after_view",
-            "n": 3069
+            "n": 3241
           },
           {
             "label": "포인트 받기 화면",
             "event": "PM_credit_result_point_view",
-            "n": 2864
+            "n": 3021
           },
           {
             "label": "포인트 받기 클릭",
             "event": "PM_credit_result_point_clickCTA",
-            "n": 2779
+            "n": 2938
           },
           {
             "label": "한도조회 유도 진입",
             "event": "PM_credit_la_view",
-            "n": 2774
+            "n": 2933
           },
           {
             "label": "한도조회 CTA 클릭",
             "event": "PM_credit_la_clickCTA",
-            "n": 894
+            "n": 952
           }
         ]
       }
@@ -429,8 +439,8 @@
             "ci": 68
           },
           "reach": {
-            "cra": 1270,
-            "ci": 3317
+            "cra": 1282,
+            "ci": 3352
           }
         },
         "keep": {
@@ -440,8 +450,8 @@
             "ci": 40
           },
           "reach": {
-            "cra": 901,
-            "ci": 3244
+            "cra": 907,
+            "ci": 3266
           }
         },
         "down": {
@@ -451,8 +461,8 @@
             "ci": 11
           },
           "reach": {
-            "cra": 119,
-            "ci": 448
+            "cra": 122,
+            "ci": 455
           }
         }
       },
@@ -521,17 +531,17 @@
         },
         {
           "d": 7,
-          "revisit": 0.4,
+          "revisit": 0.41,
           "engaged": 0.11
         },
         {
           "d": 8,
-          "revisit": 0.39,
+          "revisit": 0.38,
           "engaged": 0.09
         },
         {
           "d": 9,
-          "revisit": 0.37,
+          "revisit": 0.36,
           "engaged": 0.08
         },
         {
@@ -541,7 +551,7 @@
         },
         {
           "d": 11,
-          "revisit": 0.35,
+          "revisit": 0.34,
           "engaged": 0.06
         },
         {
@@ -563,18 +573,18 @@
       "horizon": 14
     },
     "summary": [
-      "11/26 결과 확인 278명, 한도조회 CTA 77명으로 전날(359명·106명)보다 줄었어요. 첫날 2,070명 이후 매일 줄어드는 흐름이에요.",
-      "결과 조회율은 참여자 16,708명 중 3,069명(18.4%)이에요. 미조회 약 1만 3천 명이 남아 있어 결과 확인 리마인드 여지가 커요.",
-      "결과 확인 → 한도조회 CTA 클릭 전환은 29.1%(894명)이고, 가장 큰 이탈은 한도조회 유도 화면 → CTA 클릭 단계(2,774 → 894)예요.",
-      "정답 1,486명 · 오답 1,443명으로 정답률 50.7%예요. 스페셜 30,000P 당첨은 3명이에요."
+      "11/27 결과 확인 212명, 한도조회 CTA 69명으로 전날(298명·82명)보다 줄었어요. 첫날 2,079명 이후 매일 줄어드는 흐름이에요.",
+      "결과 조회율은 참여자 16,708명 중 3,241명(19.4%)이에요. 미조회 약 1만 3천 명이 남아 있어 결과 확인 리마인드 여지가 커요.",
+      "결과 확인 → 한도조회 CTA 클릭 전환은 29.4%(952명)이고, 가장 큰 이탈은 한도조회 유도 화면 → CTA 클릭 단계(2,933 → 952)예요.",
+      "정답 1,577명 · 오답 1,529명으로 정답률 50.8%예요. 스페셜 30,000P 당첨은 3명이에요."
     ],
-    "summaryAsOf": "2026-11-26",
+    "summaryAsOf": "2026-11-27",
     "resultType": {
       "event": "PM_credit_result_point_view",
       "property": "result_type",
       "from": "2026-11-23",
-      "success": 1483,
-      "fail": 1443,
+      "success": 1574,
+      "fail": 1529,
       "special": 3,
       "_note": "누적 unique. 정답=success+special(스페셜 30,000P 당첨도 정답)"
     }
