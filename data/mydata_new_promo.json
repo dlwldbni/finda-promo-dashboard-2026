@@ -58,6 +58,19 @@
           "ctaClick": 12,
           "pointTabVisit": 4,
           "pointUse": 2
+        },
+        {
+          "date": "2026-11-26",
+          "introView": 38,
+          "contributedMau": 10,
+          "connectDone": 10,
+          "unconnOpen": 6655,
+          "firstConnect": 276,
+          "pointCost": 20000,
+          "sendCost": 0,
+          "ctaClick": 11,
+          "pointTabVisit": 7,
+          "pointUse": 3
         }
       ]
     }
@@ -136,9 +149,9 @@
   "kpiFootnote": "포인트 지급·미연동 앱오픈→연동 CVR은 Databricks 실제 DB 값이고, 진입·CTA·연동 완료·아래 인사이트는 Mixpanel 이벤트 기준이에요. 미연동 앱오픈→연동 CVR은 프로모션 경유 여부와 무관한 전체 최초 연동 기준이에요.",
   "insights": {
     "_comment": "신규 연동 프로모션 인사이트. asOf까지 누적 스냅샷, 기간 필터 미적용. 매일 갱신.",
-    "asOf": "2026-11-25",
+    "asOf": "2026-11-26",
     "cohortFrom": "2026-11-23",
-    "funnelCap": "유니크 · 11/23~25 누적 코호트 · '진입 → 연동 완료'는 1일 창, '지급 → 포인트 사용'은 지급자의 지급 이후 누적(내 포인트 클릭은 Mixpanel 연동 완료자 기준)",
+    "funnelCap": "유니크 · 11/23~26 누적 코호트 · '진입 → 연동 완료'는 1일 창, '지급 → 포인트 사용'은 지급자의 지급 이후 누적(내 포인트 클릭은 Mixpanel 연동 완료자 기준)",
     "funnels": [
       {
         "key": "main",
@@ -148,27 +161,27 @@
           {
             "label": "프로모션 페이지 진입",
             "event": "PM_2611mydata_intro_view",
-            "n": 389
+            "n": 429
           },
           {
             "label": "CTA 클릭",
             "event": "PM_2611mydata_intro_clickCTA",
-            "n": 74
+            "n": 83
           },
           {
             "label": "마이데이터 인트로",
             "event": "PM_2611mydata_mydata_intro_view",
-            "n": 74
+            "n": 83
           },
           {
             "label": "로딩 진입",
             "event": "PM_2611mydata_loading_view",
-            "n": 34
+            "n": 43
           },
           {
             "label": "연동 완료",
             "event": "PM_2611mydata_complete",
-            "n": 32
+            "n": 41
           }
         ]
       },
@@ -178,48 +191,48 @@
         "window": "지급 후 누적",
         "steps": [
           {
-            "label": "포인트 지급 (11/23~25)",
+            "label": "포인트 지급 (11/23~26)",
             "event": "pcs NOVEVT_MYDATA 적립 · Databricks",
-            "n": 33
+            "n": 43
           },
           {
             "label": "포인트탭 이동",
             "event": "지급 후 RW_main_view · Databricks",
-            "n": 21
+            "n": 28
           },
           {
             "label": "내 포인트 클릭",
             "event": "RW_main_click_mypoint · Mixpanel",
-            "n": 12
+            "n": 17
           },
           {
             "label": "포인트 사용",
             "event": "지급 후 포인트 차감 · Databricks",
-            "n": 7
+            "n": 10
           }
         ]
       }
     ],
     "channels": {
-      "cap": "배너 = 노출 → 클릭 (Mixpanel, 일별 unique 합산) · 다이나믹배너 = 포인트탭 슬롯 promotion_key CH2611_MD_NEW_CONNECT (11/25 노출 시작) · 푸시 = D0 오픈 → D0 마데 연동 (Databricks, 시트 2611MD_CRM) · 11/23~25 누적",
+      "cap": "배너 = 노출 → 클릭 (Mixpanel, 일별 unique 합산) · 다이나믹배너 = 포인트탭 슬롯 promotion_key CH2611_MD_NEW_CONNECT (11/25 노출 시작) · 푸시 = D0 오픈 → D0 마데 연동 (Databricks, 시트 2611MD_CRM) · 11/23~26 누적",
       "rows": [
         {
           "label": "홈 배너 367 (미연동자)",
-          "base": 5935,
-          "n": 147,
+          "base": 6583,
+          "n": 170,
           "def": "노출 → 클릭"
         },
         {
           "label": "홈 배너 368 (7일 약정자)",
-          "base": 50,
-          "n": 3,
+          "base": 62,
+          "n": 4,
           "def": "노출 → 클릭"
         },
         {
           "label": "포인트탭 다이나믹배너 (미연동자)",
-          "base": 66,
-          "n": 7,
-          "def": "노출 → 클릭 · 클릭 7 중 연동 완료 4 (11/25)"
+          "base": 263,
+          "n": 21,
+          "def": "노출 → 클릭 · 클릭 21 중 연동 완료 8 (11/25~26)"
         },
         {
           "label": "푸시 8771 (11/23 일회성)",
@@ -235,18 +248,24 @@
         },
         {
           "label": "푸시 8774 (상환캘린더)",
-          "base": 53,
+          "base": 54,
           "n": 0,
-          "def": "D0 오픈 → D0 마데 연동 · 발송 647"
+          "def": "D0 오픈 → D0 마데 연동 · 발송 659"
+        },
+        {
+          "label": "푸시 8791 (코스피 CTA 미연동자)",
+          "base": 1,
+          "n": 0,
+          "def": "D0 오픈 → D0 마데 연동 · 발송 4 (11/26~)"
         }
       ]
     },
     "crossPromo": {
-      "base": 32,
-      "joined": 9,
+      "base": 42,
+      "joined": 12,
       "fromLabel": "신규 연동 완료",
       "toLabel": "코스피 예측 완료",
-      "cap": "11/23~25 연동 완료(PM_2611mydata_complete) 유저 기준 · 이후 코스피 예측 완료(PM_2611kospi_result_wait_view)까지 14일 창 · Mixpanel"
+      "cap": "11/23~26 연동 완료(PM_2611mydata_complete) 유저 기준 · 이후 코스피 예측 완료(PM_2611kospi_result_wait_view)까지 14일 창 · Mixpanel"
     },
     "retention": {
       "cohort": 21,
@@ -272,20 +291,25 @@
         {
           "d": 0,
           "revisit": 0.6667,
-          "control": 0.4538
+          "control": 0.4555
         },
         {
           "d": 1,
           "revisit": 0.2857,
-          "control": 0.2266
+          "control": 0.2312
         },
         {
           "d": 2,
+          "revisit": 0.1905,
+          "control": 0.1592
+        },
+        {
+          "d": 3,
           "revisit": 0.1429,
-          "control": 0.1246
+          "control": 0.0941
         }
       ],
-      "take": "D+1 재방문 지급자 28.6% vs 대조군 22.7% (1.26배) · D+2 14.3% vs 12.5%. 늦게 적재된 로그로 대조군 D+1이 18.5%→22.7%로 올랐고, 지급자 21명이라 하루 1~2명에도 비율이 크게 움직여요."
+      "take": "11/23 지급자 재방문 D+1 28.6% vs 대조군 23.1% · D+2 19.0% vs 15.9% · D+3 14.3% vs 9.4% (1.5배). 지급자 21명이라 하루 1~2명에도 비율이 크게 움직여요."
     }
   }
 }
